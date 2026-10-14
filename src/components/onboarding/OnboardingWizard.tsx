@@ -48,34 +48,27 @@ export function OnboardingWizard() {
     createWorkspaceWithRoomCode,
     addCompany,
     companies,
+    setCompanies,
     setSelectedStageIds,
     selectedStageIds,
     customStages,
     addCustomStage,
+    accountType,
   } = useMonoSpecStore();
 
+  const isFreelancer = accountType === 'freelancer';
+
   // Step 1: Workspace State
-  const [workspaceName, setWorkspaceName] = useState('Apex Innovations Team');
-  const [roomCode, setRoomCode] = useState('MONO-8842-KSA');
+  const [workspaceName, setWorkspaceName] = useState(
+    isFreelancer ? 'استوديو المشاريع والحلول المستقلة' : 'Apex Innovations Team'
+  );
+  const [roomCode, setRoomCode] = useState(
+    isFreelancer ? 'FREE-8842-PRO' : 'MONO-8842-KSA'
+  );
   const [copiedCode, setCopiedCode] = useState(false);
 
-  // Step 2: Company Setup State
-  const [companyList, setCompanyList] = useState<Omit<Company, 'id'>[]>([
-    {
-      name: 'Awamer Alshabaka',
-      nameAr: 'أوامر الشبكة',
-      code: 'AWM',
-      industry: 'Enterprise Software & Cloud Systems',
-      tagline: 'Enterprise Digital Transformation',
-    },
-    {
-      name: 'Creative System',
-      nameAr: 'النظام الإبداعي',
-      code: 'CRT',
-      industry: 'FinTech & SaaS Engineering',
-      tagline: 'High-Performance FinTech Products',
-    },
-  ]);
+  // Step 2: Company Setup State - DYNAMIC & NOT HARDCODED!
+  const [companyList, setCompanyList] = useState<Omit<Company, 'id'>[]>([]);
   const [newCompName, setNewCompName] = useState('');
   const [newCompNameAr, setNewCompNameAr] = useState('');
   const [newCompCode, setNewCompCode] = useState('');
@@ -96,6 +89,22 @@ export function OnboardingWizard() {
     }
   };
 
+  const handleNameChange = (val: string) => {
+    setNewCompName(val);
+    if (!newCompCode || newCompCode.length <= 4) {
+      const words = val.trim().split(/\s+/);
+      const code =
+        words.length > 1
+          ? words
+              .map((w) => w[0])
+              .join('')
+              .slice(0, 4)
+              .toUpperCase()
+          : val.replace(/[^a-zA-Z0-9]/g, '').slice(0, 3).toUpperCase();
+      if (code) setNewCompCode(code);
+    }
+  };
+
   const handleAddCompany = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCompName.trim()) return;
@@ -107,8 +116,12 @@ export function OnboardingWizard() {
         name: newCompName.trim(),
         nameAr: newCompNameAr.trim() || newCompName.trim(),
         code,
-        industry: newCompIndustry.trim() || 'Software & Technology',
-        tagline: `Enterprise Architecture for ${newCompName.trim()}`,
+        industry:
+          newCompIndustry.trim() ||
+          (isFreelancer ? 'Client Engineering' : 'Software & Technology'),
+        tagline: `${
+          isFreelancer ? 'Client Specification & Architecture' : 'Enterprise Architecture'
+        } for ${newCompName.trim()}`,
       },
     ]);
 
@@ -118,8 +131,31 @@ export function OnboardingWizard() {
     setNewCompIndustry('');
   };
 
+  const handleLoadSampleCompany = () => {
+    if (isFreelancer) {
+      setCompanyList([
+        {
+          name: 'Al-Riyadh Logistics & Freight',
+          nameAr: 'شركة الرياض للوجستيات وسلاسل الإمداد',
+          code: 'RLG',
+          industry: 'Logistics & Fleet Systems',
+          tagline: 'Autonomous Freight & Telemetry Platform',
+        },
+      ]);
+    } else {
+      setCompanyList([
+        {
+          name: 'Apex Cloud Innovations',
+          nameAr: 'أنظمة أبيكس السحابية المتقدمة',
+          code: 'APX',
+          industry: 'Enterprise Cloud & FinTech Systems',
+          tagline: 'High-Availability Architecture Platform',
+        },
+      ]);
+    }
+  };
+
   const handleRemoveCompany = (index: number) => {
-    if (companyList.length <= 1) return;
     setCompanyList((prev) => prev.filter((_, idx) => idx !== index));
   };
 
@@ -162,19 +198,49 @@ export function OnboardingWizard() {
     // 1. Create Workspace
     createWorkspaceWithRoomCode(workspaceName, roomCode);
 
-    // 2. Add Companies
-    companyList.forEach((comp) => {
-      // Check if already in store
-      const exists = companies.some((c) => c.code.toLowerCase() === comp.code.toLowerCase());
-      if (!exists) {
-        addCompany(comp);
-      }
-    });
+    // 2. Set dynamic companies (configured by user)
+    const finalCompanies: Company[] = (
+      companyList.length > 0
+        ? companyList
+        : [
+            {
+              name: workspaceName || (isFreelancer ? 'Freelance Studio' : 'Apex Systems'),
+              nameAr: workspaceName || (isFreelancer ? 'استوديو العمل الحر' : 'أنظمة أبيكس'),
+              code: (workspaceName || 'APX').slice(0, 3).toUpperCase(),
+              industry: isFreelancer ? 'Client Engineering' : 'Software & Technology',
+              tagline: `Enterprise Architecture for ${workspaceName || 'Apex Systems'}`,
+            },
+          ]
+    ).map((comp, idx) => ({
+      id: `comp-${Date.now().toString(36)}-${idx}`,
+      name: comp.name,
+      nameAr: comp.nameAr || comp.name,
+      code: comp.code || comp.name.slice(0, 3).toUpperCase(),
+      industry: comp.industry || 'Software & Technology',
+      tagline: comp.tagline || `Enterprise Architecture for ${comp.name}`,
+      isCustom: true,
+    }));
+
+    setCompanies(finalCompanies);
 
     // 3. Set Selected Stages
     setSelectedStageIds(chosenStageIds);
 
-    // 4. Launch into workspace
+    // 4. Update workspace initial projects to be mapped to the user's primary company!
+    const currentState = useMonoSpecStore.getState();
+    if (currentState.projects.length > 0 && finalCompanies[0]) {
+      const updatedProjects = currentState.projects.map((proj, pIdx) => ({
+        ...proj,
+        companyId: finalCompanies[pIdx % finalCompanies.length].id,
+      }));
+      useMonoSpecStore.setState({
+        projects: updatedProjects,
+        activeProjectId: updatedProjects[0].id,
+        selectedCompanyFilter: 'all',
+      });
+    }
+
+    // 5. Launch into workspace
     setActiveView('workspace');
   };
 
@@ -311,18 +377,22 @@ export function OnboardingWizard() {
           </div>
         )}
 
-        {/* STEP 2: Company Setup & Multi-Company Addition */}
+        {/* STEP 2: Company Setup & Dynamic Multi-Company Addition */}
         {onboardingStep === 2 && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
             <div className="space-y-2">
               <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-                STEP 02 OF 03 • COMPANY SETUP
+                {isFreelancer ? 'STEP 02 OF 03 • CLIENTS & PORTFOLIO' : 'STEP 02 OF 03 • COMPANY SETUP'}
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                ما اسم شركتك؟ (ويمكنك إضافة أكثر من شركة وعميل)
+                {isFreelancer
+                  ? 'ما هي الشركات أو العملاء الذين تعمل معهم؟'
+                  : 'ما اسم شركتك؟ (ويمكنك إضافة أكثر من شركة وعميل)'}
               </h2>
               <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-                يتيح لك MonoSpec إدارة مواصفات عدة شركات ومؤسسات في نفس مساحة العمل مع عزل البيانات وسياق الذكاء الاصطناعي لكل شركة.
+                {isFreelancer
+                  ? 'أضف أول عميل أو جهة تصمم لها المواصفات الفنية والشعار. كل شركة تضاف ستحصل على كود روم خاص بها ويمكنك حذف أو إضافة أي شركة بحرية.'
+                  : 'أدخل شركتك لتهيئة مساحة العمل، ويمكنك إضافة فروع أو عملاء متعددين لعزل المواصفات والبيانات مع إمكانية التعديل والحذف في أي وقت.'}
               </p>
             </div>
 
@@ -330,81 +400,113 @@ export function OnboardingWizard() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[var(--text-secondary)]">
-                  الشركات المضافة حالياً ({companyList.length})
+                  {isFreelancer ? 'العملاء والشركات المضافة حالياً' : 'الشركات المضافة حالياً'} ({companyList.length})
                 </span>
                 <span className="text-[11px] text-[var(--text-muted)]">
-                  يمكن التبديل بينهم في أي وقت
+                  يمكنك حذف أو تعديل أو إضافة أي عدد
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {companyList.map((comp, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between shadow-2xs group hover:border-[var(--border-strong)] transition-colors"
+              {companyList.length === 0 ? (
+                /* Empty state when no companies are added yet */
+                <div className="p-6 rounded-2xl border border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)] text-center space-y-3">
+                  <div className="w-10 h-10 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+                    <Building2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-[var(--text-primary)]">
+                      {isFreelancer ? 'لم تقم بإضافة عملاء حتى الآن' : 'لم تقم بإضافة شركات حتى الآن'}
+                    </h4>
+                    <p className="text-[11px] text-[var(--text-muted)] mt-1 max-w-md mx-auto leading-relaxed">
+                      {isFreelancer
+                        ? 'أدخل اسم أول عميل لك في النموذج أدناه واضغط إضافة، أو اضغط الزر التجريبي لتحميل عميل افتراضي سريعاً.'
+                        : 'أدخل اسم شركتك في النموذج أدناه واضغط حفظ وإضافة، أو اضغط الزر التجريبي لاختبار النظام بنموذج سريع.'}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleLoadSampleCompany}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-950/20 hover:bg-emerald-900/30 text-emerald-400 text-xs font-semibold transition-colors shadow-2xs"
                   >
-                    <div className="space-y-0.5 min-w-0 pr-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-xs text-[var(--text-primary)] truncate">
-                          {comp.name}
-                        </span>
-                        <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)]">
-                          {comp.code}
-                        </span>
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>{isFreelancer ? 'تجربة بعميل تجريبي سريع' : 'تجربة بشركة تجريبية سريعة'}</span>
+                  </button>
+                </div>
+              ) : (
+                /* Dynamic company cards - each can be deleted freely! */
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {companyList.map((comp, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between shadow-2xs group hover:border-[var(--border-strong)] transition-colors"
+                    >
+                      <div className="space-y-0.5 min-w-0 pr-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-xs text-[var(--text-primary)] truncate">
+                            {comp.name}
+                          </span>
+                          <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)]">
+                            {comp.code}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[var(--text-muted)] truncate">
+                          {comp.nameAr || comp.industry}
+                        </p>
                       </div>
-                      <p className="text-[11px] text-[var(--text-muted)] truncate">
-                        {comp.nameAr || comp.industry}
-                      </p>
-                    </div>
 
-                    {companyList.length > 1 && (
+                      {/* Always removable with no restrictions! */}
                       <button
                         type="button"
                         onClick={() => handleRemoveCompany(idx)}
-                        title="حذف الشركة"
-                        className="p-1 rounded-md text-[var(--text-muted)] hover:text-red-400 hover:bg-red-950/20 transition-colors shrink-0"
+                        title="حذف من القائمة"
+                        className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-red-400 hover:bg-red-950/20 transition-colors shrink-0"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
-                    )}
-                  </div>
-                ))}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Form to Add Another Company */}
+            {/* Form to Add a Company/Client */}
             <form
               onSubmit={handleAddCompany}
               className="p-5 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] space-y-4"
             >
-              <div className="flex items-center gap-2">
-                <Plus className="w-4 h-4 text-emerald-400" />
-                <h3 className="text-xs font-bold text-[var(--text-primary)]">
-                  إضافة شركة جديدة (Add Another Company)
-                </h3>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Plus className="w-4 h-4 text-emerald-400" />
+                  <h3 className="text-xs font-bold text-[var(--text-primary)]">
+                    {isFreelancer ? 'إضافة عميل أو شركة جديدة' : 'إضافة شركة أو عميل جديد'}
+                  </h3>
+                </div>
+                <span className="text-[10px] text-[var(--text-muted)]">
+                  * الحقول الإنجليزية والكود إلزامية
+                </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    اسم الشركة (English) *
+                    {isFreelancer ? 'اسم العميل / الشركة (English) *' : 'اسم الشركة (English) *'}
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Apex FinTech Solutions"
+                    placeholder={isFreelancer ? 'e.g. Al-Riyadh Logistics / Horizon Pay' : 'e.g. Apex FinTech Solutions'}
                     value={newCompName}
-                    onChange={(e) => setNewCompName(e.target.value)}
+                    onChange={(e) => handleNameChange(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
                   />
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    اسم الشركة (بالعربية)
+                    {isFreelancer ? 'اسم العميل / الشركة (بالعربية)' : 'اسم الشركة (بالعربية)'}
                   </label>
                   <input
                     type="text"
-                    placeholder="مثال: شركة حلول التقنية المالية"
+                    placeholder={isFreelancer ? 'مثال: شركة الرياض للوجستيات' : 'مثال: شركة حلول التقنية المالية'}
                     value={newCompNameAr}
                     onChange={(e) => setNewCompNameAr(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
@@ -413,14 +515,14 @@ export function OnboardingWizard() {
 
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    كود الشركة المميز (Code)
+                    كود الشركة المميز (Code) *
                   </label>
                   <input
                     type="text"
                     placeholder="e.g. APX (أقصى 5 أحرف)"
                     maxLength={5}
                     value={newCompCode}
-                    onChange={(e) => setNewCompCode(e.target.value)}
+                    onChange={(e) => setNewCompCode(e.target.value.toUpperCase())}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] font-mono uppercase focus:outline-hidden"
                   />
                 </div>
@@ -445,7 +547,7 @@ export function OnboardingWizard() {
                   disabled={!newCompName.trim()}
                   className="px-4 py-2 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
                 >
-                  + حفظ وإضافة الشركة للقائمة
+                  + حفظ وإضافة للقائمة
                 </button>
               </div>
             </form>
@@ -461,15 +563,22 @@ export function OnboardingWizard() {
                 <span>الرجوع للخطوة 1</span>
               </button>
 
-              <button
-                type="button"
-                onClick={() => setOnboardingStep(3)}
-                disabled={companyList.length === 0}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
-              >
-                <span>المتابعة لمراحل المشروع (Step 3)</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex flex-col items-end gap-1">
+                <button
+                  type="button"
+                  onClick={() => setOnboardingStep(3)}
+                  disabled={companyList.length === 0}
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
+                >
+                  <span>المتابعة لمراحل المشروع (Step 3)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+                {companyList.length === 0 && (
+                  <span className="text-[10px] text-amber-400/80">
+                    * يرجى إضافة شركة واحدة على الأقل أو الضغط على الزر التجريبي للمتابعة
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         )}

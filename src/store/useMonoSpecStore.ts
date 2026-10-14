@@ -80,6 +80,7 @@ interface MonoSpecStore {
   joinWorkspaceByRoomCode: (roomCode: string) => boolean;
 
   // Company Actions (Multi-Company)
+  setCompanies: (companies: Company[]) => void;
   addCompany: (company: Omit<Company, 'id'> & { id?: string }) => Company;
   updateCompany: (id: string, updates: Partial<Company>) => void;
   removeCompany: (id: string) => void;
@@ -248,7 +249,9 @@ export const useMonoSpecStore = create<MonoSpecStore>()(
       },
 
       getCompanyById: (id: string) => {
-        return get().companies.find((c) => c.id === id);
+        return get().companies.find(
+          (c) => c.id === id || c.code.toLowerCase() === id.toLowerCase()
+        );
       },
 
       // View & Auth Actions
@@ -309,6 +312,13 @@ export const useMonoSpecStore = create<MonoSpecStore>()(
       },
 
       // Company Management (Multi-Company)
+      setCompanies: (newCompanies) => {
+        set({
+          companies: newCompanies,
+          selectedCompanyFilter: newCompanies[0]?.id || 'all',
+        });
+      },
+
       addCompany: (compData) => {
         const id = compData.id || `comp-${Date.now().toString(36)}`;
         const code = compData.code.toUpperCase();

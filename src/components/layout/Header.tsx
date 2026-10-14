@@ -51,13 +51,8 @@ export function Header() {
   const company =
     getCompanyById(activeProject.companyId) || {
       id: activeProject.companyId,
-      name:
-        activeProject.companyId === 'awamer'
-          ? 'Awamer Alshabaka'
-          : activeProject.companyId === 'creative'
-          ? 'Creative System'
-          : activeProject.companyId,
-      code: activeProject.companyId.slice(0, 3).toUpperCase(),
+      name: activeProject.companyId,
+      code: (activeProject.companyId.slice(0, 3) || 'APX').toUpperCase(),
     };
 
   const activeStage = STAGES.find((s) => s.id === activeStageId);
