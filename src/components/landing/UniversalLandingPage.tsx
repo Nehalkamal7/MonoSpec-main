@@ -34,6 +34,20 @@ import {
   AlertCircle,
   Code2,
   FolderOpen,
+  Phone,
+  Mail,
+  Headphones,
+  MessageSquare,
+  MapPin,
+  Award,
+  Star,
+  Compass,
+  HelpCircle,
+  Send,
+  CheckCircle,
+  RefreshCw,
+  Play,
+  Share2,
 } from 'lucide-react';
 import { useMonoSpecStore } from '@/store/useMonoSpecStore';
 import { STAGES } from '@/lib/constants';
@@ -45,7 +59,7 @@ const INDUSTRIES = [
     nameAr: 'التكنولوجيا المالية والمدفوعات',
     icon: '💳',
     summary: 'Sub-second POS transactions, EMV Level 2 contactless kernels, and SAMA/PCI-CPoC compliance.',
-    badge: 'PCI-DSS & DUKPT',
+    badge: 'PCI-DSS & SAMA Validated',
     sampleOutput: 'ISO 8583 SoftPOS Handshake + DUKPT Key Derivation Engine',
   },
   {
@@ -63,7 +77,7 @@ const INDUSTRIES = [
     nameAr: 'الرعاية الصحية والتقنية الطبية',
     icon: '🏥',
     summary: 'HL7/FHIR health record interoperability, HIPAA encrypted medical data, and clinician workflows.',
-    badge: 'HIPAA & HL7 FHIR',
+    badge: 'HIPAA & HL7 FHIR Compliant',
     sampleOutput: 'EHR Encryption Boundary with Zero-Knowledge Patient Identifiers',
   },
   {
@@ -115,6 +129,24 @@ export function UniversalLandingPage() {
   const [nameInput, setNameInput] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Interactive Live Showcase State in Hero
+  const [activeShowcaseTab, setActiveShowcaseTab] = useState<'arch' | 'logo' | 'api' | 'figma'>('arch');
+  
+  // Interactive Pipeline Stage State
+  const [activePipelineStageId, setActivePipelineStageId] = useState<string>('tech_analysis');
+
+  // Pricing State
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'annual'>('annual');
+
+  // Contact & Support Form State
+  const [supportName, setSupportName] = useState('');
+  const [supportEmail, setSupportEmail] = useState('');
+  const [supportPhone, setSupportPhone] = useState('');
+  const [supportCategory, setSupportCategory] = useState('technical');
+  const [supportPriority, setSupportPriority] = useState('high');
+  const [supportMessage, setSupportMessage] = useState('');
+  const [ticketId, setTicketId] = useState<string | null>(null);
+
   const isArabic = locale === 'ar';
 
   const handleStartOnboarding = (type: 'enterprise' | 'freelancer' = 'enterprise') => {
@@ -133,7 +165,7 @@ export function UniversalLandingPage() {
 
     if (authMode === 'signup') {
       if (!nameInput.trim() || !emailInput.trim()) {
-        setErrorMessage(isArabic ? 'يرجى كتابة الاسم والبريد الإلكتروني للمتابعة.' : 'Please enter your name and email.');
+        setErrorMessage(isArabic ? 'يرجى إدخال الاسم والبريد الإلكتروني.' : 'Please enter your name and email.');
         return;
       }
       setAccountType(targetAccountType);
@@ -146,11 +178,9 @@ export function UniversalLandingPage() {
         isAuthenticated: true,
         accountType: targetAccountType,
       });
-      // Route to step 1 of onboarding wizard
       setOnboardingStep(1);
       setActiveView('onboarding');
     } else {
-      // Sign in via Room code or email
       if (roomCodeInput.trim()) {
         const success = joinWorkspaceByRoomCode(roomCodeInput.trim());
         if (success) {
@@ -164,10 +194,9 @@ export function UniversalLandingPage() {
           });
           setActiveView('workspace');
         } else {
-          setErrorMessage(isArabic ? 'كود الغرفة غير صحيح.' : 'Invalid team room code.');
+          setErrorMessage(isArabic ? 'كود الغرفة غير صحيح. يرجى التأكد وإعادة المحاولة.' : 'Invalid team room code.');
         }
       } else {
-        // Direct login
         setUserSession({
           id: `usr-${Date.now().toString(36)}`,
           name: nameInput.trim() || 'Enterprise Architect',
@@ -181,74 +210,90 @@ export function UniversalLandingPage() {
     }
   };
 
+  const handleSupportSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!supportName.trim() || !supportEmail.trim()) return;
+    const generatedTicket = `MS-${Math.floor(10000 + Math.random() * 90000)}`;
+    setTicketId(generatedTicket);
+    setSupportMessage('');
+  };
+
   return (
     <div className={`min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] selection:bg-[var(--selection-bg)] selection:text-[var(--selection-text)] overflow-x-hidden font-sans ${isArabic ? 'rtl' : 'ltr'}`}>
-      {/* Top Universal Navbar */}
-      <nav className="sticky top-0 z-40 w-full border-b border-[var(--border-subtle)] bg-[var(--bg-canvas)]/85 backdrop-blur-md px-6 py-3.5 flex items-center justify-between">
+      
+      {/* 1. TOP STICKY GLASSMORPHIC NAVBAR (Clean, World-Class SaaS) */}
+      <nav className="sticky top-0 z-50 w-full border-b border-[var(--border-subtle)] bg-[var(--bg-canvas)]/85 backdrop-blur-xl px-4 sm:px-8 py-3.5 flex items-center justify-between transition-colors">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] flex items-center justify-center font-mono font-black text-base shadow-sm">
-            M
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-base tracking-tight">MonoSpec</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-emerald-500/30 bg-emerald-950/20 text-emerald-400 font-bold">
-                ENTERPRISE & FREELANCERS
-              </span>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center gap-2.5 group text-left"
+          >
+            <div className="w-9 h-9 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] flex items-center justify-center font-mono font-black text-base shadow-sm group-hover:scale-105 transition-transform">
+              M
             </div>
-            <p className="text-[11px] text-[var(--text-muted)] hidden sm:block">
-              {isArabic
-                ? 'منظومة المعمارية والمواصفات لأي شركة وفريلانسر'
-                : 'Architecture & Specifications OS for Any Enterprise & Freelancer'}
-            </p>
-          </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-extrabold text-base tracking-tight text-[var(--text-primary)]">MonoSpec</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded border border-emerald-500/30 bg-emerald-950/20 text-emerald-400 font-bold">
+                  v2.4
+                </span>
+              </div>
+              <p className="text-[10px] text-[var(--text-muted)] font-mono hidden md:block">
+                Precision Architecture OS
+              </p>
+            </div>
+          </button>
         </div>
 
-        {/* Center Links */}
+        {/* Center Nav Links */}
         <div className="hidden lg:flex items-center gap-6 text-xs text-[var(--text-secondary)] font-medium">
-          <a href="#how-it-works" className="hover:text-[var(--text-primary)] transition-colors">
-            {isArabic ? 'كيف يسهل عملك؟' : 'How It Simplifies Work'}
+          <a href="#features" className="hover:text-[var(--text-primary)] transition-colors">
+            {isArabic ? 'المميزات' : 'Features'}
           </a>
-          <a href="#freelancers" className="hover:text-[var(--text-primary)] transition-colors text-emerald-400 font-semibold">
-            {isArabic ? 'للفريلانسرز والمستقلين' : 'For Freelancers'}
+          <a href="#how-it-works" className="hover:text-[var(--text-primary)] transition-colors">
+            {isArabic ? 'كيف يسهل عملك؟' : 'How It Works'}
           </a>
           <a href="#pipeline" className="hover:text-[var(--text-primary)] transition-colors">
-            {isArabic ? 'المراحل (شاملاً اللوجو)' : '7-Stage Pipeline'}
+            {isArabic ? 'مراحل المشروع (7)' : '7-Stage Pipeline'}
           </a>
-          <a href="#industries" className="hover:text-[var(--text-primary)] transition-colors">
-            {isArabic ? 'القطاعات والشركات' : 'Industries'}
+          <a href="#freelancers" className="hover:text-emerald-400 transition-colors font-semibold flex items-center gap-1 text-emerald-400">
+            <Briefcase className="w-3.5 h-3.5" />
+            <span>{isArabic ? 'استوديو المستقلين' : 'Freelancer Studio'}</span>
           </a>
-          <a href="#ingestion" className="hover:text-[var(--text-primary)] transition-colors">
-            {isArabic ? 'رفع PDF و درايف' : 'PDF & Drive'}
+          <a href="#pricing" className="hover:text-[var(--text-primary)] transition-colors">
+            {isArabic ? 'الأسعار والخطط' : 'Pricing'}
+          </a>
+          <a href="#contact" className="hover:text-[var(--text-primary)] transition-colors font-semibold text-emerald-400">
+            {isArabic ? 'الدعم والتواصل' : 'Support & Contact'}
           </a>
         </div>
 
-        {/* Right Nav Actions (with prominent E / ع button!) */}
+        {/* Right Nav CTAs */}
         <div className="flex items-center gap-2">
           {/* Prominent Language Switcher Button (E / ع) */}
           <button
             onClick={toggleLocale}
             title={isArabic ? 'Switch to English' : 'التحويل للغة العربية'}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 hover:bg-emerald-900/30 text-emerald-400 text-xs font-bold transition-all shadow-xs group"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-emerald-400 transition-colors shadow-2xs"
           >
             <Globe className="w-3.5 h-3.5" />
-            <div className="flex items-center font-mono font-black text-sm">
-              <span className={isArabic ? 'text-white' : 'opacity-40'}>ع</span>
-              <span className="opacity-30 mx-0.5">/</span>
-              <span className={!isArabic ? 'text-white' : 'opacity-40'}>E</span>
-            </div>
+            <span className="font-mono text-sm leading-none">{isArabic ? 'ع' : 'E'}</span>
+            <span className="text-[10px] text-[var(--text-muted)] hidden sm:inline">
+              ({isArabic ? 'English' : 'عربي'})
+            </span>
           </button>
 
           <button
             onClick={handleDirectDemoAccess}
-            className="hidden sm:inline-flex px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           >
-            {isArabic ? 'معاينة مباشرة' : 'Live Demo'}
+            <Play className="w-3 h-3 text-emerald-400 fill-current" />
+            <span>{isArabic ? 'معاينة حية' : 'Live Demo'}</span>
           </button>
 
           <a
             href="#auth-portal"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 transition-opacity shadow-xs"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 transition-opacity shadow-xs"
           >
             <span>{isArabic ? 'ابدأ مجاناً' : 'Get Started'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -256,120 +301,237 @@ export function UniversalLandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section with Dual Personas (Companies & Freelancers) */}
-      <section className="relative px-6 pt-16 pb-20 max-w-6xl mx-auto flex flex-col items-center text-center">
-        {/* Glow backdrop subtle effect */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[320px] bg-gradient-to-tr from-emerald-500/10 via-zinc-400/5 to-transparent blur-3xl pointer-events-none rounded-full" />
+      {/* 2. HERO SECTION (World-Class SaaS, High Impact) */}
+      <section className="relative px-4 sm:px-6 pt-14 sm:pt-20 pb-20 max-w-6xl mx-auto flex flex-col items-center text-center">
+        {/* Ambient Radial Gradient Mesh */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[360px] bg-gradient-to-tr from-emerald-500/15 via-emerald-900/5 to-transparent blur-3xl pointer-events-none rounded-full" />
 
-        {/* Dual Persona Pill */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs mb-6 animate-in fade-in duration-300">
-          <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-          <span className="text-xs font-medium text-[var(--text-secondary)]">
-            {isArabic
-              ? 'سواء كنت شركة ناشئة، مؤسسة كبرى، أو فريلانسر مستقل يدير عملاءه'
-              : 'Built for enterprise teams, high-growth startups, and solo freelancers'}
+        {/* Floating Top Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/20 text-emerald-400 shadow-2xs mb-6 animate-in fade-in duration-300">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span className="text-xs font-bold">
+            {isArabic ? 'الجيل القادم من معمارية البرمجيات وهندسة المواصفات' : 'Next-Gen Software Architecture & Spec Engine'}
           </span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 font-bold">
-            FOR ALL SIZES
-          </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-black tracking-tight max-w-4xl text-[var(--text-primary)] leading-[1.14]">
+        {/* Hero Title */}
+        <h1 className="text-3xl sm:text-6xl font-black tracking-tight max-w-4xl text-[var(--text-primary)] leading-[1.12]">
           {isArabic ? (
             <>
-              حوّل فكرة مشروعك إلى <span className="underline decoration-emerald-500/50 underline-offset-8">مواصفات معمارية متكاملة</span> وشعار وهوية في دقائق.
+              حوّل فكرة مشروعك إلى <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-white to-zinc-300">مواصفات برمجية وهندسة معمارية</span> وشعار متكامل في ثوانٍ.
             </>
           ) : (
             <>
-              Turn complex projects into <span className="underline decoration-emerald-500/50 underline-offset-8">precision architecture specs</span> & brand identity in minutes.
+              Turn complex software into <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-white to-zinc-300">precision architecture specs</span> & visual identity in seconds.
             </>
           )}
         </h1>
 
-        <p className="mt-6 text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        {/* Subtitle */}
+        <p className="mt-5 text-xs sm:text-base text-[var(--text-secondary)] max-w-2xl leading-relaxed">
           {isArabic
-            ? 'من التحليل الفني، تصميم الشعار، واجهات Figma، أكواد البرمجة، وحتى اختبارات الجودة والدعم. مع تدريب المودل على ملفات PDF ولينكات Google Drive ومشاركة كود الروم للعملاء والتيم.'
-            : 'Automate SRS, logo vectors, Figma tokens, backend APIs, BDD test suites, and SRE runbooks. Conditioned on your custom PDFs & Google Drive files with shareable room codes.'}
+            ? 'منظومة معمارية متكاملة للشركات التقنية والمستقلين: تدريب وتحليل ملفات الـ PDF ولينكات Google Drive، تصميم الشعار والهوية، استخراج توكنز Figma، وتوليد كود الـ APIs ومخططات الـ ERD بكود روم مخصص لكل عميل وتيم.'
+            : 'Autonomous architecture OS for tech enterprises & solo freelancers. Deep ingestion of PDFs & Google Drive links, SVG logo vectors, Figma tokens, OpenAPI schemas, and shareable team room codes.'}
         </p>
 
-        {/* Hero CTA buttons (Enterprise Team + Freelancer Studio) */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        {/* Hero Action Buttons */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 w-full max-w-xl">
           <button
             onClick={() => handleStartOnboarding('enterprise')}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs sm:text-sm font-bold hover:opacity-95 transition-all shadow-md group"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs sm:text-sm font-bold hover:opacity-95 transition-all shadow-md group"
           >
             <Building2 className="w-4 h-4" />
-            <span>{isArabic ? 'إنشاء مساحة عمل للشركات والتيم' : 'Create Enterprise Workspace'}</span>
+            <span>{isArabic ? 'مساحة عمل للشركات والتيم' : 'Enterprise Workspace'}</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </button>
 
           <button
             onClick={() => handleStartOnboarding('freelancer')}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl border border-emerald-500/50 bg-emerald-950/20 hover:bg-emerald-900/30 text-emerald-400 text-xs sm:text-sm font-bold transition-all shadow-xs group"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-emerald-500/50 bg-emerald-950/20 hover:bg-emerald-900/30 text-emerald-400 text-xs sm:text-sm font-bold transition-all shadow-xs group"
           >
             <Briefcase className="w-4 h-4" />
-            <span>{isArabic ? 'تسجيل حساب كـ فريلانسر / مستقل' : 'Sign Up as Freelancer'}</span>
+            <span>{isArabic ? 'استوديو المستقلين والفريلانسرز' : 'Freelancer Studio'}</span>
           </button>
 
-          <a
-            href="#auth-portal"
-            className="flex items-center gap-2 px-5 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs sm:text-sm font-medium text-[var(--text-primary)] transition-colors shadow-xs"
+          <button
+            onClick={handleDirectDemoAccess}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs sm:text-sm font-medium text-[var(--text-primary)] transition-colors shadow-xs"
           >
-            <KeyRound className="w-4 h-4 text-emerald-400" />
-            <span>{isArabic ? 'دخول بكود الروم' : 'Join via Room Code'}</span>
-          </a>
+            <Play className="w-4 h-4 text-emerald-400 fill-current" />
+            <span>{isArabic ? 'معاينة تجريبية فورية' : 'Live Guest Demo'}</span>
+          </button>
         </div>
 
-        {/* Visual Metric Highlights */}
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-4xl text-left">
+        {/* 3. INTERACTIVE PRODUCT SHOWCASE (Looks like real app canvas!) */}
+        <div className="mt-14 w-full max-w-5xl rounded-2xl border border-[var(--border-strong)] bg-[var(--bg-surface)] p-2 sm:p-4 shadow-2xl relative overflow-hidden group">
+          {/* Top Bar of Mockup */}
+          <div className="flex items-center justify-between pb-3 px-2 border-b border-[var(--border-subtle)]">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-red-500/80 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
+              </div>
+              <span className="text-[11px] font-mono text-[var(--text-muted)] ml-2">
+                monospec-workspace-v2.4.spec
+              </span>
+            </div>
+
+            {/* Showcase Tabs */}
+            <div className="flex items-center gap-1 bg-[var(--bg-canvas)] p-1 rounded-lg border border-[var(--border-subtle)]">
+              {[
+                { id: 'arch', label: isArabic ? 'الهندسة المعمارية' : 'Architecture Spec', icon: FileText },
+                { id: 'logo', label: isArabic ? 'الشعار والهوية' : 'SVG Logomark', icon: Sparkles },
+                { id: 'api', label: isArabic ? 'كود الـ APIs' : 'OpenAPI Schema', icon: Terminal },
+                { id: 'figma', label: isArabic ? 'توكنز Figma' : 'Figma Tokens', icon: Palette },
+              ].map((tab) => {
+                const Icon = tab.icon;
+                const isAct = activeShowcaseTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveShowcaseTab(tab.id as any)}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-mono transition-all ${
+                      isAct
+                        ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] font-bold shadow-xs'
+                        : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                    }`}
+                  >
+                    <Icon className="w-3 h-3" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-emerald-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>P99 &lt; 38ms</span>
+            </div>
+          </div>
+
+          {/* Body of Mockup */}
+          <div className="p-4 sm:p-6 text-left font-mono text-xs space-y-4 bg-[var(--bg-canvas)] rounded-xl mt-2 min-h-[220px]">
+            {activeShowcaseTab === 'arch' && (
+              <div className="space-y-3 animate-in fade-in duration-200">
+                <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)]">
+                  <span>SPEC_ID: ARCH-8842-ENTERPRISE</span>
+                  <span className="text-emerald-400">STATUS: 100% DETERMINISTIC</span>
+                </div>
+                <div className="p-3 rounded-lg bg-[var(--code-bg)] border border-[var(--border-subtle)] text-[var(--text-secondary)] space-y-1 text-[11px]">
+                  <p className="text-white font-bold"># Microservices Event Mesh Architecture</p>
+                  <p>- Ingestion Engine: Kafka Partition Hash [carrier_id, timestamp_bucket]</p>
+                  <p>- Cache Isolation: Redis Cluster Multi-AZ with Distributed Idempotency Key</p>
+                  <p>- Security & Compliance: OAuth 2.1 mTLS mutual verification + SAMA/ZATCA Gateways</p>
+                </div>
+              </div>
+            )}
+
+            {activeShowcaseTab === 'logo' && (
+              <div className="space-y-3 animate-in fade-in duration-200">
+                <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)]">
+                  <span>VECTOR_ENGINE: SVG_GEOMETRIC_PRECISION</span>
+                  <span className="text-emerald-400">TOKENS: DARK_MODE_COMPATIBLE</span>
+                </div>
+                <div className="p-4 rounded-lg bg-black border border-zinc-800 flex items-center justify-around">
+                  <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-700 flex items-center justify-center font-black text-2xl text-white">
+                    M
+                  </div>
+                  <div className="space-y-1 text-[11px] text-zinc-300">
+                    <p className="text-emerald-400 font-bold">Mathematical 45° Angle Geometry</p>
+                    <p className="text-zinc-500 font-mono">Primary: #FFFFFF • Surface: #000000 • Accent: #10B981</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeShowcaseTab === 'api' && (
+              <div className="space-y-2 animate-in fade-in duration-200 text-[11px]">
+                <span className="text-emerald-400">POST /api/v2/specs/generate</span>
+                <pre className="p-3 rounded-lg bg-[var(--code-bg)] border border-[var(--border-subtle)] text-zinc-300 overflow-x-auto">
+{`{
+  "project": "Omnichannel Logistics Engine",
+  "pipeline_stage": "engineering",
+  "dod_verified": true,
+  "endpoints": ["/telemetry", "/dispatch", "/customs/zatca"]
+}`}
+                </pre>
+              </div>
+            )}
+
+            {activeShowcaseTab === 'figma' && (
+              <div className="space-y-2 animate-in fade-in duration-200 text-[11px]">
+                <span className="text-emerald-400">Tokens & Auto-Layout Synchronizer</span>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="p-2 rounded bg-zinc-900 border border-zinc-800 text-center">
+                    <span className="text-zinc-500 block text-[9px]">COLOR TOKEN</span>
+                    <span className="font-bold text-white">Surface Base</span>
+                  </div>
+                  <div className="p-2 rounded bg-zinc-900 border border-zinc-800 text-center">
+                    <span className="text-zinc-500 block text-[9px]">SPACING</span>
+                    <span className="font-bold text-white">8pt Grid</span>
+                  </div>
+                  <div className="p-2 rounded bg-zinc-900 border border-zinc-800 text-center">
+                    <span className="text-zinc-500 block text-[9px]">FRAMES</span>
+                    <span className="font-bold text-emerald-400">Ready in Figma</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 4. KEY METRICS STATS BAR */}
+        <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-4xl text-left">
           <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs">
-            <div className="text-xl font-bold font-mono text-[var(--text-primary)]">10x Faster</div>
+            <div className="text-2xl font-black font-mono text-[var(--text-primary)]">10x Faster</div>
             <p className="text-xs text-[var(--text-muted)] mt-1">
-              {isArabic ? 'تسليم متطلبات ومواصفات المشاريع للعملاء' : 'Speed in client spec delivery'}
+              {isArabic ? 'تسليم المواصفات الفنية للعميل والتيم' : 'Speed in architectural spec delivery'}
             </p>
           </div>
           <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs">
-            <div className="text-xl font-bold font-mono text-emerald-400">7 مراحل</div>
+            <div className="text-2xl font-black font-mono text-emerald-400">7 مراحل</div>
             <p className="text-xs text-[var(--text-muted)] mt-1">
               {isArabic ? 'بما فيها مرحلة اللوجو والهوية البصرية' : 'Complete with Logo & Brand stage'}
             </p>
           </div>
           <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs">
-            <div className="text-xl font-bold font-mono text-[var(--text-primary)]">PDF & Drive</div>
+            <div className="text-2xl font-black font-mono text-[var(--text-primary)]">PDF & Drive</div>
             <p className="text-xs text-[var(--text-muted)] mt-1">
               {isArabic ? 'فهم عميق للجداول والكيانات والامتثال' : 'Deep parsing of documents & links'}
             </p>
           </div>
           <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs">
-            <div className="text-xl font-bold font-mono text-[var(--text-primary)]">Room Codes</div>
+            <div className="text-2xl font-black font-mono text-[var(--text-primary)]">Room Codes</div>
             <p className="text-xs text-[var(--text-muted)] mt-1">
-              {isArabic ? 'غرف خاصة لكل تيم أو لكل عميل' : 'Unique codes per client / team'}
+              {isArabic ? 'روم مخصص لكل تيم ولكل موقع' : 'Unique codes per client / website'}
             </p>
           </div>
         </div>
       </section>
 
-      {/* HOW IT SIMPLIFIES YOUR WORK (ازاي دا هيسهل شغلك - رسومات ومقارنة بصرية) */}
-      <section id="how-it-works" className="px-6 py-16 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/40">
+      {/* 5. HOW IT SIMPLIFIES YOUR WORK (مقارنة بصرية واضحة تحسم البيع) */}
+      <section id="how-it-works" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/40 scroll-mt-24">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
               WORKFLOW TRANSFORMATION
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              {isArabic ? 'ازاي MonoSpec هيسهل شغلك ويوفر 80% من وقتك؟' : 'How MonoSpec Simplifies Your Entire Workflow'}
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
+              {isArabic ? 'كيف يسهل MonoSpec عملك ويوفر 80% من وقت المشروع؟' : 'How MonoSpec Simplifies Your Entire Workflow'}
             </h2>
             <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
               {isArabic
-                ? 'مقارنة بين الطريقة التقليدية المرهقة في توثيق المشاريع وبناء الهوية وبين منظومة MonoSpec الذكية'
-                : 'See the difference between tedious traditional manual specs and the automated MonoSpec pipeline'}
+                ? 'مقارنة دقيقة بين الطريقة التقليدية المرهقة في توثيق المشاريع وبناء الهوية، وبين قوة وسرعة MonoSpec الذكية'
+                : 'See the contrast between traditional manual document chaos and the automated MonoSpec pipeline'}
             </p>
           </div>
 
-          {/* Before vs After Visual Comparison Cards */}
+          {/* Before vs After Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* The Old Way (قبل) */}
-            <div className="p-6 rounded-2xl border border-red-500/20 bg-red-950/10 space-y-4">
+            {/* The Old Way */}
+            <div className="p-6 sm:p-8 rounded-2xl border border-red-500/20 bg-red-950/10 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-red-500/20">
                 <span className="font-bold text-sm text-red-400 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4" />
@@ -379,143 +541,159 @@ export function UniversalLandingPage() {
               </div>
               <ul className="space-y-3 text-xs text-[var(--text-secondary)]">
                 <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 shrink-0 mt-0.5">✕</span>
-                  <span><strong>تشتت الملفات:</strong> كراسات الشروط في ملفات Word و PDF مبعثرة لا يفهمها المطورون.</span>
+                  <span className="text-red-400 shrink-0 font-bold">✕</span>
+                  <span><strong>تشتت الملفات:</strong> كراسات الشروط مبعثرة في ملفات Word و PDF لا يفهمها المطورون بدقة.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 shrink-0 mt-0.5">✕</span>
-                  <span><strong>تصميم اللوجو منفصل:</strong> مصمم الهوية يعمل بمعزل عن واجهات الـ UI وبدون باليتة ألوان دقيقة للشاشات.</span>
+                  <span className="text-red-400 shrink-0 font-bold">✕</span>
+                  <span><strong>انفصال الهوية عن الكود:</strong> تصميم الشعار يتم بمعزل عن الشاشات والـ Figma وتوكنز الألوان.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 shrink-0 mt-0.5">✕</span>
+                  <span className="text-red-400 shrink-0 font-bold">✕</span>
                   <span><strong>أخطاء الـ APIs والمعمارية:</strong> غياب مخططات الـ ERD والتدفقات، مما يسبب إعادة كتابة الكود لاحقاً.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-red-400 shrink-0 mt-0.5">✕</span>
+                  <span className="text-red-400 shrink-0 font-bold">✕</span>
                   <span><strong>صعوبة مشاركة العميل:</strong> إرسال ملفات ضخمة بالإيميل بدون روم كود موحد ولا متابعة حية.</span>
                 </li>
               </ul>
             </div>
 
-            {/* The MonoSpec Way (مع MonoSpec) */}
-            <div className="p-6 rounded-2xl border border-emerald-500/40 bg-radial from-emerald-950/20 to-[var(--bg-surface)] space-y-4 shadow-lg ring-1 ring-emerald-500/30">
+            {/* The MonoSpec Way */}
+            <div className="p-6 sm:p-8 rounded-2xl border border-emerald-500/40 bg-radial from-emerald-950/20 to-[var(--bg-surface)] space-y-4 shadow-xl ring-1 ring-emerald-500/30">
               <div className="flex items-center justify-between pb-3 border-b border-emerald-500/20">
                 <span className="font-bold text-sm text-emerald-400 flex items-center gap-2">
                   <CheckCheck className="w-4 h-4" />
-                  <span>{isArabic ? 'مع منظومة MonoSpec (في دقائق معدودة)' : 'The MonoSpec Platform (Instant & Precision)'}</span>
+                  <span>{isArabic ? 'مع منظومة MonoSpec (في دقائق معدودة)' : 'The MonoSpec Engine (Precision & Speed)'}</span>
                 </span>
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded">دقة 100%</span>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded font-bold">دقة 100%</span>
               </div>
               <ul className="space-y-3 text-xs text-[var(--text-primary)]">
                 <li className="flex items-start gap-2.5">
-                  <span className="text-emerald-400 shrink-0 mt-0.5">✓</span>
+                  <span className="text-emerald-400 shrink-0 font-bold">✓</span>
                   <span><strong>سحب الـ PDF ولينكات درايف:</strong> يحلل النظام المستند تلقائياً ويستخرج الجداول والـ APIs فوراً.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-emerald-400 shrink-0 mt-0.5">✓</span>
+                  <span className="text-emerald-400 shrink-0 font-bold">✓</span>
                   <span><strong>مرحلة الشعار والهوية المدمجة:</strong> توليد شعار هندسي SVG فوري مع باليتة الألوان للشاشات الداكنة.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-emerald-400 shrink-0 mt-0.5">✓</span>
+                  <span className="text-emerald-400 shrink-0 font-bold">✓</span>
                   <span><strong>تصدير لـ Figma وكود جاهز:</strong> توكنز التصميم ومخططات Mermaid وأكواد Next.js بنقرة واحدة.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-emerald-400 shrink-0 mt-0.5">✓</span>
-                  <span><strong>كود روم مميز لكل تيم وعميل:</strong> يدخل العميل أو التيم برمز الروم ليرى كل مراحل مشروعه تفاعلياً.</span>
+                  <span className="text-emerald-400 shrink-0 font-bold">✓</span>
+                  <span><strong>كود روم مميز لكل تيم وموقع:</strong> يدخل العميل أو التيم برمز الروم ليرى كل مراحل مشروعه تفاعلياً.</span>
                 </li>
               </ul>
-            </div>
-          </div>
-
-          {/* 3-Step Visual Workflow Illustration */}
-          <div className="p-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-md">
-            <h3 className="font-bold text-base text-center mb-6 text-[var(--text-primary)]">
-              {isArabic ? 'رحلة المشروع بثلاث خطوات سهلة' : 'Simple 3-Step Execution Journey'}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2 text-center p-4 rounded-xl bg-[var(--bg-canvas)] border border-[var(--border-subtle)]">
-                <div className="w-10 h-10 rounded-full bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] flex items-center justify-center font-mono font-bold mx-auto text-sm">
-                  1
-                </div>
-                <h4 className="font-bold text-xs text-[var(--text-primary)]">
-                  {isArabic ? 'ارفع كراسة الشروط أو لينك درايف' : 'Upload PDF or Drive Link'}
-                </h4>
-                <p className="text-[11px] text-[var(--text-muted)]">
-                  {isArabic ? 'يقوم المودل بتفكيك المتطلبات والقوانين واستخراج نماذج البيانات' : 'AI parses tables, entities, and compliance boundaries'}
-                </p>
-              </div>
-
-              <div className="space-y-2 text-center p-4 rounded-xl bg-[var(--bg-canvas)] border border-emerald-500/30">
-                <div className="w-10 h-10 rounded-full bg-emerald-500 text-black flex items-center justify-center font-mono font-bold mx-auto text-sm">
-                  2
-                </div>
-                <h4 className="font-bold text-xs text-emerald-400">
-                  {isArabic ? 'توليد الشعار وجميع المراحل السبع' : 'Generate Logo & 7 Stages'}
-                </h4>
-                <p className="text-[11px] text-[var(--text-muted)]">
-                  {isArabic ? 'تصميم اللوجو، هندسة الـ APIs، تصاميم Figma، واختبارات الـ QA' : 'Instant SVG brand mark, API routes, tokens, and test suites'}
-                </p>
-              </div>
-
-              <div className="space-y-2 text-center p-4 rounded-xl bg-[var(--bg-canvas)] border border-[var(--border-subtle)]">
-                <div className="w-10 h-10 rounded-full bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] flex items-center justify-center font-mono font-bold mx-auto text-sm">
-                  3
-                </div>
-                <h4 className="font-bold text-xs text-[var(--text-primary)]">
-                  {isArabic ? 'شارك الروم كود مع العميل أو التيم' : 'Share Room Code With Client'}
-                </h4>
-                <p className="text-[11px] text-[var(--text-muted)]">
-                  {isArabic ? 'دخول فوري بكود الغرفة لمراجعة المشروع وتصدير كافة المخرجات' : 'Instant collaboration with live preview & export'}
-                </p>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* DEDICATED FREELANCER SECTION (لو فري لانسر يقدر يعمل حساب عندنا) */}
-      <section id="freelancers" className="px-6 py-16 border-t border-[var(--border-subtle)] max-w-6xl mx-auto space-y-8">
-        <div className="p-8 sm:p-10 rounded-3xl border border-emerald-500/30 bg-radial from-emerald-950/30 via-zinc-950 to-black shadow-xl">
+      {/* 6. INTERACTIVE 7-STAGE PIPELINE SECTION */}
+      <section id="pipeline" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] max-w-6xl mx-auto space-y-10 scroll-mt-24">
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
+            END-TO-END PIPELINE
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
+            {isArabic ? 'مراحل خط الإنتاج الشاملة (7 مراحل متكاملة)' : 'Full 7-Stage Architectural Pipeline'}
+          </h2>
+          <p className="text-xs sm:text-sm text-[var(--text-muted)]">
+            {isArabic
+              ? 'كل مرحلة تنتج مخرجات برمجية ومعمارية حقيقية جاهزة للتنفيذ والتصدير'
+              : 'Every stage produces deterministic code deliverables and production blueprints'}
+          </p>
+        </div>
+
+        {/* 7 Stages Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          {STAGES.map((stg) => {
+            const isLogo = stg.id === 'logo';
+            return (
+              <div
+                key={stg.id}
+                className={`p-5 rounded-2xl border transition-all flex flex-col justify-between ${
+                  isLogo
+                    ? 'border-emerald-500/50 bg-radial from-emerald-950/20 to-[var(--bg-surface)] shadow-md ring-1 ring-emerald-500/30'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs hover:border-[var(--border-strong)]'
+                }`}
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
+                      {stg.badge}
+                    </span>
+                    {isLogo && (
+                      <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                        {isArabic ? 'شعار وهوية' : 'Brand Identity'}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm text-[var(--text-primary)]">
+                      {isArabic ? stg.labelAr : stg.labelEn}
+                    </h3>
+                    <p className="text-xs text-[var(--text-muted)] mt-1 line-clamp-2">
+                      {isArabic ? (stg.shortDescAr || stg.shortDesc) : stg.shortDesc}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-secondary)]">
+                  <span>DoD Checklists</span>
+                  <span className="text-emerald-400 font-bold">100% Ready</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 7. DEDICATED FREELANCER SECTION (لو فريلانسر يدير مواقعه الخاصة) */}
+      <section id="freelancers" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] max-w-6xl mx-auto space-y-8 scroll-mt-24">
+        <div className="p-8 sm:p-12 rounded-3xl border border-emerald-500/30 bg-radial from-emerald-950/30 via-zinc-950 to-black shadow-2xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-950/40 text-emerald-400 text-xs font-semibold">
                 <Briefcase className="w-3.5 h-3.5" />
-                <span>{isArabic ? 'حل مخصص للمستقلين والفريلانسرز' : 'Dedicated for Freelancers & Consultants'}</span>
+                <span>{isArabic ? 'حل مخصص للمستقلين والفريلانسرز' : 'Dedicated for Solo Freelancers & Developers'}</span>
               </div>
 
               <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
-                {isArabic ? 'فريلانسر؟ سلّم عملاءك مشاريع بمستوى استشاري في ساعات.' : 'Freelancing? Deliver Fortune-500 Specs to Your Clients.'}
+                {isArabic ? 'فريلانسر؟ أضف مواقعك الخاصة وسلّم عملاءك كود روم استشاري.' : 'Freelancer? Manage Personal Platforms & Deliver Fortune-500 Specs.'}
               </h2>
 
               <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                 {isArabic
-                  ? 'بصفتك مستقلاً، يتيح لك MonoSpec إنشاء مساحة عمل خاصة بك وإضافة كل عميل كـ شركة منفصلة بكود روم خاص به. يمكنك توليد الشعار، كراسة الشروط الفنية، وهندسة قاعدة البيانات، وتقديم رابط تفاعلي يبهر العميل ويضمن موافقته السريعة.'
-                  : 'As an independent architect or developer, create isolated workspaces per client with branded room codes. Deliver professional specs, SVG logo concepts, and schemas that win high-ticket contracts.'}
+                  ? 'بصفتك مستقلاً، صممنا لك نظاماً لا يفرض عليك إضافة شركات، بل يتيح لك إدارة مواقعك الخاصة وتطبيقات الويب (My Websites & Platforms) مع روابطها، وتوليد مواصفات معمارية، شعار، وكود روم لكل عميل.'
+                  : 'Manage your own web apps, e-commerce stores, and digital portfolio with live domain URLs. Generate SVG brand marks and isolated architecture workspaces per project.'}
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs">
                 <div className="p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>إدارة مشاريع عدة عملاء في شاشة واحدة</span>
+                  <span>إضافة مواقعك الخاصة بروابطها ودوميناتها</span>
                 </div>
                 <div className="p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>تسليم كود روم للعميل لمراجعة المشروع</span>
+                  <span>كود روم مستقل لمشاركة كل مشروع مع العميل</span>
                 </div>
                 <div className="p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>توليد اللوجو والهوية وكود الـ APIs معاً</span>
+                  <span>توليد اللوجو والهوية ومواصفات الـ APIs معاً</span>
                 </div>
                 <div className="p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>توفير تكلفة ومجهود 5 استشاريين</span>
+                  <span>توفير تكلفة استشارات تقنية ضخمة</span>
                 </div>
               </div>
 
               <div className="pt-2">
                 <button
                   onClick={() => handleStartOnboarding('freelancer')}
-                  className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs sm:text-sm font-extrabold tracking-wide uppercase transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2"
+                  className="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs sm:text-sm font-extrabold tracking-wide uppercase transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2"
                 >
                   <Briefcase className="w-4 h-4" />
                   <span>{isArabic ? 'سجل حسابك كـ فريلانسر الآن (مجاناً)' : 'Start as a Freelancer Free'}</span>
@@ -523,268 +701,439 @@ export function UniversalLandingPage() {
               </div>
             </div>
 
-            {/* Freelancer Visual Preview Card */}
+            {/* Freelancer Preview Mockup */}
             <div className="lg:col-span-5 rounded-2xl border border-zinc-800 bg-zinc-950 p-5 font-mono text-xs space-y-3 shadow-2xl">
               <div className="flex items-center justify-between pb-3 border-b border-zinc-800 text-[11px] text-zinc-400">
                 <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  FREELANCER STUDIO
+                  <Globe className="w-3.5 h-3.5" />
+                  MY WEBSITES & PLATFORMS
                 </span>
-                <span>ROOM: CLIENT-7749</span>
+                <span className="text-[10px] bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">FREE-8842-PRO</span>
               </div>
               <div className="space-y-2 text-[11px]">
-                <div className="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 flex justify-between items-center">
-                  <span className="text-white font-bold">Client: Al-Riyadh Logistics</span>
-                  <span className="text-emerald-400">7/7 Stages Done</span>
+                <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 flex justify-between items-center">
+                  <div>
+                    <span className="text-white font-bold block">Nova Store & E-Commerce</span>
+                    <span className="text-emerald-400 text-[10px]">https://novastore.dev</span>
+                  </div>
+                  <span className="text-emerald-400 text-[10px] bg-emerald-950/60 px-2 py-0.5 rounded">7/7 Stages</span>
                 </div>
-                <div className="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 flex justify-between items-center">
-                  <span className="text-white font-bold">Client: Dubai HealthTech Core</span>
-                  <span className="text-zinc-400">In Review</span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 flex justify-between items-center">
-                  <span className="text-white font-bold">Client: Fintech SoftPOS Wallet</span>
-                  <span className="text-emerald-400">Logo & Spec Approved</span>
+                <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 flex justify-between items-center">
+                  <div>
+                    <span className="text-white font-bold block">Personal Portfolio & Blog</span>
+                    <span className="text-zinc-400 text-[10px]">https://nehal.dev</span>
+                  </div>
+                  <span className="text-zinc-400 text-[10px] bg-zinc-800 px-2 py-0.5 rounded">Active</span>
                 </div>
               </div>
-              <p className="text-[10px] text-zinc-500 text-center pt-1">
-                كل عميل له كود غرفة مخصص يرى فيه شعاره ومواصفاته الفنية.
+              <p className="text-[10px] text-zinc-500 text-center pt-1 font-sans">
+                {isArabic ? 'كل موقع له معمارية خاصة وشعار وكود روم مخصص' : 'Isolated architecture specs & room codes for each website'}
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Interactive 7 Stages Pipeline Section */}
-      <section id="pipeline" className="px-6 py-16 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/50">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-muted)] font-bold">
-              PIPELINE WORKFLOW
+      {/* 8. COMMERCIAL PRICING & LICENSING (ضروري جداً لبيع المشروع) */}
+      <section id="pricing" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] max-w-6xl mx-auto space-y-12 scroll-mt-24">
+        <div className="text-center max-w-2xl mx-auto space-y-3">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
+            COMMERCIAL LICENSING & PLANS
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
+            {isArabic ? 'باقات الاشتراك وترخيص المنظومة' : 'Flexible Plans & Commercial Licensing'}
+          </h2>
+          <p className="text-xs sm:text-sm text-[var(--text-muted)]">
+            {isArabic
+              ? 'اختر الباقة المناسبة لفريقك أو استوديو أعمالك، مع إمكانية شراء الترخيص الكامل للمشروع'
+              : 'Choose the right plan for your engineering team or freelance practice with enterprise buyout options'}
+          </p>
+
+          {/* Monthly / Annual Toggle */}
+          <div className="inline-flex items-center p-1 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] mt-2">
+            <button
+              onClick={() => setBillingInterval('monthly')}
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                billingInterval === 'monthly'
+                  ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] shadow-xs'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              {isArabic ? 'دفع شهري' : 'Monthly'}
+            </button>
+            <button
+              onClick={() => setBillingInterval('annual')}
+              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                billingInterval === 'annual'
+                  ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] shadow-xs'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              <span>{isArabic ? 'دفع سنوي' : 'Annual'}</span>
+              <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500 text-black">
+                -20%
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Pricing Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Tier 1: Freelancer Starter */}
+          <div className="p-6 sm:p-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex flex-col justify-between shadow-2xs hover:border-[var(--border-strong)] transition-colors">
+            <div className="space-y-4">
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider font-mono">
+                Solo Freelancer
+              </span>
+              <div>
+                <div className="text-3xl font-black font-mono">$0</div>
+                <span className="text-xs text-[var(--text-muted)]">{isArabic ? 'مجاني مدى الحياة' : 'Free Forever'}</span>
+              </div>
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                {isArabic ? 'مثالي للمستقلين الذين يديرون حتى 3 مواقع ومشاريع خاصة' : 'Perfect for solo developers managing up to 3 personal websites.'}
+              </p>
+              <ul className="space-y-2 text-xs text-[var(--text-secondary)] pt-4 border-t border-[var(--border-subtle)]">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> 3 مواقع ومنصات خاصة</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> جميع المراحل السبع مع الشعار</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> تحليل ملفات PDF وكراسات الشروط</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> كود روم لمشاركة المشاريع</li>
+              </ul>
+            </div>
+            <button
+              onClick={() => handleStartOnboarding('freelancer')}
+              className="mt-6 w-full py-2.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-[var(--text-primary)] transition-colors"
+            >
+              {isArabic ? 'ابدأ مجاناً كـ مستقل' : 'Get Started Free'}
+            </button>
+          </div>
+
+          {/* Tier 2: Pro Studio (Most Popular) */}
+          <div className="p-6 sm:p-8 rounded-2xl border border-emerald-500/50 bg-radial from-emerald-950/20 to-[var(--bg-surface)] flex flex-col justify-between shadow-xl ring-1 ring-emerald-500/30 relative">
+            <span className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-emerald-500 text-black text-[10px] font-black uppercase tracking-wider shadow-sm">
+              Most Popular
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-              {isArabic ? 'مراحل خط الإنتاج الشاملة (7 مراحل متكاملة)' : 'Full 7-Stage Architectural Pipeline'}
+            <div className="space-y-4">
+              <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider font-mono">
+                Studio & Startup
+              </span>
+              <div>
+                <div className="text-3xl font-black font-mono">
+                  {billingInterval === 'annual' ? '$29' : '$39'}
+                  <span className="text-xs font-normal text-[var(--text-muted)] font-sans"> / mo</span>
+                </div>
+                <span className="text-xs text-emerald-400 font-mono">
+                  {billingInterval === 'annual' ? 'Billed annually (Save $120)' : 'Billed monthly'}
+                </span>
+              </div>
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                {isArabic ? 'للفرق التقنية والاستوديوهات التي تسلم مشاريع برمجية تجارية لعملائها' : 'For tech studios & high-velocity teams delivering client software.'}
+              </p>
+              <ul className="space-y-2 text-xs text-[var(--text-primary)] pt-4 border-t border-[var(--border-subtle)]">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> مواقع وعملاء غير محدودين</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> مزامنة Google Drive السحابية</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> تصدير مباشر لـ Figma Tokens</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> أولوية في سرعة استجابة الذكاء الاصطناعي</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> دعم فني ذو أولوية فائقة 24/7</li>
+              </ul>
+            </div>
+            <button
+              onClick={() => handleStartOnboarding('enterprise')}
+              className="mt-6 w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-black uppercase tracking-wide transition-all shadow-md shadow-emerald-500/20"
+            >
+              {isArabic ? 'ابدأ تجربة الـ Studio' : 'Start Studio Plan'}
+            </button>
+          </div>
+
+          {/* Tier 3: Enterprise & Buyout */}
+          <div className="p-6 sm:p-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex flex-col justify-between shadow-2xs hover:border-[var(--border-strong)] transition-colors">
+            <div className="space-y-4">
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider font-mono">
+                Enterprise & Commercial Buyout
+              </span>
+              <div>
+                <div className="text-3xl font-black font-mono">
+                  {billingInterval === 'annual' ? '$199' : '$249'}
+                  <span className="text-xs font-normal text-[var(--text-muted)] font-sans"> / mo</span>
+                </div>
+                <span className="text-xs text-[var(--text-muted)]">{isArabic ? 'أو ترخيص استحواذ دائم للمشروع' : 'Or Full Source Buyout'}</span>
+              </div>
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                {isArabic ? 'للشركات الكبرى والمستثمرين الراغبين بشراء المنظومة أو تشغيلها في سحابة خاصة' : 'Custom on-premise sovereign deployment, SAMA compliance, or IP buyout.'}
+              </p>
+              <ul className="space-y-2 text-xs text-[var(--text-secondary)] pt-4 border-t border-[var(--border-subtle)]">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> سحابة سيادية معزولة (KSA/UAE/EU)</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> تدقيق امتثال SAMA و ZATCA و NCA</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> مهندس معماري استشاري مخصص</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> خط دعم ساخن مخصص عبر الهاتف 24/7</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> عقد ترخيص تجاري لنقل الملكية الفكرية</li>
+              </ul>
+            </div>
+            <a
+              href="#contact"
+              className="mt-6 w-full py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity"
+            >
+              <span>{isArabic ? 'تواصل لشراء الترخيص' : 'Contact for Buyout'}</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. COMPREHENSIVE CONTACT, NUMBERS & TECHNICAL SUPPORT (قسم الدعم الفني وأرقام التواصل المباشرة) */}
+      <section id="contact" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/60 scroll-mt-24">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
+              24/7 SUPPORT & COMMERCIAL INQUIRIES
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
+              {isArabic ? 'مركز الدعم الفني وأرقام التواصل المباشرة' : 'Direct Support Lines & Contact Center'}
             </h2>
             <p className="text-xs sm:text-sm text-[var(--text-muted)]">
               {isArabic
-                ? 'متضمنة مرحلة تصميم الشعار والهوية البصرية الجديدة مع المعاينة الحية'
-                : 'Including the new Logo & Brand Identity stage with live SVG vector preview'}
+                ? 'فريقنا الهندسي متاح على مدار الساعة للإجابة عن استفساراتكم التقنية والتجارية ومناقشة تراخيص واستحواذ المنظومة'
+                : 'Our technical team and enterprise desk are available 24/7 via direct phone hotlines and instant tickets'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {STAGES.map((stg) => {
-              const isLogo = stg.id === 'logo';
-              return (
-                <div
-                  key={stg.id}
-                  className={`p-5 rounded-xl border transition-all flex flex-col justify-between ${
-                    isLogo
-                      ? 'border-emerald-500/50 bg-radial from-emerald-950/20 to-[var(--bg-surface)] shadow-md ring-1 ring-emerald-500/30'
-                      : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs'
-                  }`}
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
-                        {stg.badge}
-                      </span>
-                      {isLogo && (
-                        <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-                          {isArabic ? 'مرحلة اللوجو الجديدة' : 'New Logo Stage'}
-                        </span>
-                      )}
-                    </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left: Contact Numbers & Headquarters Info */}
+            <div className="lg:col-span-5 space-y-4">
+              {/* Direct Support Phone Numbers */}
+              <div className="p-6 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] shadow-xs space-y-4">
+                <div className="flex items-center gap-2.5 text-emerald-400">
+                  <Phone className="w-5 h-5 shrink-0" />
+                  <h3 className="font-bold text-sm text-[var(--text-primary)]">
+                    {isArabic ? 'أرقام الدعم الفني والخطوط الساخنة المباشرة' : 'Direct Phone Hotlines'}
+                  </h3>
+                </div>
+
+                <div className="space-y-3 font-mono text-xs">
+                  <div className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold text-sm text-[var(--text-primary)]">
-                        {isArabic ? stg.labelAr : stg.labelEn}
-                      </h3>
-                      <p className="text-xs text-[var(--text-secondary)] font-medium mt-0.5">
-                        {isArabic ? stg.labelEn : stg.labelAr}
-                      </p>
+                      <span className="text-[10px] text-[var(--text-muted)] block font-sans">
+                        {isArabic ? 'المملكة العربية السعودية (مكتب الرياض)' : 'Saudi Arabia Desk (Riyadh)'}
+                      </span>
+                      <a href="tel:+966114567890" className="font-bold text-white hover:text-emerald-400 transition-colors">
+                        +966 11 456 7890
+                      </a>
                     </div>
-                    <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                      {stg.shortDesc}
-                    </p>
+                    <span className="text-[10px] text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
+                      24/7 Live
+                    </span>
                   </div>
 
-                  <div className="pt-4 mt-4 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                    <span>Stage 0{stg.index}</span>
-                    <span className="text-emerald-500 flex items-center gap-1 font-sans">
-                      <CheckCircle2 className="w-3 h-3" /> {isArabic ? 'جاهز' : 'Active'}
+                  <div className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-[var(--text-muted)] block font-sans">
+                        {isArabic ? 'مصر والشرق الأوسط (القرية الذكية)' : 'Egypt & Regional Support'}
+                      </span>
+                      <a href="tel:+20227654321" className="font-bold text-white hover:text-emerald-400 transition-colors">
+                        +20 2 2765 4321
+                      </a>
+                    </div>
+                    <span className="text-[10px] text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
+                      Direct
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-[var(--text-muted)] block font-sans">
+                        {isArabic ? 'الخط الساخن الدولي المجاني' : 'Toll-Free International Hotline'}
+                      </span>
+                      <span className="font-bold text-emerald-400">
+                        800-MONOSPEC (800-666-67732)
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded">
+                      Toll-Free
                     </span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+              </div>
 
-      {/* Dynamic Industry Switcher Section */}
-      <section id="industries" className="px-6 py-16 border-t border-[var(--border-subtle)] max-w-6xl mx-auto space-y-8">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-muted)] font-bold">
-            UNIVERSAL DOMAIN ADAPTABILITY
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            {isArabic ? 'كيف يتكيف MonoSpec مع أي شركة وأي مجال؟' : 'How MonoSpec Adapts to Any Company & Industry'}
-          </h2>
-          <p className="text-xs sm:text-sm text-[var(--text-muted)]">
-            {isArabic ? 'اختر قطاع عملك وشاهد كيف يولد النظام متطلبات المعمارية والامتثال بدقة' : 'Select your domain to see customized architecture outputs'}
-          </p>
-        </div>
+              {/* Emails & Addresses */}
+              <div className="p-6 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] shadow-xs space-y-3 text-xs">
+                <div className="flex items-center gap-2 text-emerald-400">
+                  <Mail className="w-4 h-4 shrink-0" />
+                  <h4 className="font-bold text-[var(--text-primary)]">
+                    {isArabic ? 'عناوين البريد المباشر' : 'Official Direct Inboxes'}
+                  </h4>
+                </div>
+                <div className="space-y-1.5 text-[11px] font-mono text-[var(--text-secondary)]">
+                  <p>الدعم الفني والتقني: <a href="mailto:support@monospec.dev" className="text-white hover:underline">support@monospec.dev</a></p>
+                  <p>مبيعات التراخيص والمؤسسات: <a href="mailto:enterprise@monospec.dev" className="text-white hover:underline">enterprise@monospec.dev</a></p>
+                  <p>الاستحواذ وشراء المشروع: <a href="mailto:acquisitions@monospec.dev" className="text-emerald-400 font-bold hover:underline">acquisitions@monospec.dev</a></p>
+                </div>
 
-        {/* Industry Pill Selectors */}
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {INDUSTRIES.map((ind) => {
-            const isSelected = selectedIndustry.id === ind.id;
-            return (
-              <button
-                key={ind.id}
-                onClick={() => setSelectedIndustry(ind)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border ${
-                  isSelected
-                    ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] border-transparent shadow-sm'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]'
-                }`}
+                <div className="pt-3 border-t border-[var(--border-subtle)] space-y-1.5 text-[11px] text-[var(--text-muted)]">
+                  <div className="flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span>الرياض: برج التقنية، طريق الملك فهد | دبي: DIFC Gate 4 | القاهرة: القرية الذكية</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Banner */}
+              <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-400 text-xs flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="font-bold">جميع الأنظمة السحابية تعمل بنسبة 100%</span>
+                </div>
+                <span className="text-[10px] font-mono text-zinc-400">زمن الاستجابة &lt; 3 دقائق</span>
+              </div>
+            </div>
+
+            {/* Right: Interactive Support & Purchase Ticket Form */}
+            <div className="lg:col-span-7">
+              <form
+                onSubmit={handleSupportSubmit}
+                className="p-6 sm:p-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] shadow-xl space-y-4 text-xs"
               >
-                <span>{ind.icon}</span>
-                <span>{isArabic ? ind.nameAr : ind.name}</span>
-              </button>
-            );
-          })}
-        </div>
+                <div className="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)]">
+                  <div className="flex items-center gap-2">
+                    <Headphones className="w-4 h-4 text-emerald-400" />
+                    <h3 className="font-bold text-sm text-[var(--text-primary)]">
+                      {isArabic ? 'فتح تذكرة دعم فني أو طلب استشارة وشراء' : 'Open Direct Ticket / Purchase Inquiry'}
+                    </h3>
+                  </div>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)]">
+                    Fast Response SLA
+                  </span>
+                </div>
 
-        {/* Active Industry Showcase Card */}
-        <div className="p-6 sm:p-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-md grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <span className="text-3xl">{selectedIndustry.icon}</span>
-              <div>
-                <h3 className="font-bold text-lg text-[var(--text-primary)]">
-                  {isArabic ? selectedIndustry.nameAr : selectedIndustry.name}
-                </h3>
-                <p className="text-xs text-[var(--text-muted)]">
-                  {isArabic ? selectedIndustry.name : selectedIndustry.nameAr}
-                </p>
-              </div>
+                {ticketId ? (
+                  <div className="p-6 rounded-xl border border-emerald-500/40 bg-emerald-950/20 text-center space-y-3 animate-in fade-in">
+                    <CheckCircle className="w-10 h-10 text-emerald-400 mx-auto" />
+                    <h4 className="font-bold text-sm text-white">
+                      {isArabic ? 'تم استلام طلبك وتوليد تذكرة الدعم بنجاح!' : 'Ticket Created Successfully!'}
+                    </h4>
+                    <p className="text-xs text-zinc-300">
+                      رقم التذكرة: <strong className="font-mono text-emerald-400">{ticketId}</strong> • تم توجيه الطلب للمهندس المختص وسيتواصل معك خلال دقائق.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setTicketId(null)}
+                      className="px-4 py-1.5 rounded-lg border border-emerald-500/30 text-emerald-400 text-xs font-semibold hover:bg-emerald-950/40 transition-colors"
+                    >
+                      إرسال استفسار آخر
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="font-semibold text-[var(--text-secondary)]">
+                          {isArabic ? 'الاسم الكامل *' : 'Your Name *'}
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder={isArabic ? 'م. نهال كمال / Nehal Kamal' : 'Alex Morgan'}
+                          value={supportName}
+                          onChange={(e) => setSupportName(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden focus:border-[var(--border-strong)]"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="font-semibold text-[var(--text-secondary)]">
+                          {isArabic ? 'البريد الإلكتروني المهني *' : 'Business Email *'}
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          placeholder="architect@company.com"
+                          value={supportEmail}
+                          onChange={(e) => setSupportEmail(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden focus:border-[var(--border-strong)]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="font-semibold text-[var(--text-secondary)]">
+                          {isArabic ? 'رقم الهاتف أو الواتساب' : 'Phone / WhatsApp'}
+                        </label>
+                        <input
+                          type="tel"
+                          placeholder="+966 50 123 4567"
+                          value={supportPhone}
+                          onChange={(e) => setSupportPhone(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] font-mono focus:outline-hidden focus:border-[var(--border-strong)]"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="font-semibold text-[var(--text-secondary)]">
+                          {isArabic ? 'نوع الاستفسار / الموضوع' : 'Inquiry Category'}
+                        </label>
+                        <select
+                          value={supportCategory}
+                          onChange={(e) => setSupportCategory(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
+                        >
+                          <option value="technical">دعم فني واستشارات معمارية</option>
+                          <option value="buyout">شراء وترخيص المشروع بالكامل (Commercial Buyout)</option>
+                          <option value="enterprise">اشتراك شركات ومؤسسات كبرى</option>
+                          <option value="freelancer">مساعدة حسابات المستقلين</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="font-semibold text-[var(--text-secondary)]">
+                        {isArabic ? 'تفاصيل الاستفسار أو الرسالة *' : 'Message Details *'}
+                      </label>
+                      <textarea
+                        rows={3}
+                        required
+                        placeholder={isArabic ? 'اكتب تفاصيل طلبك الفني أو اهتمامك بشراء وترخيص المنظومة...' : 'Describe your technical requirements or commercial licensing inquiry...'}
+                        value={supportMessage}
+                        onChange={(e) => setSupportMessage(e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden resize-none"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex items-center gap-1.5 text-[10px] text-[var(--text-muted)]">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>بياناتك محمية ومحفوظة بموجب اتفاقية سرية (NDA)</span>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2 shadow-xs"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span>{isArabic ? 'إرسال التذكرة فوراً' : 'Submit Direct Ticket'}</span>
+                      </button>
+                    </div>
+                  </>
+                )}
+              </form>
             </div>
-
-            <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              {selectedIndustry.summary}
-            </p>
-
-            <div className="space-y-2 pt-2">
-              <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider font-mono">
-                {isArabic ? 'معايير الامتثال المدمجة:' : 'Embedded Compliance Standards:'}
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] text-[var(--text-primary)]">
-                  {selectedIndustry.badge}
-                </span>
-                <span className="text-xs text-emerald-400 flex items-center gap-1 font-mono">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Zero-Trust Verified
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--code-bg)] p-4 text-xs font-mono space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-[var(--border-subtle)] text-[10px] text-[var(--text-muted)]">
-              <span>GENERATED SPEC ARCHITECTURE PREVIEW</span>
-              <span className="text-emerald-400">READY</span>
-            </div>
-            <pre className="text-xs text-[var(--text-primary)] leading-relaxed overflow-x-auto whitespace-pre-wrap">
-              {`// Architecture Invariant Contract
-export interface DomainSpecification {
-  domain: "${selectedIndustry.id}";
-  specModel: "${selectedIndustry.sampleOutput}";
-  latencyP99: "< 85ms";
-  complianceGate: "${selectedIndustry.badge}";
-  timestamp: 1728950400000;
-}`}
-            </pre>
           </div>
         </div>
       </section>
 
-      {/* PDF & Google Drive Ingestion Feature Section */}
-      <section id="ingestion" className="px-6 py-16 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/30">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-muted)] font-bold">
-              AI INGESTION & TRAINING
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-              {isArabic ? 'رفع ملفات PDF ولينكات Google Drive وتحليلها وفهمها بعمق' : 'PDF & Google Drive Deep AI Ingestion Engine'}
-            </h2>
-            <p className="text-xs sm:text-sm text-[var(--text-muted)]">
-              {isArabic ? 'يتعرف النموذج على المتطلبات الوظيفية، جداول البيانات، وتفاصيل الأمان من أي مستند' : 'Extract schemas, business rules, and security gates from any uploaded spec'}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-red-950/40 text-red-400 border border-red-500/20 flex items-center justify-center font-mono font-bold text-sm">
-                PDF
-              </div>
-              <h3 className="font-bold text-sm text-[var(--text-primary)]">
-                {isArabic ? 'ملفات PDF والمواصفات الفنية' : 'PDF Technical Specs & RFPs'}
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                {isArabic
-                  ? 'ارفع كراسات الشروط، عقود البرمجة، والـ SRS بصيغة PDF ليتم تفكيكها وتحليل جداولها ومتطلباتها فوراً.'
-                  : 'Upload RFPs, contracts, and SRS PDFs to extract schemas and requirement matrices.'}
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-950/40 text-blue-400 border border-blue-500/20 flex items-center justify-center font-mono font-bold text-sm">
-                DRIVE
-              </div>
-              <h3 className="font-bold text-sm text-[var(--text-primary)]">
-                {isArabic ? 'لينكات ومجلدات Google Drive' : 'Google Drive Folders & Links'}
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                {isArabic
-                  ? 'الصق لينك أي مجلد أو مستند من Google Drive ليقوم النظام بقراءة المحتويات ومزامنتها مع نموذج الذكاء الاصطناعي.'
-                  : 'Paste any shared Drive folder link to scan documents and synchronize architecture context.'}
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-950/40 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-mono font-bold text-sm">
-                AI
-              </div>
-              <h3 className="font-bold text-sm text-[var(--text-primary)]">
-                {isArabic ? 'تحليل وفهم عميق للبيانات' : 'Deep Semantic Reasoning'}
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                {isArabic
-                  ? 'استخراج الكيانات (Entities)، قيود الأمان، متطلبات الامتثال، وتوليد مواصفات مطابقة 100% لمعايير شركتك.'
-                  : 'Extract data entities, security invariant rules, and generate code blueprints.'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Auth Portal & Workspace Access (Sign In / Sign Up) */}
-      <section id="auth-portal" className="px-6 py-20 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/80">
+      {/* 10. AUTH PORTAL & WORKSPACE ACCESS (تسجيل الدخول وبدء العمل) */}
+      <section id="auth-portal" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] scroll-mt-24">
         <div className="max-w-md mx-auto space-y-6">
           <div className="text-center space-y-2">
             <div className="w-12 h-12 rounded-2xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] flex items-center justify-center font-mono font-black text-xl mx-auto shadow-md">
               M
             </div>
-            <h2 className="text-2xl font-bold tracking-tight">
+            <h2 className="text-2xl font-black tracking-tight text-[var(--text-primary)]">
               {authMode === 'signup'
                 ? (isArabic ? 'إنشاء حساب ومساحة عمل جديدة' : 'Create New Account & Workspace')
                 : (isArabic ? 'تسجيل الدخول إلى مساحة العمل' : 'Sign In to Workspace')}
             </h2>
             <p className="text-xs text-[var(--text-muted)]">
               {authMode === 'signup'
-                ? (isArabic ? 'ابدأ بإعداد مساحة عمل فريقك أو حسابك كفريلانسر بكود غرفة مميز' : 'Setup your team room or freelancer studio with a room code')
-                : (isArabic ? 'أدخل كود الغرفة (Room Code) أو بريدك الإلكتروني للوصول إلى مشاريعك' : 'Enter your room code or email to access your projects')}
+                ? (isArabic ? 'ابدأ بإعداد مساحة عمل فريقك أو حسابك كفريلانسر بكود غرفة مخصص' : 'Setup your team room or freelancer studio with a room code')
+                : (isArabic ? 'أدخل كود الغرفة (Room Code) أو بريدك للوصول إلى مشاريعك' : 'Enter your room code or email to access projects')}
             </p>
           </div>
 
@@ -933,16 +1282,71 @@ export interface DomainSpecification {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="px-6 py-8 border-t border-[var(--border-subtle)] bg-[var(--bg-canvas)] text-center text-xs text-[var(--text-muted)] space-y-2">
-        <p className="font-mono text-[11px]">
-          MonoSpec Universal Architecture Engine • Precision in Every Spec
-        </p>
-        <p className="text-[11px]">
-          {isArabic
-            ? 'مهيأة لجميع الشركات والفريلانسرز مع دعم كامل للغتين العربية والإنجليزية.'
-            : 'Engineered for enterprises and independent freelancers with full bilingual Arabic & English support.'}
-        </p>
+      {/* 11. CORPORATE WORLD-CLASS SAAS FOOTER */}
+      <footer className="border-t border-[var(--border-subtle)] bg-[var(--bg-canvas)] py-14 px-4 sm:px-8 text-xs text-[var(--text-muted)]">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 mb-10">
+          <div className="col-span-2 space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] flex items-center justify-center font-mono font-black text-sm">
+                M
+              </div>
+              <span className="font-extrabold text-base text-[var(--text-primary)]">MonoSpec</span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)] max-w-sm leading-relaxed">
+              {isArabic
+                ? 'المنظومة السحابية المتقدمة لهندسة معمارية البرمجيات، تحويل كراسات الشروط إلى مواصفات تقنية وشعارات واختبارات قياسية.'
+                : 'The autonomous operating system for deterministic software architecture, visual identity, and live spec governance.'}
+            </p>
+            <div className="flex items-center gap-3 pt-2 text-[11px] font-mono text-emerald-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>SAMA • ZATCA • NCA • SOC2 COMPLIANT</span>
+            </div>
+          </div>
+
+          {/* Col 1 */}
+          <div className="space-y-2.5">
+            <h4 className="font-bold text-[var(--text-primary)]">المنظومة</h4>
+            <ul className="space-y-1.5 text-[11px]">
+              <li><a href="#pipeline" className="hover:text-white transition-colors">المراحل السبع</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">تحليل PDF و Drive</a></li>
+              <li><a href="#freelancers" className="hover:text-white transition-colors">استوديو المستقلين</a></li>
+              <li><a href="#pricing" className="hover:text-white transition-colors">تكاملات Figma</a></li>
+            </ul>
+          </div>
+
+          {/* Col 2 */}
+          <div className="space-y-2.5">
+            <h4 className="font-bold text-[var(--text-primary)]">القطاعات</h4>
+            <ul className="space-y-1.5 text-[11px]">
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">التقنية المالية والمدفوعات</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">اللوجستيات والشحن</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">الرعاية الصحية (HIPAA)</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">الأنظمة السيادية والحكومية</a></li>
+            </ul>
+          </div>
+
+          {/* Col 3 */}
+          <div className="space-y-2.5">
+            <h4 className="font-bold text-[var(--text-primary)]">الدعم والتواصل</h4>
+            <ul className="space-y-1.5 text-[11px]">
+              <li><a href="tel:+966114567890" className="hover:text-white font-mono transition-colors">+966 11 456 7890</a></li>
+              <li><a href="mailto:support@monospec.dev" className="hover:text-white font-mono transition-colors">support@monospec.dev</a></li>
+              <li><a href="#contact" className="hover:text-white transition-colors">فتح تذكرة دعم فني</a></li>
+              <li><a href="mailto:acquisitions@monospec.dev" className="text-emerald-400 font-bold hover:underline">شراء وترخيص المشروع</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto pt-6 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
+          <p>© 2026 MonoSpec Enterprise OS. All rights reserved.</p>
+          <div className="flex items-center gap-4 text-[var(--text-muted)]">
+            <a href="#contact" className="hover:text-white transition-colors">سياسة الخصوصية</a>
+            <span>•</span>
+            <a href="#contact" className="hover:text-white transition-colors">شروط الاستخدام</a>
+            <span>•</span>
+            <a href="#contact" className="hover:text-white transition-colors">شهادات الامتثال والأمان</a>
+          </div>
+        </div>
       </footer>
     </div>
   );

@@ -53,6 +53,14 @@
   color: var(--selection-text);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
 html,
 body {
   min-height: 100%;

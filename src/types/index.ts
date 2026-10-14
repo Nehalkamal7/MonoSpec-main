@@ -29,6 +29,7 @@ export interface StageDefinition {
   labelEn: string;
   labelAr: string;
   shortDesc: string;
+  shortDescAr?: string;
   badge: string;
   iconName?: string;
   isRecommended?: boolean;
