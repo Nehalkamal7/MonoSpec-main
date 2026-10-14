@@ -43,9 +43,9 @@ export function NewProjectModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-lg rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] shadow-2xl overflow-hidden text-[var(--text-primary)]">
+      <div className="w-full max-w-lg rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] shadow-2xl overflow-hidden text-[var(--text-primary)] flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] flex items-center justify-center font-mono font-bold text-xs">
               +
@@ -69,7 +69,7 @@ export function NewProjectModal() {
         </div>
 
         {/* Modal Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1 min-h-0">
           {/* Company Selection */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
@@ -166,7 +166,7 @@ export function NewProjectModal() {
           </div>
 
           {/* Modal Actions */}
-          <div className="pt-2 flex items-center justify-end gap-2 border-t border-[var(--border-subtle)]">
+          <div className="pt-2 flex items-center justify-end gap-2 border-t border-[var(--border-subtle)] shrink-0">
             <button
               type="button"
               onClick={() => setNewProjectModalOpen(false)}

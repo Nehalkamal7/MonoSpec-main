@@ -301,8 +301,8 @@ export function UniversalLandingPage() {
         </div>
       </nav>
 
-      {/* 2. HERO SECTION (World-Class SaaS, High Impact) */}
-      <section className="relative px-4 sm:px-6 pt-14 sm:pt-20 pb-20 max-w-6xl mx-auto flex flex-col items-center text-center">
+      {/* 2. HERO SECTION & FEATURES (World-Class SaaS, High Impact) */}
+      <section id="features" className="relative px-4 sm:px-6 pt-14 sm:pt-20 pb-20 max-w-6xl mx-auto flex flex-col items-center text-center scroll-mt-24">
         {/* Ambient Radial Gradient Mesh */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[360px] bg-gradient-to-tr from-emerald-500/15 via-emerald-900/5 to-transparent blur-3xl pointer-events-none rounded-full" />
 

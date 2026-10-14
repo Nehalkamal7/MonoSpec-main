@@ -49,7 +49,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="h-full w-full overflow-hidden bg-[var(--bg-canvas)] text-[var(--text-primary)]">
+      <body className="min-h-full w-full bg-[var(--bg-canvas)] text-[var(--text-primary)]" suppressHydrationWarning>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

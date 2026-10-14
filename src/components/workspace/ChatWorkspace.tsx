@@ -112,7 +112,7 @@ export function ChatWorkspace() {
   const isLogoStage = activeStageId === 'logo';
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[var(--bg-canvas)] overflow-hidden transition-colors">
+    <div className="flex-1 flex flex-col h-full bg-[var(--bg-canvas)] overflow-hidden transition-colors min-h-0">
       {/* Chat Stage Header */}
       <div className="h-12 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 sm:px-4 flex items-center justify-between gap-2 shrink-0 select-none overflow-hidden whitespace-nowrap">
         <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
@@ -135,7 +135,7 @@ export function ChatWorkspace() {
       </div>
 
       {/* Messages Stream */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-3">
             <div className="w-10 h-10 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-center text-[var(--text-muted)] shadow-2xs">

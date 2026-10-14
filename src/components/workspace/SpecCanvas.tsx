@@ -137,7 +137,7 @@ export function SpecCanvas() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[var(--bg-canvas)] border-l border-[var(--border-subtle)] overflow-hidden transition-colors">
+    <div className="flex-1 flex flex-col h-full bg-[var(--bg-canvas)] border-l border-[var(--border-subtle)] overflow-hidden transition-colors min-h-0">
       {/* Spec Canvas Toolbar */}
       <div className="h-12 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 sm:px-4 flex items-center justify-between gap-2 shrink-0 select-none overflow-hidden whitespace-nowrap">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 overflow-hidden">
@@ -212,7 +212,7 @@ export function SpecCanvas() {
       </div>
 
       {/* Main Spec Content Area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 min-h-0">
         {/* UI/UX STAGE TOOLING CARD (Rendered dynamically in UI/UX Stage) */}
         {activeStageId === 'ui_ux' && (
           <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-sm space-y-4">

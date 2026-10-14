@@ -46,12 +46,12 @@ export function AppShell() {
   }, [setNewProjectModalOpen, toggleSidebar, setActiveStage]);
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased transition-colors">
+    <div className="flex h-screen w-full overflow-hidden bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased transition-colors">
       {/* 1. Left Collapsible Sidebar */}
       <Sidebar />
 
       {/* Main Workspace Frame */}
-      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full overflow-hidden">
         {/* 2. Active Project Context Header */}
         <Header />
 
@@ -59,7 +59,7 @@ export function AppShell() {
         <StageNavigation />
 
         {/* 4. Main Chat & Workspace Canvas */}
-        <main className="flex-1 overflow-hidden">
+        <main className="flex-1 overflow-hidden min-h-0">
           <WorkspaceContainer />
         </main>
       </div>

@@ -165,7 +165,7 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="w-72 h-screen border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] flex flex-col justify-between select-none transition-all duration-200 shrink-0">
+    <aside className="w-72 h-full min-h-0 border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] flex flex-col justify-between select-none transition-all duration-200 shrink-0">
       {/* Top Header / Branding & Workspace Info */}
       <div className="p-4 border-b border-[var(--border-subtle)] flex flex-col gap-3">
         <div className="flex items-center justify-between">
@@ -269,7 +269,7 @@ export function Sidebar() {
       </div>
 
       {/* Projects List Grouped Dynamically by Company */}
-      <div className="flex-1 overflow-y-auto px-2 py-3 space-y-4">
+      <div className="flex-1 overflow-y-auto px-2 py-3 space-y-4 min-h-0">
         {/* Dynamic Companies Loop */}
         {companies.map((company) => {
           const compProjects = filteredProjects.filter((p) => p.companyId === company.id);
