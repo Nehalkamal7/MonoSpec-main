@@ -56,7 +56,7 @@ export function OnboardingWizard() {
 
   // Step 1: Workspace State
   const [workspaceName, setWorkspaceName] = useState('Apex Innovations Team');
-  const [roomCode, setRoomCode] = useState(() => `MONO-${Math.floor(1000 + Math.random() * 9000)}-KSA`);
+  const [roomCode, setRoomCode] = useState('MONO-8842-KSA');
   const [copiedCode, setCopiedCode] = useState(false);
 
   // Step 2: Company Setup State

@@ -444,7 +444,7 @@ export interface DomainSpecification {
   specModel: "${selectedIndustry.sampleOutput}";
   latencyP99: "< 85ms";
   complianceGate: "${selectedIndustry.badge}";
-  timestamp: ${Date.now()};
+  timestamp: 1728950400000;
 }`}
             </pre>
           </div>
