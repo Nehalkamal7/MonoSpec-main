@@ -173,9 +173,189 @@ ${references}
 function generateRealisticStageSpec(
   stage: ProjectChatStage,
   companyCode: CompanyCode,
-  userMessage: string
+  userMessage: string,
+  isArabic = false
 ): string {
   const isAwamer = companyCode === 'awamer';
+
+  if (isArabic) {
+    switch (stage) {
+      case 'technical_analysis':
+        return `### مواصفة التحليل المعماري للنظام (MonoSpec)
+**السياق:** ${userMessage}
+**المنشأة المستهدفة:** ${isAwamer ? 'أوامر الشبكة (المعيار السيادي المعتمد)' : 'النظام الإبداعي (الأداء الفائق الحديث)'}
+
+#### 1. طوبولوجيا النظام وضوابط المعمارية
+- **القدرة الاستيعابية:** استهداف 22,000 طلب بالثانية مع زمن استجابة P99 < 65ms.
+- **طبقة استبقاء البيانات:** قاعدة بيانات PostgreSQL 16 مقسمة مع ملحقات TimescaleDB و PostGIS.
+- **وسيط الرسائل:** Apache Kafka مع تقسيم متعدد المستأجرين عبر المفتاح \`tenant_id + entity_id\`.
+- **ضمان عدم التكرار (Idempotency):** أقفال موزعة في Redis بصيغة \`idemp:<sha256(payload + timestamp_window)>\` مع فترة صلاحية 120 ثانية.
+
+#### 2. الكيانات البرمجية الأساسية
+| الكيان | محرك التخزين | المفاتيح الأساسية | استراتيجية الفهرسة |
+| :--- | :--- | :--- | :--- |
+| \`organizations\` | علائقي (PG) | UUIDv7 | \`idx_org_code_active\` |
+| \`audit_events\` | سجل غير قابل للتعديل | UUIDv7 + الوقت | تقسيم شهري للبيانات |
+| \`telemetry_stream\` | جداول زمنية مجمعة | معرف الجهاز + الوقت | فهرس معكوس مركب |
+
+#### 3. بوابات الأمان والامتثال
+${isAwamer 
+  ? '- **هيئة الاتصالات وهيئة الزكاة والضريبة:** ختم تشفيري معتمد، وتجزئة SHA-256، واستبقاء كامل للبيانات داخل المملكة.\n- **ضوابط الهيئة الوطنية للأمن السيبراني (ECC-1:2018):** تحكم دقيق في الوصول المبني على الأدوار RBAC مع سجل تدقيق غير قابل للتغيير.'
+  : '- **معايير PCI-DSS و SOC2:** تجزئة الخدمات المصغرة مع تشفير ثنائي mTLS عبر شبكة Istio.\n- **معيار OpenTelemetry:** تمرير سياق التتبع الموزع عبر كافة بوابات HTTP و gRPC.'}
+`;
+
+      case 'logo_branding':
+        return `### مواصفة الهوية البصرية والشعار الهندسي المتجهي
+**النطاق:** ${userMessage}
+**معيار التصميم:** تباين أحادي فائق الدقة مع عنصر تمييز ديناميكي
+
+#### 1. بناء الشعار الهندسي (كود SVG متجهي نقي)
+\`\`\`svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" width="280" height="80" class="w-56 h-16">
+  <rect width="280" height="80" rx="14" fill="#09090b" stroke="#27272a" stroke-width="2"/>
+  <path d="M35 55 L52 24 L69 55 L59 55 L52 41 L45 55 Z" fill="#ffffff" />
+  <circle cx="72" cy="30" r="4.5" fill="#22c55e" />
+  <text x="88" y="47" font-family="monospace" font-size="20" font-weight="900" fill="#ffffff" letter-spacing="2">SPEC</text>
+  <text x="156" y="47" font-family="sans-serif" font-size="14" font-weight="300" fill="#a1a1aa">BRAND</text>
+  <circle cx="250" cy="40" r="3" fill="#71717a" />
+</svg>
+\`\`\`
+
+#### 2. جدول رموز ألوان الهوية
+| الرمز | كود HEX | المقابل في HSL | الغرض الدلالي |
+| :--- | :--- | :--- | :--- |
+| \`--brand-base\` | \`#09090b\` | \`hsl(240, 10%, 4%)\` | طبقة الخلفية الأساسية |
+| \`--brand-mark-contrast\` | \`#ffffff\` | \`hsl(0, 0%, 100%)\` | علامة الشعار البصرية الرئيسية |
+| \`--brand-grid-border\` | \`#27272a\` | \`hsl(240, 5%, 16%)\` | حدود العزل الهندسي |
+| \`--brand-status-signal\` | \`#22c55e\` | \`hsl(142, 71%, 45%)\` | نقطة التشغيل الحية |
+`;
+
+      case 'ui_ux_design':
+        return `### مواصفة نظام واجهات وتجربة المستخدم وكود Figma
+**النطاق:** ${userMessage}
+
+#### 1. هيكل المعلومات وتوزيع الشاشات
+- **نموذج التخطيط:** مساحة عمل مزدوجة (شريط جانبي 260px، ومساحة العمل الرئيسية بنسبة مرنة).
+- **التوجه الجمالي:** أحادي داكن دقيق (#000000 أسود خالص، #ffffff أبيض نقي، مع لمسات رمادية).
+
+#### 2. كود HTML و Tailwind جاهز لبرنامج Figma
+\`\`\`html
+<div class="w-full max-w-4xl p-6 bg-zinc-950 border border-zinc-800 rounded-xl text-white font-sans">
+  <div class="flex items-center justify-between pb-4 border-b border-zinc-800">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-white text-black font-mono font-black flex items-center justify-center text-sm">MS</div>
+      <div>
+        <h4 class="text-sm font-semibold text-white">MonoSpec Design System</h4>
+        <p class="text-xs text-zinc-400 font-mono">UI/UX Stage Invariant</p>
+      </div>
+    </div>
+  </div>
+</div>
+\`\`\`
+`;
+
+      case 'software_engineering':
+        return `### مخطط التنفيذ الهندسي والبرمجي
+**الميزة المستهدفة:** ${userMessage}
+
+\`\`\`typescript
+import { z } from 'zod';
+import { NextRequest, NextResponse } from 'next/server';
+
+const RequestSchema = z.object({
+  entityId: z.string().uuid(),
+  action: z.enum(['PROCESS', 'VERIFY', 'ARCHIVE']),
+});
+
+export async function POST(req: NextRequest) {
+  try {
+    const rawBody = await req.json();
+    const payload = RequestSchema.parse(rawBody);
+
+    const lockKey = \`lock:entity:\${payload.entityId}\`;
+    
+    return NextResponse.json({
+      success: true,
+      transactionId: crypto.randomUUID(),
+      timestamp: new Date().toISOString(),
+      status: 'COMMITTED',
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+}
+\`\`\`
+`;
+
+      case 'qa_testing':
+        return `### بروتوكول فحص الجودة ومجموعة اختبارات BDD
+**الخاصية:** ${userMessage}
+
+\`\`\`gherkin
+خاصية: مسار معالجة المعاملات عالية الأداء
+  كمحرك ربط وتكامل مؤسسي
+  أحتاج إلى ضمان عدم تكرار تنفيذ العمليات مطلقاً
+  حتى لا تؤدي إعادة إرسال إشعارات Webhook إلى تلف سجل الحسابات
+
+  الخلفية:
+    بفرض أن مجموعة خوادم Redis الموزعة تعمل بزمن استجابة أقل من 5ms
+    وأن رمز مصادقة المستأجر تم التحقق منه رقمياً
+
+  سيناريو: معالجة معاملة متطابقة خلال نافذة عدم التكرار (60 ثانية)
+    بفرض ورود طلب إرسال مع تدقيق تجزئة صالح
+    عندما يستقبل المسار الطلب للمرة الأولى
+    حينئذ يتم حجز القفل الموزع بنجاح
+    ويتم إرجاع حالة 201 Created مع إيصال العملية
+    وعند ورود طلب Webhook مكرر بنفس كود التجزئة
+    حينئذ تفشل عملية حجز القفل بحالة 409 Conflict
+    ولا تتم كتابة أي مدخل مكرر في السجل
+\`\`\`
+`;
+
+      case 'content_strategy':
+        return `### استراتيجية المحتوى وصياغة النصوص الرقمية
+
+| المفتاح / السياق | النص باللغة العربية (العربية الفصحى المعاصرة) |
+| :--- | :--- |
+| \`header.title\` | لوحة المعمارية المؤسسية المتكاملة |
+| \`status.synced\` | تم مزامنة كافة المواصفات مع قاعدة البيانات المركزية |
+| \`modal.confirm\` | تأكيد اعتماد النموذج المعماري |
+| \`error.timeout\` | تعذر الاتصال بالبوابة المركزية، جاري إعادة المحاولة |
+| \`empty.state\` | لا توجد مواصفات فنية مدخلة في هذه المرحلة حتى الآن |
+`;
+
+      case 'technical_support':
+        return `### ملف بنية التشغيل التحتية ونشر الخدمات (DevOps)
+**البيئة المستهدفة:** بيئة التشغيل الإنتاجية متعددة الحاويات
+
+\`\`\`yaml
+version: '3.9'
+
+services:
+  monospec-core:
+    image: monospec/core:2.0.0-enterprise
+    restart: always
+    deploy:
+      replicas: 4
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4096M
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - KSA_SOVEREIGN_MODE=enabled
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "3000:3000"
+\`\`\`
+`;
+    }
+  }
 
   switch (stage) {
     case 'technical_analysis':
@@ -392,7 +572,7 @@ services:
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { projectId, stage, message, companyCode } = body;
+    const { projectId, stage, message, companyCode, locale } = body;
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json(
@@ -401,6 +581,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const isArabic = locale === 'ar' || /[\u0600-\u06FF]/.test(message);
     const normalizedStage = normalizeStage(stage || 'technical_analysis');
     const normalizedCompany = normalizeCompanyCode(companyCode || 'awamer');
 
@@ -420,6 +601,9 @@ Active Stage: ${stageConfig.title}
 ${stageConfig.instructions}
 ${companyStyle}
 ${retrievedContext}
+${isArabic 
+  ? 'CRITICAL MANDATORY INSTRUCTION: You MUST respond 100% in pure Arabic. Zero English words in narrative, explanations, checklists or diagrams. Every section, header, and explanation MUST be Arabic.'
+  : 'CRITICAL MANDATORY INSTRUCTION: You MUST respond 100% in pure English. Zero Arabic text. Every section, header, and explanation MUST be English.'}
 `;
 
     // Check if an external LLM key is configured (OpenAI or Anthropic or custom endpoint)
@@ -463,7 +647,8 @@ ${retrievedContext}
     const generatedMarkdown = generateRealisticStageSpec(
       normalizedStage,
       normalizedCompany,
-      message
+      message,
+      isArabic
     );
 
     // Automatically persist the message to Supabase / local mock in the background

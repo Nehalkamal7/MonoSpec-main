@@ -43,6 +43,17 @@ export default function RootLayout({
                     document.documentElement.classList.remove('dark');
                     document.documentElement.style.colorScheme = 'light';
                   }
+
+                  var locale = 'ar';
+                  var storeStr = localStorage.getItem('monospec-storage');
+                  if (storeStr) {
+                    var parsed = JSON.parse(storeStr);
+                    if (parsed && parsed.state && parsed.state.locale) {
+                      locale = parsed.state.locale;
+                    }
+                  }
+                  document.documentElement.setAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
+                  document.documentElement.setAttribute('lang', locale);
                 } catch(e) {}
               })();
             `,

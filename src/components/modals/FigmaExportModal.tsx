@@ -22,7 +22,10 @@ export function FigmaExportModal() {
     setFigmaModalOpen,
     getActiveProject,
     updateProjectUrls,
+    locale,
   } = useMonoSpecStore();
+
+  const isArabic = locale === 'ar';
 
   const [activeTab, setActiveTab] = useState<'preview' | 'code' | 'tokens'>('preview');
   const [copiedFigma, setCopiedFigma] = useState(false);
@@ -130,7 +133,7 @@ export function FigmaExportModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150" dir={isArabic ? 'rtl' : 'ltr'}>
       <div className="w-full max-w-3xl rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] shadow-2xl overflow-hidden text-[var(--text-primary)] flex flex-col max-h-[90vh]">
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between shrink-0">
@@ -140,9 +143,11 @@ export function FigmaExportModal() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-semibold tracking-tight">Figma Export & Design Tooling</h2>
+                <h2 className="text-sm font-semibold tracking-tight">
+                  {isArabic ? 'تصدير إلى Figma وأدوات التصميم' : 'Figma Export & Design Tooling'}
+                </h2>
                 <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
-                  HTML to Design Ready
+                  {isArabic ? 'جاهز لإضافات التصميم' : 'HTML to Design Ready'}
                 </span>
               </div>
               <p className="text-[11px] text-[var(--text-muted)] font-mono">
@@ -163,7 +168,9 @@ export function FigmaExportModal() {
         <div className="px-6 py-2.5 bg-[var(--bg-surface)] border-b border-[var(--border-subtle)] flex items-center justify-between gap-3 text-xs shrink-0">
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <Link2 className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
-            <span className="font-mono text-[11px] text-[var(--text-muted)] shrink-0">Figma URL:</span>
+            <span className="font-mono text-[11px] text-[var(--text-muted)] shrink-0">
+              {isArabic ? 'رابط Figma:' : 'Figma URL:'}
+            </span>
             {isEditingUrl ? (
               <div className="flex items-center gap-2 flex-1">
                 <input
@@ -178,19 +185,19 @@ export function FigmaExportModal() {
                   className="flex items-center gap-1 px-2 py-1 rounded bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-[11px] font-medium"
                 >
                   <Save className="w-3 h-3" />
-                  <span>Save</span>
+                  <span>{isArabic ? 'حفظ' : 'Save'}</span>
                 </button>
                 <button
                   onClick={() => setIsEditingUrl(false)}
                   className="px-2 py-1 rounded border border-[var(--border-subtle)] text-[11px] text-[var(--text-muted)]"
                 >
-                  Cancel
+                  {isArabic ? 'إلغاء' : 'Cancel'}
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2 truncate flex-1">
                 <span className="font-mono text-[11px] text-[var(--text-primary)] truncate">
-                  {activeProject.figmaUrl || 'No native Figma URL linked yet'}
+                  {activeProject.figmaUrl || (isArabic ? 'لم يتم ربط ملف Figma بعد' : 'No native Figma URL linked yet')}
                 </span>
                 <button
                   onClick={() => {
@@ -199,7 +206,7 @@ export function FigmaExportModal() {
                   }}
                   className="text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] underline shrink-0"
                 >
-                  Edit Link
+                  {isArabic ? 'تعديل الرابط' : 'Edit Link'}
                 </button>
               </div>
             )}
@@ -212,7 +219,7 @@ export function FigmaExportModal() {
               rel="noreferrer"
               className="flex items-center gap-1 text-[11px] font-medium text-[var(--text-primary)] hover:underline shrink-0"
             >
-              <span>Open in Figma</span>
+              <span>{isArabic ? 'فتح في Figma' : 'Open in Figma'}</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           )}
@@ -230,7 +237,7 @@ export function FigmaExportModal() {
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Live Preview</span>
+              <span>{isArabic ? 'المعاينة المباشرة' : 'Live Preview'}</span>
             </button>
 
             <button
@@ -242,7 +249,7 @@ export function FigmaExportModal() {
               }`}
             >
               <Code2 className="w-3.5 h-3.5" />
-              <span>Figma-Ready Code</span>
+              <span>{isArabic ? 'كود جاهز للتصميم' : 'Figma-Ready Code'}</span>
             </button>
 
             <button
@@ -254,7 +261,7 @@ export function FigmaExportModal() {
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>Design Tokens (JSON)</span>
+              <span>{isArabic ? 'رموز التصميم (JSON)' : 'Design Tokens (JSON)'}</span>
             </button>
           </div>
 
@@ -270,8 +277,8 @@ export function FigmaExportModal() {
             )}
             <span>
               {activeTab === 'tokens'
-                ? copiedTokens ? 'Copied Tokens' : 'Copy Tokens'
-                : copiedFigma ? 'Copied for Figma!' : 'Copy for Figma'}
+                ? copiedTokens ? (isArabic ? 'تم نسخ الرموز' : 'Copied Tokens') : (isArabic ? 'نسخ الرموز' : 'Copy Tokens')
+                : copiedFigma ? (isArabic ? 'تم النسخ للـ Figma!' : 'Copied for Figma!') : (isArabic ? 'نسخ للـ Figma' : 'Copy for Figma')}
             </span>
           </button>
         </div>
@@ -282,7 +289,7 @@ export function FigmaExportModal() {
             <div className="flex flex-col items-center justify-center p-6 border border-dashed border-[var(--border-subtle)] rounded-2xl bg-[var(--bg-surface)]">
               <div className="w-full flex justify-center" dangerouslySetInnerHTML={{ __html: defaultHtmlSnippet }} />
               <p className="text-[11px] text-[var(--text-muted)] mt-4 font-mono text-center">
-                Interactive preview rendered directly from the semantic HTML + Tailwind CSS specification.
+                {isArabic ? 'معاينة تفاعلية معتمدة مباشرة على مواصفة HTML الدلالية ونظام Tailwind CSS.' : 'Interactive preview rendered directly from the semantic HTML + Tailwind CSS specification.'}
               </p>
             </div>
           )}
@@ -315,13 +322,17 @@ export function FigmaExportModal() {
         {/* Footer Guidance */}
         <div className="px-6 py-3 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between text-xs text-[var(--text-muted)] shrink-0">
           <span className="font-sans">
-            Tip: Install the <strong>HTML to Design</strong> plugin in Figma, click <strong>Copy for Figma</strong>, and paste.
+            {isArabic ? (
+              <>ملاحظة: ثبّت إضافة <strong>HTML to Design</strong> في Figma، ثم انسخ الكود والصقه مباشرة في ساحة التصميم.</>
+            ) : (
+              <>Tip: Install the <strong>HTML to Design</strong> plugin in Figma, click <strong>Copy for Figma</strong>, and paste.</>
+            )}
           </span>
           <button
             onClick={() => setFigmaModalOpen(false)}
             className="px-4 py-1.5 rounded-lg text-xs font-semibold border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] transition-colors"
           >
-            Close
+            {isArabic ? 'إغلاق' : 'Close'}
           </button>
         </div>
       </div>

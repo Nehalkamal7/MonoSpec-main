@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Check, Copy, Terminal, Eye, Code as CodeIcon } from 'lucide-react';
+import { useMonoSpecStore } from '@/store/useMonoSpecStore';
 
 interface CodeBlockProps {
   language?: string;
@@ -10,6 +11,8 @@ interface CodeBlockProps {
 }
 
 export function CodeBlock({ language = 'text', filename, code }: CodeBlockProps) {
+  const { locale } = useMonoSpecStore();
+  const isArabic = locale === 'ar';
   const [copied, setCopied] = useState(false);
   const isSvg = language.toLowerCase() === 'svg' || (code.trim().startsWith('<svg') && code.includes('</svg>'));
   const [viewMode, setViewMode] = useState<'preview' | 'code'>(isSvg ? 'preview' : 'code');
@@ -51,7 +54,7 @@ export function CodeBlock({ language = 'text', filename, code }: CodeBlockProps)
                 }`}
               >
                 <Eye className="w-2.5 h-2.5" />
-                <span>Visual Logo</span>
+                <span>{isArabic ? 'معاينة بصرية' : 'Visual Preview'}</span>
               </button>
               <button
                 type="button"
@@ -63,7 +66,7 @@ export function CodeBlock({ language = 'text', filename, code }: CodeBlockProps)
                 }`}
               >
                 <CodeIcon className="w-2.5 h-2.5" />
-                <span>Source</span>
+                <span>{isArabic ? 'الشيفرة' : 'Source'}</span>
               </button>
             </div>
           )}
@@ -75,12 +78,12 @@ export function CodeBlock({ language = 'text', filename, code }: CodeBlockProps)
             {copied ? (
               <>
                 <Check className="w-3 h-3 text-emerald-500" />
-                <span className="text-emerald-500 font-sans">Copied</span>
+                <span className="text-emerald-500 font-sans">{isArabic ? 'تم النسخ' : 'Copied'}</span>
               </>
             ) : (
               <>
                 <Copy className="w-3 h-3" />
-                <span className="font-sans">Copy</span>
+                <span className="font-sans">{isArabic ? 'نسخ' : 'Copy'}</span>
               </>
             )}
           </button>
@@ -95,7 +98,7 @@ export function CodeBlock({ language = 'text', filename, code }: CodeBlockProps)
             dangerouslySetInnerHTML={{ __html: code }}
           />
           <span className="text-[10px] font-mono text-[var(--text-muted)] mt-2">
-            Interactive Vector Render • 100% Scalable SVG
+            {isArabic ? 'عرض متجه تفاعلي • SVG فائق الدقة والقابلية للتوسع' : 'Interactive Vector Render • 100% Scalable SVG'}
           </span>
         </div>
       ) : (

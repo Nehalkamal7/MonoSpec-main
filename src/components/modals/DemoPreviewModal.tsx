@@ -26,7 +26,10 @@ export function DemoPreviewModal() {
     getActiveProject,
     updateProjectUrls,
     getCompanyById,
+    locale,
   } = useMonoSpecStore();
+
+  const isArabic = locale === 'ar';
 
   const [activeTab, setActiveTab] = useState<'iframe' | 'telemetry' | 'topology'>('iframe');
   const [latency, setLatency] = useState(18);
@@ -62,7 +65,7 @@ export function DemoPreviewModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150" dir={isArabic ? 'rtl' : 'ltr'}>
       <div className="w-full max-w-4xl rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] shadow-2xl overflow-hidden text-[var(--text-primary)] flex flex-col max-h-[90vh]">
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between shrink-0">
@@ -72,9 +75,11 @@ export function DemoPreviewModal() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-semibold tracking-tight">Demo Preview & Architectural Sandbox</h2>
+                <h2 className="text-sm font-semibold tracking-tight">
+                  {isArabic ? 'معاينة المشروع التفاعلية وبيئة التشغيل' : 'Demo Preview & Architectural Sandbox'}
+                </h2>
                 <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
-                  LIVE RUNTIME
+                  {isArabic ? 'بيئة حية' : 'LIVE RUNTIME'}
                 </span>
               </div>
               <p className="text-[11px] text-[var(--text-muted)] font-mono">
@@ -95,7 +100,9 @@ export function DemoPreviewModal() {
         <div className="px-6 py-2.5 bg-[var(--bg-surface)] border-b border-[var(--border-subtle)] flex items-center justify-between gap-3 text-xs shrink-0">
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <Globe className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
-            <span className="font-mono text-[11px] text-[var(--text-muted)] shrink-0">Demo URL:</span>
+            <span className="font-mono text-[11px] text-[var(--text-muted)] shrink-0">
+              {isArabic ? 'رابط المعاينة:' : 'Demo URL:'}
+            </span>
             {isEditingUrl ? (
               <div className="flex items-center gap-2 flex-1">
                 <input
@@ -110,19 +117,19 @@ export function DemoPreviewModal() {
                   className="flex items-center gap-1 px-2 py-1 rounded bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-[11px] font-medium"
                 >
                   <Save className="w-3 h-3" />
-                  <span>Save</span>
+                  <span>{isArabic ? 'حفظ' : 'Save'}</span>
                 </button>
                 <button
                   onClick={() => setIsEditingUrl(false)}
                   className="px-2 py-1 rounded border border-[var(--border-subtle)] text-[11px] text-[var(--text-muted)]"
                 >
-                  Cancel
+                  {isArabic ? 'إلغاء' : 'Cancel'}
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2 truncate flex-1">
                 <span className="font-mono text-[11px] text-[var(--text-primary)] truncate">
-                  {activeProject.demoUrl || 'No dynamic demo preview URL set'}
+                  {activeProject.demoUrl || (isArabic ? 'لم يتم تعيين رابط معاينة بعد' : 'No dynamic demo preview URL set')}
                 </span>
                 <button
                   onClick={() => {
@@ -131,7 +138,7 @@ export function DemoPreviewModal() {
                   }}
                   className="text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] underline shrink-0"
                 >
-                  Edit URL
+                  {isArabic ? 'تعديل الرابط' : 'Edit URL'}
                 </button>
               </div>
             )}
@@ -144,7 +151,7 @@ export function DemoPreviewModal() {
               rel="noreferrer"
               className="flex items-center gap-1 text-[11px] font-medium text-[var(--text-primary)] hover:underline shrink-0"
             >
-              <span>Open in New Tab</span>
+              <span>{isArabic ? 'فتح في نافذة جديدة' : 'Open in New Tab'}</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           )}
@@ -162,7 +169,7 @@ export function DemoPreviewModal() {
               }`}
             >
               <Globe className="w-3.5 h-3.5" />
-              <span>Live Preview Sandbox</span>
+              <span>{isArabic ? 'بيئة المعاينة التفاعلية' : 'Live Preview Sandbox'}</span>
             </button>
 
             <button
@@ -174,7 +181,7 @@ export function DemoPreviewModal() {
               }`}
             >
               <Activity className="w-3.5 h-3.5" />
-              <span>Telemetry & Latency</span>
+              <span>{isArabic ? 'المقاييس وسرعة الاستجابة' : 'Telemetry & Latency'}</span>
             </button>
 
             <button
@@ -186,13 +193,13 @@ export function DemoPreviewModal() {
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>Sovereign Topology</span>
+              <span>{isArabic ? 'طوبولوجيا السحابة السيادية' : 'Sovereign Topology'}</span>
             </button>
           </div>
 
           <button
             onClick={() => setIframeKey((prev) => prev + 1)}
-            title="Reload Sandbox"
+            title={isArabic ? 'إعادة تحميل البيئة' : 'Reload Sandbox'}
             className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)] transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -218,10 +225,10 @@ export function DemoPreviewModal() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-                      No Demo Preview URL Configured
+                      {isArabic ? 'لم يتم تعيين رابط معاينة تفاعلية' : 'No Demo Preview URL Configured'}
                     </h3>
                     <p className="text-xs text-[var(--text-muted)] max-w-sm mt-1">
-                      Click <strong>Edit URL</strong> above to assign a Vercel staging preview, local port, or Cloudflare tunnel.
+                      {isArabic ? 'اضغط على "تعديل الرابط" بالأعلى لتعيين رابط المعاينة التجريبية الخاص بك.' : 'Click Edit URL above to assign a dynamic staging preview, local port, or tunnel.'}
                     </p>
                   </div>
                 </div>
@@ -231,25 +238,33 @@ export function DemoPreviewModal() {
 
           {activeTab === 'telemetry' && (
             <div className="space-y-4">
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">P99 Ingress Latency</span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">
+                    {isArabic ? 'زمن الاستجابة' : 'P99 Ingress Latency'}
+                  </span>
                   <p className="text-xl font-mono font-bold mt-1 text-[var(--text-primary)]">{latency}ms</p>
                 </div>
                 <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">Throughput</span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">
+                    {isArabic ? 'معدل الطلبات' : 'Throughput'}
+                  </span>
                   <p className="text-xl font-mono font-bold mt-1 text-[var(--text-primary)]">
                     {throughput.toLocaleString()} <span className="text-xs font-normal text-[var(--text-muted)]">RPS</span>
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">Architecture Tier</span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">
+                    {isArabic ? 'مستوى المعمارية' : 'Architecture Tier'}
+                  </span>
                   <p className="text-xs font-semibold mt-2 text-[var(--text-primary)] truncate">
                     {activeProject.architectureTier}
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">Availability SLA</span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">
+                    {isArabic ? 'اتفاقية التوفر' : 'Availability SLA'}
+                  </span>
                   <p className="text-sm font-mono font-bold mt-1.5 text-emerald-400 flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     99.995%
@@ -259,8 +274,12 @@ export function DemoPreviewModal() {
 
               <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4">
                 <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-subtle)] text-xs font-mono">
-                  <span className="text-[var(--text-muted)]">Active Health Checks</span>
-                  <span className="text-emerald-400 font-semibold">ALL OPERATIONAL</span>
+                  <span className="text-[var(--text-muted)]">
+                    {isArabic ? 'الفحوصات الحية للخدمات' : 'Active Health Checks'}
+                  </span>
+                  <span className="text-emerald-400 font-semibold">
+                    {isArabic ? 'جميع الأنظمة تعمل بكفاءة' : 'ALL OPERATIONAL'}
+                  </span>
                 </div>
                 <div className="space-y-2 text-xs font-mono">
                   <div className="flex items-center justify-between p-2 rounded-lg bg-[var(--bg-surface-elevated)]">
@@ -283,13 +302,15 @@ export function DemoPreviewModal() {
           {activeTab === 'topology' && (
             <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 space-y-3 font-mono text-xs">
               <div className="flex items-center justify-between pb-2 border-b border-[var(--border-subtle)]">
-                <span className="text-[var(--text-muted)]">Sovereign Cluster Invariants</span>
+                <span className="text-[var(--text-muted)]">
+                  {isArabic ? 'ضوابط الكتلة السحابية السيادية' : 'Sovereign Cluster Invariants'}
+                </span>
                 <span className="text-[var(--text-primary)]">{company.name}</span>
               </div>
               <ul className="space-y-2 text-[var(--text-secondary)]">
-                <li>• Multi-zone redundancy across Saudi sovereign data centers (Riyadh / Jeddah).</li>
-                <li>• Hardware Keystore attestation for cryptographic payloads and tokens.</li>
-                <li>• Zero data egress outside national jurisdiction, certified against NCA controls.</li>
+                <li>• {isArabic ? 'تعدد مراكز البيانات واستبقاء كامل داخل السعودية (الرياض / جدة).' : 'Multi-zone redundancy across Saudi sovereign data centers (Riyadh / Jeddah).'}</li>
+                <li>• {isArabic ? 'توثيق أمني كامل للمفاتيح المشفرة عبر وحدات Keystore المعتمدة.' : 'Hardware Keystore attestation for cryptographic payloads and tokens.'}</li>
+                <li>• {isArabic ? 'منع خروج البيانات خارج الحدود الوطنية وفقاً لمعايير الهيئة الوطنية للأمن السيبراني NCA.' : 'Zero data egress outside national jurisdiction, certified against NCA controls.'}</li>
               </ul>
             </div>
           )}
@@ -297,12 +318,12 @@ export function DemoPreviewModal() {
 
         {/* Footer */}
         <div className="px-6 py-3 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between text-xs text-[var(--text-muted)] shrink-0">
-          <span>Persisted into active project record automatically.</span>
+          <span>{isArabic ? 'يتم حفظ الرابط وتحديث المشروع تلقائياً في السجل.' : 'Persisted into active project record automatically.'}</span>
           <button
             onClick={() => setDemoModalOpen(false)}
             className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] hover:opacity-90 transition-opacity"
           >
-            Done
+            {isArabic ? 'تم' : 'Done'}
           </button>
         </div>
       </div>

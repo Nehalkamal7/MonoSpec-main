@@ -19,7 +19,10 @@ export function AppShell() {
     setNewProjectModalOpen,
     toggleSidebar,
     setActiveStage,
+    locale,
   } = useMonoSpecStore();
+
+  const isArabic = locale === 'ar';
 
   // Keyboard shortcut listener (Cmd/Ctrl + N, Cmd/Ctrl + B, Cmd/Ctrl + 1..6)
   useEffect(() => {
@@ -46,7 +49,12 @@ export function AppShell() {
   }, [setNewProjectModalOpen, toggleSidebar, setActiveStage]);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased transition-colors">
+    <div
+      dir={isArabic ? 'rtl' : 'ltr'}
+      className={`flex h-screen w-full overflow-hidden bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased transition-colors ${
+        isArabic ? 'rtl font-sans' : 'ltr font-sans'
+      }`}
+    >
       {/* 1. Left Collapsible Sidebar */}
       <Sidebar />
 

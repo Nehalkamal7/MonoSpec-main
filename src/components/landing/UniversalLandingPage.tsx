@@ -274,13 +274,10 @@ export function UniversalLandingPage() {
           <button
             onClick={toggleLocale}
             title={isArabic ? 'Switch to English' : 'التحويل للغة العربية'}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-emerald-400 transition-colors shadow-2xs"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-emerald-400 transition-colors shadow-2xs"
           >
             <Globe className="w-3.5 h-3.5" />
-            <span className="font-mono text-sm leading-none">{isArabic ? 'ع' : 'E'}</span>
-            <span className="text-[10px] text-[var(--text-muted)] hidden sm:inline">
-              ({isArabic ? 'English' : 'عربي'})
-            </span>
+            <span className="font-mono text-xs">{isArabic ? 'English' : 'عربي'}</span>
           </button>
 
           <button
@@ -535,26 +532,40 @@ export function UniversalLandingPage() {
               <div className="flex items-center justify-between pb-3 border-b border-red-500/20">
                 <span className="font-bold text-sm text-red-400 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4" />
-                  <span>{isArabic ? 'الطريقة التقليدية القديمة (تستغرق أسابيع)' : 'Traditional Workflow (Weeks of Chaos)'}</span>
+                  <span>{isArabic ? 'الطريقة التقليدية القديمة' : 'Traditional Workflow'}</span>
                 </span>
-                <span className="text-[10px] font-mono text-red-400 bg-red-950/40 px-2 py-0.5 rounded">بطيئة ومكلفة</span>
+                <span className="text-[10px] font-mono text-red-400 bg-red-950/40 px-2 py-0.5 rounded">
+                  {isArabic ? 'بطيئة ومكلفة' : 'Slow & Costly'}
+                </span>
               </div>
               <ul className="space-y-3 text-xs text-[var(--text-secondary)]">
                 <li className="flex items-start gap-2.5">
                   <span className="text-red-400 shrink-0 font-bold">✕</span>
-                  <span><strong>تشتت الملفات:</strong> كراسات الشروط مبعثرة في ملفات Word و PDF لا يفهمها المطورون بدقة.</span>
+                  <span>
+                    <strong>{isArabic ? 'تشتت الملفات: ' : 'Scattered Documents: '}</strong>
+                    {isArabic ? 'كراسات الشروط مبعثرة في ملفات منفصلة لا يفهمها المطورون بدقة.' : 'Requirements scattered across documents that engineers easily misunderstand.'}
+                  </span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="text-red-400 shrink-0 font-bold">✕</span>
-                  <span><strong>انفصال الهوية عن الكود:</strong> تصميم الشعار يتم بمعزل عن الشاشات والـ Figma وتوكنز الألوان.</span>
+                  <span>
+                    <strong>{isArabic ? 'انفصال الهوية عن الكود: ' : 'Disconnected Brand & UI: '}</strong>
+                    {isArabic ? 'تصميم الشعار يتم بمعزل عن الشاشات والـ Figma وتوكنز الألوان.' : 'Logos designed in silos, disconnected from UI screens and Figma tokens.'}
+                  </span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="text-red-400 shrink-0 font-bold">✕</span>
-                  <span><strong>أخطاء الـ APIs والمعمارية:</strong> غياب مخططات الـ ERD والتدفقات، مما يسبب إعادة كتابة الكود لاحقاً.</span>
+                  <span>
+                    <strong>{isArabic ? 'أخطاء المعمارية والـ APIs: ' : 'Architectural Inconsistencies: '}</strong>
+                    {isArabic ? 'غياب مخططات الـ ERD والتدفقات، مما يسبب إعادة كتابة الكود لاحقاً.' : 'Missing ERDs and data flows leading to costly engineering refactors.'}
+                  </span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="text-red-400 shrink-0 font-bold">✕</span>
-                  <span><strong>صعوبة مشاركة العميل:</strong> إرسال ملفات ضخمة بالإيميل بدون روم كود موحد ولا متابعة حية.</span>
+                  <span>
+                    <strong>{isArabic ? 'صعوبة مشاركة العميل: ' : 'Fragmented Delivery: '}</strong>
+                    {isArabic ? 'إرسال ملفات ضخمة بالإيميل بدون روم كود موحد ولا متابعة حية.' : 'Clunky attachments without unified room codes or live interactive progress.'}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -564,26 +575,40 @@ export function UniversalLandingPage() {
               <div className="flex items-center justify-between pb-3 border-b border-emerald-500/20">
                 <span className="font-bold text-sm text-emerald-400 flex items-center gap-2">
                   <CheckCheck className="w-4 h-4" />
-                  <span>{isArabic ? 'مع منظومة MonoSpec (في دقائق معدودة)' : 'The MonoSpec Engine (Precision & Speed)'}</span>
+                  <span>{isArabic ? 'مع منظومة MonoSpec' : 'The MonoSpec Engine'}</span>
                 </span>
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded font-bold">دقة 100%</span>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded font-bold">
+                  {isArabic ? 'دقة 100%' : '100% Precision'}
+                </span>
               </div>
               <ul className="space-y-3 text-xs text-[var(--text-primary)]">
                 <li className="flex items-start gap-2.5">
                   <span className="text-emerald-400 shrink-0 font-bold">✓</span>
-                  <span><strong>سحب الـ PDF ولينكات درايف:</strong> يحلل النظام المستند تلقائياً ويستخرج الجداول والـ APIs فوراً.</span>
+                  <span>
+                    <strong>{isArabic ? 'استيعاب الـ PDF وروابط درايف: ' : 'PDF & Drive Ingestion: '}</strong>
+                    {isArabic ? 'يحلل النظام المستند تلقائياً ويستخرج الجداول والـ APIs فوراً.' : 'Parses requirements automatically, extracting database entities and endpoints.'}
+                  </span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="text-emerald-400 shrink-0 font-bold">✓</span>
-                  <span><strong>مرحلة الشعار والهوية المدمجة:</strong> توليد شعار هندسي SVG فوري مع باليتة الألوان للشاشات الداكنة.</span>
+                  <span>
+                    <strong>{isArabic ? 'مرحلة الشعار والهوية المدمجة: ' : 'Integrated SVG Brand Studio: '}</strong>
+                    {isArabic ? 'توليد شعار هندسي SVG فوري مع باليتة الألوان للشاشات الداكنة.' : 'Generates instant geometric SVG brand identity and theme palettes.'}
+                  </span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="text-emerald-400 shrink-0 font-bold">✓</span>
-                  <span><strong>تصدير لـ Figma وكود جاهز:</strong> توكنز التصميم ومخططات Mermaid وأكواد Next.js بنقرة واحدة.</span>
+                  <span>
+                    <strong>{isArabic ? 'تصدير لـ Figma وكود جاهز: ' : 'Figma & Production Code: '}</strong>
+                    {isArabic ? 'توكنز التصميم ومخططات Mermaid وأكواد Next.js بنقرة واحدة.' : 'One-click export of design tokens, Mermaid diagrams, and clean code.'}
+                  </span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="text-emerald-400 shrink-0 font-bold">✓</span>
-                  <span><strong>كود روم مميز لكل تيم وموقع:</strong> يدخل العميل أو التيم برمز الروم ليرى كل مراحل مشروعه تفاعلياً.</span>
+                  <span>
+                    <strong>{isArabic ? 'كود روم موحد لكل تيم وموقع: ' : 'Dedicated Room Codes: '}</strong>
+                    {isArabic ? 'يدخل العميل أو التيم برمز الروم ليرى كل مراحل مشروعه تفاعلياً.' : 'Clients & engineers access their interactive spec stages with a single room code.'}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -674,19 +699,19 @@ export function UniversalLandingPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs">
                 <div className="p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>إضافة مواقعك الخاصة بروابطها ودوميناتها</span>
+                  <span>{isArabic ? 'إضافة مواقعك الخاصة بروابطها ودوميناتها' : 'Manage personal platforms & custom domains'}</span>
                 </div>
                 <div className="p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>كود روم مستقل لمشاركة كل مشروع مع العميل</span>
+                  <span>{isArabic ? 'كود روم مستقل لمشاركة كل مشروع مع العميل' : 'Isolated client room codes for easy handover'}</span>
                 </div>
                 <div className="p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>توليد اللوجو والهوية ومواصفات الـ APIs معاً</span>
+                  <span>{isArabic ? 'توليد الشعار والهوية ومواصفات الـ APIs معاً' : 'Simultaneous SVG brand marks & API specs'}</span>
                 </div>
                 <div className="p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-200 flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>توفير تكلفة استشارات تقنية ضخمة</span>
+                  <span>{isArabic ? 'توفير تكلفة استشارات تقنية ضخمة' : 'Save thousands in technical consultation fees'}</span>
                 </div>
               </div>
 
@@ -696,7 +721,7 @@ export function UniversalLandingPage() {
                   className="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs sm:text-sm font-extrabold tracking-wide uppercase transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2"
                 >
                   <Briefcase className="w-4 h-4" />
-                  <span>{isArabic ? 'سجل حسابك كـ فريلانسر الآن (مجاناً)' : 'Start as a Freelancer Free'}</span>
+                  <span>{isArabic ? 'سجل حسابك كـ مستقل الآن' : 'Start as a Freelancer Free'}</span>
                 </button>
               </div>
             </div>
@@ -793,10 +818,10 @@ export function UniversalLandingPage() {
                 {isArabic ? 'مثالي للمستقلين الذين يديرون حتى 3 مواقع ومشاريع خاصة' : 'Perfect for solo developers managing up to 3 personal websites.'}
               </p>
               <ul className="space-y-2 text-xs text-[var(--text-secondary)] pt-4 border-t border-[var(--border-subtle)]">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> 3 مواقع ومنصات خاصة</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> جميع المراحل السبع مع الشعار</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> تحليل ملفات PDF وكراسات الشروط</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> كود روم لمشاركة المشاريع</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? '3 مواقع ومنصات خاصة' : '3 personal websites & platforms'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'جميع المراحل السبع مع الشعار' : 'All 7 stages including brand & logo'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'تحليل ملفات PDF ومستندات العمل' : 'PDF & RFP specification ingestion'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'كود روم لمشاركة المشاريع' : 'Dedicated room code per project'}</li>
               </ul>
             </div>
             <button
@@ -810,7 +835,7 @@ export function UniversalLandingPage() {
           {/* Tier 2: Pro Studio (Most Popular) */}
           <div className="p-6 sm:p-8 rounded-2xl border border-emerald-500/50 bg-radial from-emerald-950/20 to-[var(--bg-surface)] flex flex-col justify-between shadow-xl ring-1 ring-emerald-500/30 relative">
             <span className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-emerald-500 text-black text-[10px] font-black uppercase tracking-wider shadow-sm">
-              Most Popular
+              {isArabic ? 'الأكثر طلباً' : 'Most Popular'}
             </span>
             <div className="space-y-4">
               <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider font-mono">
@@ -819,28 +844,30 @@ export function UniversalLandingPage() {
               <div>
                 <div className="text-3xl font-black font-mono">
                   {billingInterval === 'annual' ? '$29' : '$39'}
-                  <span className="text-xs font-normal text-[var(--text-muted)] font-sans"> / mo</span>
+                  <span className="text-xs font-normal text-[var(--text-muted)] font-sans"> {isArabic ? ' / شهرياً' : ' / mo'}</span>
                 </div>
                 <span className="text-xs text-emerald-400 font-mono">
-                  {billingInterval === 'annual' ? 'Billed annually (Save $120)' : 'Billed monthly'}
+                  {billingInterval === 'annual' 
+                    ? (isArabic ? 'فوترة سنوية (وفر $120)' : 'Billed annually (Save $120)') 
+                    : (isArabic ? 'فوترة شهرية' : 'Billed monthly')}
                 </span>
               </div>
               <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                 {isArabic ? 'للفرق التقنية والاستوديوهات التي تسلم مشاريع برمجية تجارية لعملائها' : 'For tech studios & high-velocity teams delivering client software.'}
               </p>
               <ul className="space-y-2 text-xs text-[var(--text-primary)] pt-4 border-t border-[var(--border-subtle)]">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> مواقع وعملاء غير محدودين</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> مزامنة Google Drive السحابية</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> تصدير مباشر لـ Figma Tokens</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> أولوية في سرعة استجابة الذكاء الاصطناعي</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> دعم فني ذو أولوية فائقة 24/7</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'مواقع وعملاء غير محدودين' : 'Unlimited websites & client projects'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'مزامنة Google Drive السحابية' : 'Google Drive & cloud ingestion'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'تصدير مباشر لـ Figma Tokens' : 'Direct Figma Tokens & Next.js export'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'أولوية في سرعة استجابة الذكاء الاصطناعي' : 'Priority AI generation & sub-second latency'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'دعم فني ذو أولوية فائقة 24/7' : '24/7 High-priority technical support'}</li>
               </ul>
             </div>
             <button
               onClick={() => handleStartOnboarding('enterprise')}
               className="mt-6 w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-black uppercase tracking-wide transition-all shadow-md shadow-emerald-500/20"
             >
-              {isArabic ? 'ابدأ تجربة الـ Studio' : 'Start Studio Plan'}
+              {isArabic ? 'ابدأ تجربة الاستوديو' : 'Start Studio Plan'}
             </button>
           </div>
 
@@ -853,7 +880,7 @@ export function UniversalLandingPage() {
               <div>
                 <div className="text-3xl font-black font-mono">
                   {billingInterval === 'annual' ? '$199' : '$249'}
-                  <span className="text-xs font-normal text-[var(--text-muted)] font-sans"> / mo</span>
+                  <span className="text-xs font-normal text-[var(--text-muted)] font-sans"> {isArabic ? ' / شهرياً' : ' / mo'}</span>
                 </div>
                 <span className="text-xs text-[var(--text-muted)]">{isArabic ? 'أو ترخيص استحواذ دائم للمشروع' : 'Or Full Source Buyout'}</span>
               </div>
@@ -861,11 +888,11 @@ export function UniversalLandingPage() {
                 {isArabic ? 'للشركات الكبرى والمستثمرين الراغبين بشراء المنظومة أو تشغيلها في سحابة خاصة' : 'Custom on-premise sovereign deployment, SAMA compliance, or IP buyout.'}
               </p>
               <ul className="space-y-2 text-xs text-[var(--text-secondary)] pt-4 border-t border-[var(--border-subtle)]">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> سحابة سيادية معزولة (KSA/UAE/EU)</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> تدقيق امتثال SAMA و ZATCA و NCA</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> مهندس معماري استشاري مخصص</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> خط دعم ساخن مخصص عبر الهاتف 24/7</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> عقد ترخيص تجاري لنقل الملكية الفكرية</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'سحابة سيادية معزولة (السعودية / الإمارات / أوروبا)' : 'Isolated sovereign cloud (KSA / UAE / EU)'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'تدقيق امتثال SAMA و ZATCA و NCA' : 'SAMA, ZATCA, and NCA compliance audits'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'مهندس معماري استشاري مخصص' : 'Dedicated principal software architect'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'خط دعم ساخن مخصص عبر الهاتف 24/7' : '24/7 Dedicated executive phone hotline'}</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'عقد ترخيص تجاري لنقل الملكية الفكرية' : 'Full commercial IP transfer buyout contract'}</li>
               </ul>
             </div>
             <a
@@ -903,7 +930,7 @@ export function UniversalLandingPage() {
                 <div className="flex items-center gap-2.5 text-emerald-400">
                   <Phone className="w-5 h-5 shrink-0" />
                   <h3 className="font-bold text-sm text-[var(--text-primary)]">
-                    {isArabic ? 'أرقام الدعم الفني والخطوط الساخنة المباشرة' : 'Direct Phone Hotlines'}
+                    {isArabic ? 'أرقام التواصل والدعم الفني المباشر' : 'Direct Support Lines & Hotlines'}
                   </h3>
                 </div>
 
@@ -911,28 +938,28 @@ export function UniversalLandingPage() {
                   <div className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between">
                     <div>
                       <span className="text-[10px] text-[var(--text-muted)] block font-sans">
-                        {isArabic ? 'المملكة العربية السعودية (مكتب الرياض)' : 'Saudi Arabia Desk (Riyadh)'}
+                        {isArabic ? 'المؤسس والدعم الفني المباشر (م. نهال كمال)' : 'Founder & Technical Desk (Nehal Kamal)'}
                       </span>
-                      <a href="tel:+966114567890" className="font-bold text-white hover:text-emerald-400 transition-colors">
-                        +966 11 456 7890
+                      <a href="tel:+201553646123" className="font-bold text-white hover:text-emerald-400 transition-colors">
+                        +20 155 364 6123
                       </a>
                     </div>
                     <span className="text-[10px] text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
-                      24/7 Live
+                      {isArabic ? 'مباشر 24/7' : '24/7 Live'}
                     </span>
                   </div>
 
                   <div className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between">
                     <div>
                       <span className="text-[10px] text-[var(--text-muted)] block font-sans">
-                        {isArabic ? 'مصر والشرق الأوسط (القرية الذكية)' : 'Egypt & Regional Support'}
+                        {isArabic ? 'مصر والشرق الأوسط (القرية الذكية)' : 'Egypt & Regional Support (Smart Village)'}
                       </span>
-                      <a href="tel:+20227654321" className="font-bold text-white hover:text-emerald-400 transition-colors">
-                        +20 2 2765 4321
+                      <a href="tel:+201553646123" className="font-bold text-white hover:text-emerald-400 transition-colors">
+                        +20 155 364 6123
                       </a>
                     </div>
                     <span className="text-[10px] text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
-                      Direct
+                      {isArabic ? 'متاح' : 'Direct'}
                     </span>
                   </div>
 
@@ -946,7 +973,7 @@ export function UniversalLandingPage() {
                       </span>
                     </div>
                     <span className="text-[10px] text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded">
-                      Toll-Free
+                      {isArabic ? 'مجاني' : 'Toll-Free'}
                     </span>
                   </div>
                 </div>
@@ -961,15 +988,28 @@ export function UniversalLandingPage() {
                   </h4>
                 </div>
                 <div className="space-y-1.5 text-[11px] font-mono text-[var(--text-secondary)]">
-                  <p>الدعم الفني والتقني: <a href="mailto:support@monospec.dev" className="text-white hover:underline">support@monospec.dev</a></p>
-                  <p>مبيعات التراخيص والمؤسسات: <a href="mailto:enterprise@monospec.dev" className="text-white hover:underline">enterprise@monospec.dev</a></p>
-                  <p>الاستحواذ وشراء المشروع: <a href="mailto:acquisitions@monospec.dev" className="text-emerald-400 font-bold hover:underline">acquisitions@monospec.dev</a></p>
+                  <p>
+                    {isArabic ? 'الدعم الفني والتقني: ' : 'Technical Support: '}
+                    <a href="mailto:nehaledeib@gmail.com" className="text-white hover:underline">nehaledeib@gmail.com</a>
+                  </p>
+                  <p>
+                    {isArabic ? 'مبيعات التراخيص والمؤسسات: ' : 'Enterprise & Licensing: '}
+                    <a href="mailto:nehaledeib@gmail.com" className="text-white hover:underline">nehaledeib@gmail.com</a>
+                  </p>
+                  <p>
+                    {isArabic ? 'الاستحواذ وشراء المشروع (نهال كمال): ' : 'Founder & Commercial Acquisition: '}
+                    <a href="mailto:nehaledeib@gmail.com" className="text-emerald-400 font-bold hover:underline">nehaledeib@gmail.com</a>
+                  </p>
                 </div>
 
                 <div className="pt-3 border-t border-[var(--border-subtle)] space-y-1.5 text-[11px] text-[var(--text-muted)]">
                   <div className="flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span>الرياض: برج التقنية، طريق الملك فهد | دبي: DIFC Gate 4 | القاهرة: القرية الذكية</span>
+                    <span>
+                      {isArabic
+                        ? 'القاهرة: القرية الذكية | الرياض: برج التقنية | دبي: مركز DIFC'
+                        : 'Cairo: Smart Village | Riyadh: Tech Tower | Dubai: DIFC'}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -978,9 +1018,9 @@ export function UniversalLandingPage() {
               <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-950/20 text-emerald-400 text-xs flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-bold">جميع الأنظمة السحابية تعمل بنسبة 100%</span>
+                  <span className="font-bold">{isArabic ? 'جميع الأنظمة السحابية تعمل بنسبة 100%' : 'All Cloud Systems 100% Operational'}</span>
                 </div>
-                <span className="text-[10px] font-mono text-zinc-400">زمن الاستجابة &lt; 3 دقائق</span>
+                <span className="text-[10px] font-mono text-zinc-400">{isArabic ? 'زمن الاستجابة أقل من 3 دقائق' : 'Response SLA < 3 mins'}</span>
               </div>
             </div>
 
@@ -998,7 +1038,7 @@ export function UniversalLandingPage() {
                     </h3>
                   </div>
                   <span className="text-[10px] font-mono text-[var(--text-muted)]">
-                    Fast Response SLA
+                    {isArabic ? 'استجابة فائقة السرعة' : 'Fast Response SLA'}
                   </span>
                 </div>
 
@@ -1009,14 +1049,18 @@ export function UniversalLandingPage() {
                       {isArabic ? 'تم استلام طلبك وتوليد تذكرة الدعم بنجاح!' : 'Ticket Created Successfully!'}
                     </h4>
                     <p className="text-xs text-zinc-300">
-                      رقم التذكرة: <strong className="font-mono text-emerald-400">{ticketId}</strong> • تم توجيه الطلب للمهندس المختص وسيتواصل معك خلال دقائق.
+                      {isArabic ? (
+                        <>رقم التذكرة: <strong className="font-mono text-emerald-400">{ticketId}</strong> • تم توجيه الطلب للمهندس المختص وسيتواصل معك خلال دقائق.</>
+                      ) : (
+                        <>Ticket ID: <strong className="font-mono text-emerald-400">{ticketId}</strong> • Assigned to lead engineer, we will contact you shortly.</>
+                      )}
                     </p>
                     <button
                       type="button"
                       onClick={() => setTicketId(null)}
                       className="px-4 py-1.5 rounded-lg border border-emerald-500/30 text-emerald-400 text-xs font-semibold hover:bg-emerald-950/40 transition-colors"
                     >
-                      إرسال استفسار آخر
+                      {isArabic ? 'إرسال استفسار آخر' : 'Submit Another Inquiry'}
                     </button>
                   </div>
                 ) : (
@@ -1029,7 +1073,7 @@ export function UniversalLandingPage() {
                         <input
                           type="text"
                           required
-                          placeholder={isArabic ? 'م. نهال كمال / Nehal Kamal' : 'Alex Morgan'}
+                          placeholder={isArabic ? 'نهال كمال' : 'Nehal Kamal'}
                           value={supportName}
                           onChange={(e) => setSupportName(e.target.value)}
                           className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden focus:border-[var(--border-strong)]"
@@ -1043,7 +1087,7 @@ export function UniversalLandingPage() {
                         <input
                           type="email"
                           required
-                          placeholder="architect@company.com"
+                          placeholder="nehaledeib@gmail.com"
                           value={supportEmail}
                           onChange={(e) => setSupportEmail(e.target.value)}
                           className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden focus:border-[var(--border-strong)]"
@@ -1058,7 +1102,7 @@ export function UniversalLandingPage() {
                         </label>
                         <input
                           type="tel"
-                          placeholder="+966 50 123 4567"
+                          placeholder="+201553646123"
                           value={supportPhone}
                           onChange={(e) => setSupportPhone(e.target.value)}
                           className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] font-mono focus:outline-hidden focus:border-[var(--border-strong)]"
@@ -1074,10 +1118,10 @@ export function UniversalLandingPage() {
                           onChange={(e) => setSupportCategory(e.target.value)}
                           className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
                         >
-                          <option value="technical">دعم فني واستشارات معمارية</option>
-                          <option value="buyout">شراء وترخيص المشروع بالكامل (Commercial Buyout)</option>
-                          <option value="enterprise">اشتراك شركات ومؤسسات كبرى</option>
-                          <option value="freelancer">مساعدة حسابات المستقلين</option>
+                          <option value="technical">{isArabic ? 'دعم فني واستشارات معمارية' : 'Technical & Architecture Support'}</option>
+                          <option value="buyout">{isArabic ? 'شراء وترخيص المشروع بالكامل' : 'Full Commercial Buyout & IP License'}</option>
+                          <option value="enterprise">{isArabic ? 'اشتراك شركات ومؤسسات كبرى' : 'Enterprise & Team Plan'}</option>
+                          <option value="freelancer">{isArabic ? 'مساعدة حسابات المستقلين' : 'Freelancer Studio Support'}</option>
                         </select>
                       </div>
                     </div>
@@ -1099,7 +1143,7 @@ export function UniversalLandingPage() {
                     <div className="flex items-center justify-between pt-2">
                       <div className="flex items-center gap-1.5 text-[10px] text-[var(--text-muted)]">
                         <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>بياناتك محمية ومحفوظة بموجب اتفاقية سرية (NDA)</span>
+                        <span>{isArabic ? 'بياناتك محمية ومحفوظة بموجب اتفاقية سرية (NDA)' : 'Protected by Enterprise Non-Disclosure Agreement (NDA)'}</span>
                       </div>
 
                       <button
@@ -1118,7 +1162,7 @@ export function UniversalLandingPage() {
         </div>
       </section>
 
-      {/* 10. AUTH PORTAL & WORKSPACE ACCESS (تسجيل الدخول وبدء العمل) */}
+      {/* 10. AUTH PORTAL & WORKSPACE ACCESS */}
       <section id="auth-portal" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] scroll-mt-24">
         <div className="max-w-md mx-auto space-y-6">
           <div className="text-center space-y-2">
@@ -1132,8 +1176,8 @@ export function UniversalLandingPage() {
             </h2>
             <p className="text-xs text-[var(--text-muted)]">
               {authMode === 'signup'
-                ? (isArabic ? 'ابدأ بإعداد مساحة عمل فريقك أو حسابك كفريلانسر بكود غرفة مخصص' : 'Setup your team room or freelancer studio with a room code')
-                : (isArabic ? 'أدخل كود الغرفة (Room Code) أو بريدك للوصول إلى مشاريعك' : 'Enter your room code or email to access projects')}
+                ? (isArabic ? 'ابدأ بإعداد مساحة عمل فريقك أو حسابك كـ مستقل بكود مخصص' : 'Setup your team room or freelancer studio with a room code')
+                : (isArabic ? 'أدخل كود الغرفة أو بريدك للوصول إلى مشاريعك' : 'Enter your room code or email to access projects')}
             </p>
           </div>
 
@@ -1151,7 +1195,7 @@ export function UniversalLandingPage() {
               }`}
             >
               <UserPlus className="w-3.5 h-3.5" />
-              <span>{isArabic ? 'تسجيل جديد (Sign Up)' : 'Sign Up'}</span>
+              <span>{isArabic ? 'تسجيل جديد' : 'Sign Up'}</span>
             </button>
             <button
               onClick={() => {
@@ -1165,7 +1209,7 @@ export function UniversalLandingPage() {
               }`}
             >
               <LogIn className="w-3.5 h-3.5" />
-              <span>{isArabic ? 'تسجيل دخول (Sign In)' : 'Sign In'}</span>
+              <span>{isArabic ? 'تسجيل دخول' : 'Sign In'}</span>
             </button>
           </div>
 
@@ -1211,11 +1255,11 @@ export function UniversalLandingPage() {
             {authMode === 'signup' && (
               <div className="space-y-1">
                 <label className="font-semibold text-[var(--text-secondary)]">
-                  {isArabic ? 'الاسم الكامل / Name' : 'Full Name'}
+                  {isArabic ? 'الاسم الكامل' : 'Full Name'}
                 </label>
                 <input
                   type="text"
-                  placeholder={isArabic ? 'مثال: م. نهال كمال / Nehal Kamal' : 'e.g. Alex Morgan'}
+                  placeholder={isArabic ? 'نهال كمال' : 'Nehal Kamal'}
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden focus:border-[var(--border-strong)]"
@@ -1226,11 +1270,11 @@ export function UniversalLandingPage() {
 
             <div className="space-y-1">
               <label className="font-semibold text-[var(--text-secondary)]">
-                {isArabic ? 'البريد الإلكتروني / Work Email' : 'Email Address'}
+                {isArabic ? 'البريد الإلكتروني المهني' : 'Work Email Address'}
               </label>
               <input
                 type="email"
-                placeholder="architect@yourcompany.com"
+                placeholder="nehaledeib@gmail.com"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden focus:border-[var(--border-strong)]"
@@ -1242,7 +1286,7 @@ export function UniversalLandingPage() {
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <label className="font-semibold text-[var(--text-secondary)]">
-                    {isArabic ? 'كود الغرفة / Team Room Code (اختياري)' : 'Team Room Code (Optional)'}
+                    {isArabic ? 'كود الغرفة للفريق (اختياري)' : 'Team Room Code (Optional)'}
                   </label>
                   <span className="text-[10px] font-mono text-emerald-400">e.g. MONO-8842-PRO</span>
                 </div>
@@ -1305,34 +1349,34 @@ export function UniversalLandingPage() {
 
           {/* Col 1 */}
           <div className="space-y-2.5">
-            <h4 className="font-bold text-[var(--text-primary)]">المنظومة</h4>
+            <h4 className="font-bold text-[var(--text-primary)]">{isArabic ? 'المنظومة' : 'Platform'}</h4>
             <ul className="space-y-1.5 text-[11px]">
-              <li><a href="#pipeline" className="hover:text-white transition-colors">المراحل السبع</a></li>
-              <li><a href="#how-it-works" className="hover:text-white transition-colors">تحليل PDF و Drive</a></li>
-              <li><a href="#freelancers" className="hover:text-white transition-colors">استوديو المستقلين</a></li>
-              <li><a href="#pricing" className="hover:text-white transition-colors">تكاملات Figma</a></li>
+              <li><a href="#pipeline" className="hover:text-white transition-colors">{isArabic ? 'المراحل السبع' : 'The 7 Stages'}</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">{isArabic ? 'تحليل PDF ومستندات العمل' : 'PDF & Drive Ingestion'}</a></li>
+              <li><a href="#freelancers" className="hover:text-white transition-colors">{isArabic ? 'استوديو المستقلين' : 'Freelancer Studio'}</a></li>
+              <li><a href="#pricing" className="hover:text-white transition-colors">{isArabic ? 'تكاملات Figma والمعمارية' : 'Figma & Architecture'}</a></li>
             </ul>
           </div>
 
           {/* Col 2 */}
           <div className="space-y-2.5">
-            <h4 className="font-bold text-[var(--text-primary)]">القطاعات</h4>
+            <h4 className="font-bold text-[var(--text-primary)]">{isArabic ? 'القطاعات' : 'Industries'}</h4>
             <ul className="space-y-1.5 text-[11px]">
-              <li><a href="#how-it-works" className="hover:text-white transition-colors">التقنية المالية والمدفوعات</a></li>
-              <li><a href="#how-it-works" className="hover:text-white transition-colors">اللوجستيات والشحن</a></li>
-              <li><a href="#how-it-works" className="hover:text-white transition-colors">الرعاية الصحية (HIPAA)</a></li>
-              <li><a href="#how-it-works" className="hover:text-white transition-colors">الأنظمة السيادية والحكومية</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">{isArabic ? 'التقنية المالية والمدفوعات' : 'FinTech & Payments'}</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">{isArabic ? 'اللوجستيات والشحن' : 'Logistics & Supply Chain'}</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">{isArabic ? 'الرعاية الصحية (HIPAA)' : 'HealthTech (HIPAA)'}</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">{isArabic ? 'الأنظمة السيادية والحكومية' : 'GovTech & Sovereign Cloud'}</a></li>
             </ul>
           </div>
 
           {/* Col 3 */}
           <div className="space-y-2.5">
-            <h4 className="font-bold text-[var(--text-primary)]">الدعم والتواصل</h4>
+            <h4 className="font-bold text-[var(--text-primary)]">{isArabic ? 'الدعم والتواصل' : 'Direct Support'}</h4>
             <ul className="space-y-1.5 text-[11px]">
-              <li><a href="tel:+966114567890" className="hover:text-white font-mono transition-colors">+966 11 456 7890</a></li>
-              <li><a href="mailto:support@monospec.dev" className="hover:text-white font-mono transition-colors">support@monospec.dev</a></li>
-              <li><a href="#contact" className="hover:text-white transition-colors">فتح تذكرة دعم فني</a></li>
-              <li><a href="mailto:acquisitions@monospec.dev" className="text-emerald-400 font-bold hover:underline">شراء وترخيص المشروع</a></li>
+              <li><a href="tel:+201553646123" className="hover:text-white font-mono transition-colors">+20 155 364 6123</a></li>
+              <li><a href="mailto:nehaledeib@gmail.com" className="hover:text-white font-mono transition-colors">nehaledeib@gmail.com</a></li>
+              <li><a href="#contact" className="hover:text-white transition-colors">{isArabic ? 'فتح تذكرة دعم فني' : 'Open Support Ticket'}</a></li>
+              <li><a href="mailto:nehaledeib@gmail.com" className="text-emerald-400 font-bold hover:underline">{isArabic ? 'شراء وترخيص المشروع' : 'Commercial IP Buyout'}</a></li>
             </ul>
           </div>
         </div>
@@ -1340,11 +1384,11 @@ export function UniversalLandingPage() {
         <div className="max-w-6xl mx-auto pt-6 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
           <p>© 2026 MonoSpec Enterprise OS. All rights reserved.</p>
           <div className="flex items-center gap-4 text-[var(--text-muted)]">
-            <a href="#contact" className="hover:text-white transition-colors">سياسة الخصوصية</a>
+            <a href="#contact" className="hover:text-white transition-colors">{isArabic ? 'سياسة الخصوصية' : 'Privacy Policy'}</a>
             <span>•</span>
-            <a href="#contact" className="hover:text-white transition-colors">شروط الاستخدام</a>
+            <a href="#contact" className="hover:text-white transition-colors">{isArabic ? 'شروط الاستخدام' : 'Terms of Service'}</a>
             <span>•</span>
-            <a href="#contact" className="hover:text-white transition-colors">شهادات الامتثال والأمان</a>
+            <a href="#contact" className="hover:text-white transition-colors">{isArabic ? 'شهادات الامتثال والأمان' : 'Security & Compliance'}</a>
           </div>
         </div>
       </footer>

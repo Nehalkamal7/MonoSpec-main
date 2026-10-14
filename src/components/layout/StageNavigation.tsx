@@ -30,11 +30,13 @@ const STAGE_ICONS: Record<string, typeof FileCode2> = {
 };
 
 export function StageNavigation() {
-  const { activeStageId, setActiveStage, getActiveProject, customStages, selectedStageIds } =
+  const { activeStageId, setActiveStage, getActiveProject, customStages, selectedStageIds, locale } =
     useMonoSpecStore();
   const activeProject = getActiveProject();
 
   if (!activeProject) return null;
+
+  const isArabic = locale === 'ar';
 
   // Render configured stages that are active
   const displayedStages = customStages.filter(
@@ -76,13 +78,10 @@ export function StageNavigation() {
                 />
               </div>
 
-              {/* Labels (English + Arabic) */}
-              <div className="flex flex-col text-left leading-tight">
+              {/* Labels (Strictly Arabic when Arabic, English when English) */}
+              <div className="flex flex-col text-start leading-tight">
                 <span className={`font-medium ${isActive ? 'font-semibold' : ''}`}>
-                  {stage.labelEn}
-                </span>
-                <span className="text-[10px] text-[var(--text-muted)] font-sans opacity-85">
-                  {stage.labelAr}
+                  {isArabic ? stage.labelAr : stage.labelEn}
                 </span>
               </div>
 

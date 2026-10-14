@@ -38,7 +38,10 @@ export function TrainingDatasetsModal() {
     ingestedSources,
     addIngestedSource,
     analyzeSource,
+    locale,
   } = useMonoSpecStore();
+
+  const isArabic = locale === 'ar';
 
   const [activeTab, setActiveTab] = useState<'browse' | 'pdf_upload' | 'drive_sync' | 'manual_add' | 'guide'>('browse');
   const [selectedCompanyFilter, setSelectedCompanyFilter] = useState<string>('all');
@@ -231,7 +234,7 @@ export function TrainingDatasetsModal() {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150" dir={isArabic ? 'rtl' : 'ltr'}>
       <div className="w-full max-w-4xl rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] shadow-2xl overflow-hidden text-[var(--text-primary)] flex flex-col max-h-[92vh]">
         {/* Header */}
         <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center justify-between shrink-0">
@@ -241,13 +244,17 @@ export function TrainingDatasetsModal() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-semibold tracking-tight">AI Training Datasets & Document Ingestion</h2>
+                <h2 className="text-sm font-semibold tracking-tight">
+                  {isArabic ? 'قواعد بيانات التدريب واستيعاب المستندات' : 'AI Training Datasets & Document Ingestion'}
+                </h2>
                 <span className="text-[10px] font-mono px-1.5 py-0.2 rounded border border-emerald-500/30 bg-emerald-950/20 text-emerald-400 font-bold">
-                  PDF & DRIVE ENGINE
+                  {isArabic ? 'محرك PDF ودرايف' : 'PDF & DRIVE ENGINE'}
                 </span>
               </div>
               <p className="text-[11px] text-[var(--text-muted)]">
-                تدريب النموذج الذكي عبر رفع ملفات الـ PDF أو مجلدات Google Drive لاستخراج المواصفات الفنية
+                {isArabic 
+                  ? 'تدريب النموذج الذكي عبر استيعاب ملفات المواصفات الفنية أو مجلدات Google Drive لاستخراج المتطلبات بدقة' 
+                  : 'Train the architectural model by ingesting PDF specifications or Google Drive repositories.'}
               </p>
             </div>
           </div>
@@ -271,7 +278,7 @@ export function TrainingDatasetsModal() {
               }`}
             >
               <Database className="w-3.5 h-3.5" />
-              <span>البيانات المدربة ({datasets.length + ingestedSources.length})</span>
+              <span>{isArabic ? `البيانات المدربة (${datasets.length + ingestedSources.length})` : `Trained Benchmarks (${datasets.length + ingestedSources.length})`}</span>
             </button>
 
             <button
@@ -283,7 +290,7 @@ export function TrainingDatasetsModal() {
               }`}
             >
               <FileText className="w-3.5 h-3.5 text-red-400" />
-              <span>رفع ملف PDF وتحليله</span>
+              <span>{isArabic ? 'رفع ملف PDF وتحليله' : 'Upload & Ingest PDF'}</span>
             </button>
 
             <button
@@ -295,7 +302,7 @@ export function TrainingDatasetsModal() {
               }`}
             >
               <HardDrive className="w-3.5 h-3.5 text-blue-400" />
-              <span>ربط Google Drive</span>
+              <span>{isArabic ? 'ربط Google Drive' : 'Sync Google Drive'}</span>
             </button>
 
             <button
@@ -307,7 +314,7 @@ export function TrainingDatasetsModal() {
               }`}
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>إدخال يدوي</span>
+              <span>{isArabic ? 'إدخال يدوي' : 'Manual Benchmark'}</span>
             </button>
 
             <button
@@ -319,19 +326,21 @@ export function TrainingDatasetsModal() {
               }`}
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span>دليل المعمارية</span>
+              <span>{isArabic ? 'دليل المعمارية' : 'Architecture Guide'}</span>
             </button>
           </div>
 
           {activeTab === 'browse' && (
             <div className="flex items-center gap-1 text-xs py-2">
-              <span className="text-[10px] font-mono text-[var(--text-muted)] mr-1">Company:</span>
+              <span className="text-[10px] font-mono text-[var(--text-muted)] ltr:mr-1 rtl:ml-1">
+                {isArabic ? 'الشركة:' : 'Company:'}
+              </span>
               <select
                 value={selectedCompanyFilter}
                 onChange={(e) => setSelectedCompanyFilter(e.target.value)}
                 className="px-2 py-1 rounded text-[11px] font-mono border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
               >
-                <option value="all">All Companies</option>
+                <option value="all">{isArabic ? 'جميع الشركات' : 'All Companies'}</option>
                 {companies.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.code} · {c.name}
@@ -353,9 +362,11 @@ export function TrainingDatasetsModal() {
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1.5">
                       <Cpu className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>المستندات المحللة والمدربة في النموذج ({filteredIngestedSources.length})</span>
+                      <span>{isArabic ? `المستندات المحللة والمدربة في النموذج (${filteredIngestedSources.length})` : `Ingested & Trained Documents (${filteredIngestedSources.length})`}</span>
                     </span>
-                    <span className="text-[10px] font-mono text-emerald-400">ACTIVE IN FEW-SHOT RAG</span>
+                    <span className="text-[10px] font-mono text-emerald-400">
+                      {isArabic ? 'نشط في الاسترجاع الذكي' : 'ACTIVE IN FEW-SHOT RAG'}
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-1 gap-3">
@@ -380,14 +391,14 @@ export function TrainingDatasetsModal() {
                                 {source.name}
                               </h4>
                               <p className="text-[11px] text-[var(--text-muted)] font-mono">
-                                {source.size} {source.pageCount ? `• ${source.pageCount} Pages` : ''} • {new Date(source.uploadedAt).toLocaleDateString()}
+                                {source.size} {source.pageCount ? `• ${source.pageCount} ${isArabic ? 'صفحة' : 'Pages'}` : ''} • {new Date(source.uploadedAt).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
 
                           <span className="flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950/30 text-emerald-400 border border-emerald-500/20">
                             <CheckCircle2 className="w-3 h-3" />
-                            <span>TRAINED</span>
+                            <span>{isArabic ? 'تم التدريب' : 'TRAINED'}</span>
                           </span>
                         </div>
 
@@ -406,7 +417,7 @@ export function TrainingDatasetsModal() {
                                 </span>
                               ))}
                               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-300">
-                                {source.extractedInsights.tokenCount.toLocaleString()} Tokens Ingested
+                                {source.extractedInsights.tokenCount.toLocaleString()} {isArabic ? 'رمز مستوعب' : 'Tokens Ingested'}
                               </span>
                             </div>
                           </div>
@@ -420,12 +431,12 @@ export function TrainingDatasetsModal() {
               {/* Classical Benchmarks List */}
               <div className="space-y-2 pt-2">
                 <span className="text-xs font-bold text-[var(--text-primary)]">
-                  نماذج ومواصفات السجل المركزي ({datasets.length})
+                  {isArabic ? `نماذج ومواصفات السجل المركزي (${datasets.length})` : `Central Registry Architectural Benchmarks (${datasets.length})`}
                 </span>
 
                 {datasets.length === 0 ? (
                   <div className="p-8 text-center text-xs text-[var(--text-muted)] border border-dashed border-[var(--border-subtle)] rounded-xl">
-                    لا توجد مواصفات مسجلة. يمكنك رفع ملف PDF أو ربط Google Drive أعلاه.
+                    {isArabic ? 'لا توجد مواصفات مسجلة. يمكنك رفع ملف PDF أو ربط Google Drive أعلاه.' : 'No benchmark specifications found. Upload a PDF or sync Google Drive above.'}
                   </div>
                 ) : (
                   datasets.map((ds) => (
@@ -456,17 +467,17 @@ export function TrainingDatasetsModal() {
             <div className="space-y-6 max-w-2xl mx-auto">
               <div className="space-y-1 text-center">
                 <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  رفع ملف PDF للمواصفات الفنية (SRS / RFPs / Specs)
+                  {isArabic ? 'رفع ملف PDF للمواصفات الفنية (SRS / RFPs / Specs)' : 'Upload Architecture Spec PDF (SRS / RFPs / Specs)'}
                 </h3>
                 <p className="text-xs text-[var(--text-muted)]">
-                  يقوم المحرك بقراءة جداول البيانات والكيانات وقواعد الأمان وتغذية النموذج بها
+                  {isArabic ? 'يقوم المحرك بقراءة جداول البيانات والكيانات وقواعد الأمان وتغذية النموذج بها' : 'The pipeline extracts entity schemas, APIs, and security invariant rules.'}
                 </p>
               </div>
 
               {/* Company Selector for PDF */}
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-[var(--text-secondary)]">
-                  الشركة أو العميل المستهدف
+                  {isArabic ? 'الشركة أو العميل المستهدف' : 'Target Client / Company'}
                 </label>
                 <select
                   value={formCompanyId}
@@ -496,10 +507,10 @@ export function TrainingDatasetsModal() {
                   </div>
                   <div>
                     <p className="text-xs font-bold text-[var(--text-primary)]">
-                      {selectedFile ? selectedFile.name : 'اسحب ملف الـ PDF هنا أو اضغط للاختيار'}
+                      {selectedFile ? selectedFile.name : (isArabic ? 'اسحب ملف الـ PDF هنا أو اضغط للاختيار' : 'Drop PDF spec file here or click to browse')}
                     </p>
                     <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                      يدعم ملفات PDF، Word، Markdown وحتى 100 ميجابايت
+                      {isArabic ? 'يدعم ملفات PDF، Word، Markdown وحتى 100 ميجابايت' : 'Supports PDF, Word, Markdown up to 100MB'}
                     </p>
                   </div>
                 </div>
@@ -511,7 +522,7 @@ export function TrainingDatasetsModal() {
                   <div className="flex items-center justify-between text-xs font-semibold text-emerald-400">
                     <span className="flex items-center gap-1.5">
                       <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      <span>جاري التحليل المعماري للمستند بالذكاء الاصطناعي...</span>
+                      <span>{isArabic ? 'جاري التحليل المعماري للمستند بالذكاء الاصطناعي...' : 'AI architectural parsing in progress...'}</span>
                     </span>
                     <span className="font-mono">{pdfAnalysisStep * 25}%</span>
                   </div>
@@ -525,13 +536,13 @@ export function TrainingDatasetsModal() {
 
                   <ul className="text-[11px] font-mono text-[var(--text-muted)] space-y-1">
                     <li className={pdfAnalysisStep >= 1 ? 'text-emerald-300' : ''}>
-                      {pdfAnalysisStep >= 1 ? '✓' : '○'} تفكيك النصوص والجداول واستخراج الفصول
+                      {pdfAnalysisStep >= 1 ? '✓' : '○'} {isArabic ? 'تفكيك النصوص والجداول واستخراج الفصول' : 'Deconstructing sections, schemas, and tables'}
                     </li>
                     <li className={pdfAnalysisStep >= 2 ? 'text-emerald-300' : ''}>
-                      {pdfAnalysisStep >= 2 ? '✓' : '○'} استخراج الكيانات البرمجية (Entities) والـ APIs
+                      {pdfAnalysisStep >= 2 ? '✓' : '○'} {isArabic ? 'استخراج الكيانات البرمجية (Entities) والـ APIs' : 'Extracting domain entities, microservices & APIs'}
                     </li>
                     <li className={pdfAnalysisStep >= 3 ? 'text-emerald-300' : ''}>
-                      {pdfAnalysisStep >= 3 ? '✓' : '○'} فحص الامتثال السيبراني وتدريب وزن النموذج
+                      {pdfAnalysisStep >= 3 ? '✓' : '○'} {isArabic ? 'فحص الامتثال السيبراني وتدريب أوزان النموذج' : 'Verifying cyber compliance & fine-tuning weights'}
                     </li>
                   </ul>
                 </div>
@@ -546,7 +557,7 @@ export function TrainingDatasetsModal() {
                   className="px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs flex items-center gap-2"
                 >
                   <Cpu className="w-3.5 h-3.5" />
-                  <span>بدء التحليل والتدريب للمودل</span>
+                  <span>{isArabic ? 'بدء التحليل والتدريب للمودل' : 'Begin Ingestion & Model Fine-Tuning'}</span>
                 </button>
               </div>
             </div>
@@ -557,21 +568,21 @@ export function TrainingDatasetsModal() {
             <div className="space-y-6 max-w-2xl mx-auto">
               <div className="space-y-1 text-center">
                 <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  ربط مجلد أو ملف Google Drive
+                  {isArabic ? 'ربط مجلد أو ملف Google Drive' : 'Sync Google Drive Folder or Spec Asset'}
                 </h3>
                 <p className="text-xs text-[var(--text-muted)]">
-                  الصق لينك مجلد درايف ليتم استيراد كافة المستندات والمخططات وتدريب النموذج عليها
+                  {isArabic ? 'الصق رابط مجلد درايف ليتم استيراد كافة المستندات والمخططات وتدريب النموذج عليها' : 'Paste a Google Drive share link to ingest architectural diagrams and training records.'}
                 </p>
               </div>
 
               <div className="p-6 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-4">
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-[var(--text-secondary)]">
-                    عنوان أو اسم المجلد / Folder Title
+                    {isArabic ? 'اسم أو عنوان المجلد' : 'Folder Title'}
                   </label>
                   <input
                     type="text"
-                    placeholder="مثال: Google Drive: /Core-Architecture/FinTech-Specs"
+                    placeholder={isArabic ? 'مثال: Google Drive: /المعمارية-الأساسية/المواصفات' : 'e.g. Google Drive: /Core-Architecture/FinTech-Specs'}
                     value={driveFolderTitle}
                     onChange={(e) => setDriveFolderTitle(e.target.value)}
                     className="w-full px-3 py-2 text-xs rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] focus:outline-hidden"
@@ -580,24 +591,24 @@ export function TrainingDatasetsModal() {
 
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-[var(--text-secondary)]">
-                    رابط Google Drive (Share Link) *
+                    {isArabic ? 'رابط Google Drive (رابط المشاركة) *' : 'Google Drive Share Link *'}
                   </label>
                   <input
                     type="url"
-                    placeholder="https://drive.google.com/drive/folders/1aBcDeFgHi..."
+                    placeholder="https://drive.google.com/drive/folders/..."
                     value={driveUrl}
                     onChange={(e) => setDriveUrl(e.target.value)}
                     className="w-full px-3 py-2 text-xs rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] font-mono focus:outline-hidden"
                     required
                   />
                   <p className="text-[11px] text-[var(--text-muted)]">
-                    يمكنك مشاركة الرابط مع صلاحية القراءة (Viewer) لمسح المستندات وتلخيصها فوراً.
+                    {isArabic ? 'يمكنك مشاركة الرابط مع صلاحية القراءة (Viewer) لمسح المستندات وتلخيصها فوراً.' : 'Share link with Viewer permissions for automated indexing and extraction.'}
                   </p>
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-[var(--text-secondary)]">
-                    الشركة التابعة
+                    {isArabic ? 'الشركة التابعة' : 'Associated Company'}
                   </label>
                   <select
                     value={formCompanyId}
@@ -619,7 +630,7 @@ export function TrainingDatasetsModal() {
                   <div className="flex items-center justify-between text-xs font-semibold text-blue-400">
                     <span className="flex items-center gap-1.5">
                       <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      <span>جاري فحص مجلد Google Drive وفهرسة المحتويات...</span>
+                      <span>{isArabic ? 'جاري فحص مجلد Google Drive وفهرسة المحتويات...' : 'Indexing Google Drive folder and generating embeddings...'}</span>
                     </span>
                     <span className="font-mono">{driveSyncStep * 25}%</span>
                   </div>
@@ -633,13 +644,13 @@ export function TrainingDatasetsModal() {
 
                   <ul className="text-[11px] font-mono text-[var(--text-muted)] space-y-1">
                     <li className={driveSyncStep >= 1 ? 'text-blue-300' : ''}>
-                      {driveSyncStep >= 1 ? '✓' : '○'} الاتصال مع Google Drive API والتحقق من الصلاحيات
+                      {driveSyncStep >= 1 ? '✓' : '○'} {isArabic ? 'الاتصال مع Google Drive API والتحقق من الصلاحيات' : 'Connecting to Google Drive API & verifying permissions'}
                     </li>
                     <li className={driveSyncStep >= 2 ? 'text-blue-300' : ''}>
-                      {driveSyncStep >= 2 ? '✓' : '○'} قراءة المستندات والمخططات وتوليد Embeddings
+                      {driveSyncStep >= 2 ? '✓' : '○'} {isArabic ? 'قراءة المستندات والمخططات وتوليد Embeddings' : 'Extracting documents and generating semantic vectors'}
                     </li>
                     <li className={driveSyncStep >= 3 ? 'text-blue-300' : ''}>
-                      {driveSyncStep >= 3 ? '✓' : '○'} تدريب سياق المعمارية على مشاريع الشركة
+                      {driveSyncStep >= 3 ? '✓' : '○'} {isArabic ? 'تدريب سياق المعمارية على مشاريع الشركة' : 'Conditioning architecture weights on company projects'}
                     </li>
                   </ul>
                 </div>
@@ -653,7 +664,7 @@ export function TrainingDatasetsModal() {
                   className="px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs flex items-center gap-2"
                 >
                   <HardDrive className="w-3.5 h-3.5" />
-                  <span>بدء فحص ومزامنة مجلد درايف</span>
+                  <span>{isArabic ? 'بدء فحص ومزامنة مجلد درايف' : 'Start Google Drive Ingestion'}</span>
                 </button>
               </div>
             </div>
@@ -664,7 +675,9 @@ export function TrainingDatasetsModal() {
             <form onSubmit={handleCreateDataset} className="space-y-4 max-w-2xl mx-auto text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="font-semibold text-[var(--text-secondary)]">Target Company</label>
+                  <label className="font-semibold text-[var(--text-secondary)]">
+                    {isArabic ? 'الشركة المستهدفة' : 'Target Company'}
+                  </label>
                   <select
                     value={formCompanyId}
                     onChange={(e) => setFormCompanyId(e.target.value)}
@@ -679,10 +692,12 @@ export function TrainingDatasetsModal() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-semibold text-[var(--text-secondary)]">Project Title *</label>
+                  <label className="font-semibold text-[var(--text-secondary)]">
+                    {isArabic ? 'عنوان المشروع *' : 'Project Title *'}
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g. Omnichannel Logistics Hub"
+                    placeholder={isArabic ? 'مثال: مركز الخدمات اللوجستية الموحد' : 'e.g. Omnichannel Logistics Hub'}
                     value={projectTitle}
                     onChange={(e) => setProjectTitle(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
@@ -692,10 +707,12 @@ export function TrainingDatasetsModal() {
               </div>
 
               <div className="space-y-1">
-                <label className="font-semibold text-[var(--text-secondary)]">Architecture Scope</label>
+                <label className="font-semibold text-[var(--text-secondary)]">
+                  {isArabic ? 'نطاق المعمارية' : 'Architecture Scope'}
+                </label>
                 <input
                   type="text"
-                  placeholder="System goals, high-throughput requirements..."
+                  placeholder={isArabic ? 'أهداف المنظومة، متطلبات الأداء العالي...' : 'System goals, high-throughput requirements...'}
                   value={scopeDescription}
                   onChange={(e) => setScopeDescription(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
@@ -704,11 +721,11 @@ export function TrainingDatasetsModal() {
 
               <div className="space-y-1">
                 <label className="font-semibold text-[var(--text-secondary)]">
-                  Approved Technical Architecture & Invariants *
+                  {isArabic ? 'المعمارية المعتمدة والضوابط الفنية *' : 'Approved Technical Architecture & Invariants *'}
                 </label>
                 <textarea
                   rows={6}
-                  placeholder="Enter Markdown specification with ERD, Kafka streams, and security invariants..."
+                  placeholder={isArabic ? 'أدخل مواصفة Markdown مع مخططات ERD ومسارات Kafka وضوابط الأمان...' : 'Enter Markdown specification with ERD, Kafka streams, and security invariants...'}
                   value={technicalAnalysis}
                   onChange={(e) => setTechnicalAnalysis(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] font-mono text-[11px] focus:outline-hidden resize-none"
@@ -719,7 +736,7 @@ export function TrainingDatasetsModal() {
               <div className="flex justify-end gap-2 pt-2 border-t border-[var(--border-subtle)]">
                 {savedSuccess && (
                   <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5" /> تم الحفظ بنجاح
+                    <Check className="w-3.5 h-3.5" /> {isArabic ? 'تم الحفظ بنجاح' : 'Saved Successfully'}
                   </span>
                 )}
                 <button
@@ -727,7 +744,7 @@ export function TrainingDatasetsModal() {
                   disabled={!projectTitle.trim() || !technicalAnalysis.trim()}
                   className="px-5 py-2 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] font-bold text-xs hover:opacity-90 disabled:opacity-40 transition-all shadow-xs"
                 >
-                  حفظ في بيانات التدريب
+                  {isArabic ? 'حفظ في بيانات التدريب' : 'Save to Training Datasets'}
                 </button>
               </div>
             </form>
@@ -737,16 +754,16 @@ export function TrainingDatasetsModal() {
           {activeTab === 'guide' && (
             <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs text-[var(--text-secondary)] space-y-3 leading-relaxed">
               <h4 className="font-bold text-sm text-[var(--text-primary)]">
-                كيف يستفيد نموذج الذكاء الاصطناعي من ملفات PDF ولينكات Google Drive؟
+                {isArabic ? 'كيف يستفيد نموذج الذكاء الاصطناعي من ملفات PDF وروابط Google Drive؟' : 'How Does the AI Model Leverage Ingested PDFs and Google Drive?'}
               </h4>
               <p>
-                1. <strong>استخراج المعمارية (Architectural Extraction):</strong> عند رفع ملف PDF أو ربط مجلد درايف، يقوم MonoSpec باستخراج نماذج البيانات (Data Models)، قيود الـ APIs، والاتصالات المشتركة بين الخدمات.
+                1. <strong>{isArabic ? 'استخراج المعمارية:' : 'Architectural Extraction:'}</strong> {isArabic ? 'عند رفع ملف PDF أو ربط مجلد درايف، يقوم MonoSpec باستخراج نماذج البيانات، قيود الـ APIs، والاتصالات المشتركة بين الخدمات.' : 'When uploading a PDF or syncing Google Drive, MonoSpec extracts entity schemas, API contracts, and microservice topologies.'}
               </p>
               <p>
-                2. <strong>سياق الشركة المخصص (Company-Conditioned Weights):</strong> يتم ربط كل مستند بالشركة الخاصة به حتى لا تتداخل المتطلبات مع شركات أخرى داخل نفس مساحة العمل.
+                2. <strong>{isArabic ? 'سياق الشركة المخصص:' : 'Company-Conditioned Weights:'}</strong> {isArabic ? 'يتم ربط كل مستند بالشركة الخاصة به حتى لا تتداخل المتطلبات مع شركات أخرى داخل نفس مساحة العمل.' : 'Each document is conditioned on its assigned company to preserve architectural isolation and sovereign boundaries.'}
               </p>
               <p>
-                3. <strong>التوليد المباشر في المراحل:</strong> عند محادثة مساعد المعمارية في أي مرحلة (مثل التحليل الفني أو تصميم اللوجو أو واجهات الـ UI)، يتم دمج سياق المستند تلقائياً في الإجابات ومخططات الـ Mermaid.
+                3. <strong>{isArabic ? 'التوليد المباشر في المراحل:' : 'Direct Pipeline Generation:'}</strong> {isArabic ? 'عند محادثة مساعد المعمارية في أي مرحلة، يتم دمج سياق المستند تلقائياً في الإجابات ومخططات الـ Mermaid وقوائم التحقق.' : 'During architectural chat and canvas authoring, ingested technical context is automatically injected into specifications and diagrams.'}
               </p>
             </div>
           )}

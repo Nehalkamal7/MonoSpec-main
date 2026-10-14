@@ -6,9 +6,10 @@ import { useMonoSpecStore } from '@/store/useMonoSpecStore';
 import { CompanyId, Project } from '@/types';
 
 export function NewProjectModal() {
-  const { isNewProjectModalOpen, setNewProjectModalOpen, createProject, companies, accountType } =
+  const { isNewProjectModalOpen, setNewProjectModalOpen, createProject, companies, accountType, locale } =
     useMonoSpecStore();
 
+  const isArabic = locale === 'ar';
   const isFreelancer = accountType === 'freelancer';
 
   const [title, setTitle] = useState('');
@@ -29,8 +30,8 @@ export function NewProjectModal() {
       description:
         description.trim() ||
         (isFreelancer
-          ? 'المواصفات الفنية والمعمارية للموقع / المنصة تم إنشاؤها عبر MonoSpec.'
-          : 'Enterprise software architecture specification created via MonoSpec.'),
+          ? (isArabic ? 'المواصفات الفنية والمعمارية للموقع تم إنشاؤها عبر MonoSpec.' : 'Website technical architecture specification created via MonoSpec.')
+          : (isArabic ? 'مواصفة معمارية للمشروع تم إنشاؤها عبر منظومة MonoSpec.' : 'Enterprise software architecture specification created via MonoSpec.')),
       architectureTier,
     });
 
@@ -52,11 +53,17 @@ export function NewProjectModal() {
             </div>
             <div>
               <h2 className="text-sm font-semibold tracking-tight">
-                {isFreelancer ? 'بدء مواصفة موقع جديد (New Spec)' : 'Initialize New Project'}
+                {isFreelancer 
+                  ? (isArabic ? 'بدء مواصفة موقع جديد' : 'Initialize New Website Spec') 
+                  : (isArabic ? 'بدء مشروع جديد' : 'Initialize New Project')}
               </h2>
               <p className="text-[11px] text-[var(--text-muted)]">
-                {isFreelancer ? 'التابع لموقع / منصة: ' : 'Assign to '}
-                <strong className="text-[var(--text-primary)]">{selectedCompany?.name || (isFreelancer ? 'الموقع' : 'Company')}</strong>
+                {isFreelancer 
+                  ? (isArabic ? 'التابع لموقع: ' : 'Assigned to platform: ') 
+                  : (isArabic ? 'التابع لشركة: ' : 'Assign to company: ')}
+                <strong className="text-[var(--text-primary)]">
+                  {isArabic ? (selectedCompany?.nameAr || selectedCompany?.name) : selectedCompany?.name}
+                </strong>
               </p>
             </div>
           </div>
@@ -74,10 +81,12 @@ export function NewProjectModal() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-[var(--text-secondary)]">
-                {isFreelancer ? 'اختر الموقع أو المنصة التابع لها المشروع' : 'Enterprise Client / Target Company'}
+                {isFreelancer 
+                  ? (isArabic ? 'اختر الموقع أو المنصة التابع لها المشروع' : 'Select Target Website / Platform') 
+                  : (isArabic ? 'العميل المستهدف / الشركة' : 'Enterprise Client / Target Company')}
               </label>
               <span className="text-[10px] font-mono text-[var(--text-muted)]">
-                {isFreelancer ? 'كود الموقع: ' : 'Selected Code: '}
+                {isFreelancer ? (isArabic ? 'كود الموقع: ' : 'Site Code: ') : (isArabic ? 'كود الشركة: ' : 'Company Code: ')}
                 <strong className="text-[var(--text-primary)]">{selectedCompany?.code}</strong>
               </span>
             </div>
@@ -90,7 +99,7 @@ export function NewProjectModal() {
                     key={comp.id}
                     type="button"
                     onClick={() => setCompanyId(comp.id)}
-                    className={`p-3 rounded-xl border text-left transition-all flex flex-col gap-1.5 ${
+                    className={`p-3 rounded-xl border text-left rtl:text-right transition-all flex flex-col gap-1.5 ${
                       isSelected
                         ? 'border-[var(--border-strong)] bg-[var(--bg-surface-elevated)] shadow-xs ring-1 ring-[var(--border-strong)]'
                         : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)]'
@@ -98,14 +107,14 @@ export function NewProjectModal() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-[var(--text-primary)] truncate">
-                        {comp.name}
+                        {isArabic ? (comp.nameAr || comp.name) : comp.name}
                       </span>
                       <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] shrink-0">
                         {comp.code}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)] font-sans">
-                      <span className="truncate">{comp.nameAr || comp.industry || 'Technology'}</span>
+                      <span className="truncate">{comp.industry || 'Technology'}</span>
                     </div>
                   </button>
                 );
@@ -116,11 +125,13 @@ export function NewProjectModal() {
           {/* Project Title Input */}
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[var(--text-secondary)]">
-              Project Title
+              {isArabic ? 'عنوان المشروع' : 'Project Title'}
             </label>
             <input
               type="text"
-              placeholder="e.g. NextGen Autonomous Freight Engine"
+              placeholder={isFreelancer 
+                ? (isArabic ? 'مثال: متجر إلكتروني فائق السرعة' : 'e.g. NextGen Headless Storefront') 
+                : (isArabic ? 'مثال: محرك التتبع والشحن اللوجستي' : 'e.g. NextGen Autonomous Freight Engine')}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full px-3 py-2 text-xs rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-hidden focus:border-[var(--border-strong)] transition-colors"
@@ -131,21 +142,25 @@ export function NewProjectModal() {
           {/* Architecture Tier */}
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[var(--text-secondary)]">
-              Architecture Criticality Tier
+              {isArabic ? 'مستوى الأهمية المعمارية' : 'Architecture Criticality Tier'}
             </label>
             <div className="grid grid-cols-3 gap-2">
-              {(['Tier 1 Enterprise', 'Core Platform', 'Mission Critical'] as const).map((tier) => (
+              {[
+                { id: 'Tier 1 Enterprise', label: isArabic ? 'مؤسسي (المستوى 1)' : 'Tier 1 Enterprise' },
+                { id: 'Core Platform', label: isArabic ? 'منصة رئيسية' : 'Core Platform' },
+                { id: 'Mission Critical', label: isArabic ? 'فائق الحساسية' : 'Mission Critical' },
+              ].map((tier) => (
                 <button
-                  key={tier}
+                  key={tier.id}
                   type="button"
-                  onClick={() => setArchitectureTier(tier)}
+                  onClick={() => setArchitectureTier(tier.id as any)}
                   className={`py-1.5 px-2 rounded-lg text-[11px] font-mono border text-center transition-all ${
-                    architectureTier === tier
+                    architectureTier === tier.id
                       ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] border-transparent font-bold'
                       : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                   }`}
                 >
-                  {tier}
+                  {tier.label}
                 </button>
               ))}
             </div>
@@ -154,10 +169,12 @@ export function NewProjectModal() {
           {/* Description */}
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[var(--text-secondary)]">
-              System Scope & Architecture Invariants
+              {isArabic ? 'نطاق النظام والمحددات المعمارية' : 'System Scope & Architecture Invariants'}
             </label>
             <textarea
-              placeholder="High-throughput message pipeline, event-driven microservices, ZATCA e-invoicing compliance..."
+              placeholder={isArabic 
+                ? 'معالجة الرسائل فائقة السرعة، خدمات مصغرة، الامتثال للمعايير الحكومية والمالية...' 
+                : 'High-throughput message pipeline, event-driven microservices, compliance...'}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -172,14 +189,14 @@ export function NewProjectModal() {
               onClick={() => setNewProjectModalOpen(false)}
               className="px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs text-[var(--text-secondary)] transition-colors"
             >
-              Cancel
+              {isArabic ? 'إلغاء' : 'Cancel'}
             </button>
             <button
               type="submit"
               disabled={!title.trim()}
               className="px-4 py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
             >
-              Create Specification
+              {isArabic ? 'إنشاء المواصفة' : 'Create Specification'}
             </button>
           </div>
         </form>

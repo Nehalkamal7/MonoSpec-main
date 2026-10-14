@@ -56,13 +56,17 @@ export function OnboardingWizard() {
     customStages,
     addCustomStage,
     accountType,
+    locale,
   } = useMonoSpecStore();
 
+  const isArabic = locale === 'ar';
   const isFreelancer = accountType === 'freelancer';
 
   // Step 1: Workspace State
   const [workspaceName, setWorkspaceName] = useState(
-    isFreelancer ? 'استوديو المواقع والمشاريع الخاصة' : 'Apex Innovations Team'
+    isFreelancer 
+      ? (isArabic ? 'استوديو المواقع والمشاريع الخاصة' : 'Freelancer Studio & Web Apps') 
+      : (isArabic ? 'فريق أبيكس للابتكارات والأنظمة' : 'Apex Innovations Team')
   );
   const [roomCode, setRoomCode] = useState(
     isFreelancer ? 'FREE-8842-PRO' : 'MONO-8842-KSA'
@@ -122,9 +126,13 @@ export function OnboardingWizard() {
         websiteUrl: newCompUrl.trim() || undefined,
         industry:
           newCompIndustry.trim() ||
-          (isFreelancer ? 'منصة وتطبيق ويب' : 'Software & Technology'),
+          (isFreelancer 
+            ? (isArabic ? 'منصة وتطبيق ويب' : 'Web App & Platform') 
+            : (isArabic ? 'تقنية وأنظمة برمجية' : 'Software & Technology')),
         tagline: `${
-          isFreelancer ? 'مواصفات وتصميم موقع' : 'Enterprise Architecture for'
+          isFreelancer 
+            ? (isArabic ? 'مواصفات وتصميم موقع' : 'Architecture & Spec for') 
+            : (isArabic ? 'معمارية برمجية لـ' : 'Enterprise Architecture for')
         } ${newCompName.trim()}`,
         type: isFreelancer ? 'freelancer_site' : 'enterprise',
       },
@@ -145,8 +153,8 @@ export function OnboardingWizard() {
           nameAr: 'متجر ومنصة نوفا للتجارة السريعة',
           code: 'NOVA',
           websiteUrl: 'https://novastore.dev',
-          industry: 'متجر إلكتروني ومنصة دفع',
-          tagline: 'منصة ويب للتجارة الإلكترونية والمدفوعات',
+          industry: isArabic ? 'متجر إلكتروني ومنصة دفع' : 'E-Commerce Storefront',
+          tagline: isArabic ? 'منصة ويب للتجارة الإلكترونية والمدفوعات' : 'Headless e-commerce platform',
           type: 'freelancer_site',
         },
       ]);
@@ -157,8 +165,8 @@ export function OnboardingWizard() {
           nameAr: 'أنظمة أبيكس السحابية المتقدمة',
           code: 'APX',
           websiteUrl: 'https://apexcloud.internal',
-          industry: 'Enterprise Cloud & FinTech Systems',
-          tagline: 'High-Availability Architecture Platform',
+          industry: isArabic ? 'أنظمة سحابية وتكنولوجيا مالية' : 'Enterprise Cloud & FinTech Systems',
+          tagline: isArabic ? 'منصة معمارية عالية الإتاحة' : 'High-Availability Architecture Platform',
           type: 'enterprise',
         },
       ]);
@@ -193,7 +201,7 @@ export function OnboardingWizard() {
       index: customStages.length + 1,
       labelEn: customStageLabel.trim(),
       labelAr: customStageLabelAr.trim() || customStageLabel.trim(),
-      shortDesc: 'Custom enterprise pipeline stage configured during onboarding',
+      shortDesc: isArabic ? 'مرحلة معمارية مخصصة تم إعدادها خلال التهيئة' : 'Custom enterprise pipeline stage configured during onboarding',
       badge: `CUST-0${customStages.length + 1}`,
       isRecommended: false,
     };
@@ -218,7 +226,9 @@ export function OnboardingWizard() {
               nameAr: workspaceName || (isFreelancer ? 'موقعي الشخصي' : 'أنظمة أبيكس'),
               code: (workspaceName || (isFreelancer ? 'WEB' : 'APX')).slice(0, 3).toUpperCase(),
               websiteUrl: undefined,
-              industry: isFreelancer ? 'منصة وتطبيق ويب' : 'Software & Technology',
+              industry: isFreelancer 
+                ? (isArabic ? 'منصة وتطبيق ويب' : 'Web App & Platform') 
+                : (isArabic ? 'تقنية وأنظمة برمجية' : 'Software & Technology'),
               tagline: `${isFreelancer ? 'مواصفات وتصميم موقع' : 'Enterprise Architecture for'} ${workspaceName || 'Platform'}`,
               type: isFreelancer ? ('freelancer_site' as const) : ('enterprise' as const),
             },
@@ -259,7 +269,7 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="h-screen w-full bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col selection:bg-[var(--selection-bg)] selection:text-[var(--selection-text)] font-sans overflow-hidden">
+    <div className={`h-screen w-full bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col selection:bg-[var(--selection-bg)] selection:text-[var(--selection-text)] font-sans overflow-hidden ${isArabic ? 'rtl' : 'ltr'}`}>
       {/* Top Bar */}
       <header className="h-16 shrink-0 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
@@ -271,10 +281,14 @@ export function OnboardingWizard() {
           </button>
           <div>
             <h1 className="text-sm font-bold tracking-tight">
-              {isFreelancer ? 'إعداد استوديو المستقل MonoSpec' : 'إعداد مساحة عمل MonoSpec'}
+              {isFreelancer 
+                ? (isArabic ? 'إعداد استوديو المستقل MonoSpec' : 'Setup MonoSpec Freelancer Studio') 
+                : (isArabic ? 'إعداد مساحة عمل MonoSpec' : 'Setup MonoSpec Workspace')}
             </h1>
             <p className="text-[11px] text-[var(--text-muted)]">
-              {isFreelancer ? 'تهيئة النظام لمشاريعك ومواقعك الخاصة في 3 خطوات بسيطة' : 'تهيئة النظام لشركتك وفريقك في 3 خطوات بسيطة'}
+              {isFreelancer 
+                ? (isArabic ? 'تهيئة النظام لمشاريعك ومواقعك الخاصة في 3 خطوات بسيطة' : 'Configure your web platforms in 3 simple steps') 
+                : (isArabic ? 'تهيئة النظام لشركتك وفريقك في 3 خطوات بسيطة' : 'Configure your team & architecture pipeline in 3 simple steps')}
             </p>
           </div>
         </div>
@@ -282,9 +296,9 @@ export function OnboardingWizard() {
         {/* Step Indicator Pills */}
         <div className="flex items-center gap-2">
           {[
-            { num: 1, title: isFreelancer ? 'الاستوديو والروم' : 'مساحة العمل والروم' },
-            { num: 2, title: isFreelancer ? 'المواقع والمنصات' : 'الشركات والعملاء' },
-            { num: 3, title: isFreelancer ? 'مراحل تصميم الموقع' : 'مراحل المشروع' },
+            { num: 1, title: isFreelancer ? (isArabic ? 'الاستوديو والروم' : 'Studio & Room') : (isArabic ? 'مساحة العمل والروم' : 'Workspace & Room') },
+            { num: 2, title: isFreelancer ? (isArabic ? 'المواقع والمنصات' : 'Websites & Platforms') : (isArabic ? 'الشركات والعملاء' : 'Companies & Clients') },
+            { num: 3, title: isFreelancer ? (isArabic ? 'مراحل تصميم الموقع' : 'Platform Stages') : (isArabic ? 'مراحل المشروع' : 'Pipeline Stages') },
           ].map((s) => (
             <div
               key={s.num}
@@ -311,24 +325,28 @@ export function OnboardingWizard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
             <div className="space-y-2">
               <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-                STEP 01 OF 03 • TEAM WORKSPACE
+                {isArabic ? 'الخطوة 01 من 03 • مساحة العمل' : 'STEP 01 OF 03 • TEAM WORKSPACE'}
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                أنشئ مساحة عمل (Workspace) خاصة بفريقك بكود غرفة مميز
+                {isArabic 
+                  ? 'أنشئ مساحة عمل خاصة بفريقك بكود غرفة مميز' 
+                  : 'Create Team Workspace & Dedicated Room Code'}
               </h2>
               <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-                مساحة العمل تجمع كل مشاريعك ومواصفاتك الفنية. يمكنك مشاركة كود الروم مع أي عضو في الفريق للدخول الفوري.
+                {isArabic
+                  ? 'مساحة العمل تجمع كل مشاريعك ومواصفاتك الفنية. يمكنك مشاركة كود الروم مع أي عضو في الفريق للدخول الفوري.'
+                  : 'Your workspace consolidates all specifications, architectural stages, and team models. Share the room code for instant access.'}
               </p>
             </div>
 
             <div className="p-6 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-md space-y-5">
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-[var(--text-secondary)]">
-                  اسم مساحة العمل / Workspace Name
+                  {isArabic ? 'اسم مساحة العمل' : 'Workspace Name'}
                 </label>
                 <input
                   type="text"
-                  placeholder="مثال: Apex Engineering Team / تيم التطوير والأنظمة"
+                  placeholder={isArabic ? 'مثال: فريق التطوير والأنظمة المعمارية' : 'e.g. Apex Engineering Team'}
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
                   className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] focus:outline-hidden focus:border-[var(--border-strong)]"
@@ -341,10 +359,10 @@ export function OnboardingWizard() {
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-semibold text-[var(--text-secondary)] flex items-center gap-1.5">
                     <KeyRound className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>الكود المميز للروم (Unique Team Room Code)</span>
+                    <span>{isArabic ? 'الكود المميز للغرفة' : 'Unique Team Room Code'}</span>
                   </label>
                   <span className="text-[11px] text-[var(--text-muted)]">
-                    يمكنك تعديله أو استخدام الكود المولد تلقائياً
+                    {isArabic ? 'يمكنك تعديله أو استخدام الكود المولد تلقائياً' : 'Customize or keep auto-generated code'}
                   </span>
                 </div>
 
@@ -364,18 +382,22 @@ export function OnboardingWizard() {
                     {copiedCode ? (
                       <>
                         <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">تم النسخ</span>
+                        <span className="text-emerald-400">{isArabic ? 'تم النسخ' : 'Copied'}</span>
                       </>
                     ) : (
                       <>
                         <Copy className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                        <span>نسخ الكود</span>
+                        <span>{isArabic ? 'نسخ الكود' : 'Copy Code'}</span>
                       </>
                     )}
                   </button>
                 </div>
                 <p className="text-[11px] text-[var(--text-muted)]">
-                  💡 يستطيع أي مهندس أو مصمم الانضمام للروم عبر إدخال الكود <strong className="text-[var(--text-primary)] font-mono">{roomCode}</strong> في صفحة الدخول.
+                  {isArabic ? (
+                    <>💡 يستطيع أي مهندس أو مصمم الانضمام للروم عبر إدخال الكود <strong className="text-[var(--text-primary)] font-mono">{roomCode}</strong> في صفحة الدخول.</>
+                  ) : (
+                    <>💡 Engineers & collaborators join this room directly by entering code <strong className="text-[var(--text-primary)] font-mono">{roomCode}</strong> on the login portal.</>
+                  )}
                 </p>
               </div>
             </div>
@@ -387,17 +409,23 @@ export function OnboardingWizard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
             <div className="space-y-2">
               <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-                {isFreelancer ? 'STEP 02 OF 03 • MY WEBSITES & DIGITAL PLATFORMS' : 'STEP 02 OF 03 • COMPANY SETUP'}
+                {isFreelancer 
+                  ? (isArabic ? 'الخطوة 02 من 03 • المواقع والمنصات الرقمية' : 'STEP 02 OF 03 • WEBSITES & PLATFORMS') 
+                  : (isArabic ? 'الخطوة 02 من 03 • إعداد الشركات والعملاء' : 'STEP 02 OF 03 • COMPANY SETUP')}
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                 {isFreelancer
-                  ? 'ما هي مواقعك أو منصاتك وتطبيقاتك الخاصة؟'
-                  : 'ما اسم شركتك؟ (ويمكنك إضافة أكثر من شركة وعميل)'}
+                  ? (isArabic ? 'ما هي مواقعك أو منصاتك وتطبيقاتك الخاصة؟' : 'What are your web apps and personal platforms?')
+                  : (isArabic ? 'ما اسم شركتك أو عميلك المستهدف؟' : 'What is your company or client name?')}
               </h2>
               <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
                 {isFreelancer
-                  ? 'أضف مواقعك الخاصة والمنصات وتطبيقات الويب التي قمت بتطويرها أو تعمل عليها. كل موقع ستُصمَّم له مواصفات معمارية، شعار، وروم كود مخصص.'
-                  : 'أدخل شركتك لتهيئة مساحة العمل، ويمكنك إضافة فروع أو عملاء متعددين لعزل المواصفات والبيانات مع إمكانية التعديل والحذف في أي وقت.'}
+                  ? (isArabic
+                      ? 'أضف مواقعك الخاصة وتطبيقات الويب التي تعمل عليها. كل موقع ستُصمَّم له مواصفات معمارية، شعار، وروم كود مخصص.'
+                      : 'Add your web apps, portfolio, or SaaS products. Each website gets its own architecture spec, SVG logo, and room code.')
+                  : (isArabic
+                      ? 'أدخل شركتك لتهيئة مساحة العمل، ويمكنك إضافة فروع أو عملاء متعددين لعزل المواصفات والبيانات مع إمكانية التعديل والحذف في أي وقت.'
+                      : 'Configure client accounts or company entities to isolate architecture blueprints and compliance datasets.')}
               </p>
             </div>
 
@@ -405,10 +433,14 @@ export function OnboardingWizard() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[var(--text-secondary)]">
-                  {isFreelancer ? 'مواقعك ومنصاتك المضافة حالياً' : 'الشركات المضافة حالياً'} ({companyList.length})
+                  {isFreelancer 
+                    ? (isArabic ? 'مواقعك ومنصاتك المضافة حالياً' : 'Current Websites & Platforms') 
+                    : (isArabic ? 'الشركات المضافة حالياً' : 'Current Configured Companies')} ({companyList.length})
                 </span>
                 <span className="text-[11px] text-[var(--text-muted)]">
-                  {isFreelancer ? 'يمكنك إضافة أو حذف أي موقع بحرية' : 'يمكنك حذف أو تعديل أو إضافة أي عدد'}
+                  {isFreelancer 
+                    ? (isArabic ? 'يمكنك إضافة أو حذف أي موقع بحرية' : 'Add or remove websites freely') 
+                    : (isArabic ? 'يمكنك حذف أو تعديل أو إضافة أي عدد' : 'Add or remove client accounts freely')}
                 </span>
               </div>
 
@@ -420,12 +452,18 @@ export function OnboardingWizard() {
                   </div>
                   <div>
                     <h4 className="font-bold text-xs text-[var(--text-primary)]">
-                      {isFreelancer ? 'لم تقم بإضافة أي موقع أو منصة بعد' : 'لم تقم بإضافة شركات حتى الآن'}
+                      {isFreelancer 
+                        ? (isArabic ? 'لم تقم بإضافة أي موقع أو منصة بعد' : 'No personal websites added yet') 
+                        : (isArabic ? 'لم تقم بإضافة شركات حتى الآن' : 'No companies added yet')}
                     </h4>
                     <p className="text-[11px] text-[var(--text-muted)] mt-1 max-w-md mx-auto leading-relaxed">
                       {isFreelancer
-                        ? 'أدخل اسم ورابط موقعك الخاص في النموذج أدناه واضغط حفظ وإضافة، أو اضغط الزر التجريبي لتحميل موقع تجريبي سريعاً.'
-                        : 'أدخل اسم شركتك في النموذج أدناه واضغط حفظ وإضافة، أو اضغط الزر التجريبي لاختبار النظام بنموذج سريع.'}
+                        ? (isArabic
+                            ? 'أدخل اسم ورابط موقعك الخاص في النموذج أدناه واضغط حفظ وإضافة، أو اضغط الزر التجريبي لتحميل موقع تجريبي سريعاً.'
+                            : 'Enter your website details in the form below and click save, or click the sample button for a quick start.')
+                        : (isArabic
+                            ? 'أدخل اسم شركتك في النموذج أدناه واضغط حفظ وإضافة، أو اضغط الزر التجريبي لاختبار النظام بنموذج سريع.'
+                            : 'Enter your company details in the form below and click save, or load the instant sample template.')}
                     </p>
                   </div>
                   <button
@@ -434,7 +472,11 @@ export function OnboardingWizard() {
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-950/20 hover:bg-emerald-900/30 text-emerald-400 text-xs font-semibold transition-colors shadow-2xs"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>{isFreelancer ? 'تجربة بموقع أو منصة تجريبية سريعة' : 'تجربة بشركة تجريبية سريعة'}</span>
+                    <span>
+                      {isFreelancer 
+                        ? (isArabic ? 'تجربة بموقع أو منصة تجريبية سريعة' : 'Load Sample Freelancer Site') 
+                        : (isArabic ? 'تجربة بشركة تجريبية سريعة' : 'Load Sample Enterprise Company')}
+                    </span>
                   </button>
                 </div>
               ) : (
@@ -453,14 +495,14 @@ export function OnboardingWizard() {
                             <Building2 className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
                           )}
                           <span className="font-bold text-xs text-[var(--text-primary)] truncate">
-                            {comp.name}
+                            {isArabic ? (comp.nameAr || comp.name) : comp.name}
                           </span>
                           <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)]">
                             {comp.code}
                           </span>
                         </div>
                         <p className="text-[11px] text-[var(--text-muted)] truncate">
-                          {comp.nameAr || comp.industry}
+                          {comp.industry}
                         </p>
                         {comp.websiteUrl && (
                           <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-mono">
@@ -474,7 +516,7 @@ export function OnboardingWizard() {
                       <button
                         type="button"
                         onClick={() => handleRemoveCompany(idx)}
-                        title="حذف من القائمة"
+                        title={isArabic ? 'حذف من القائمة' : 'Remove from list'}
                         className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-red-400 hover:bg-red-950/20 transition-colors shrink-0"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -498,22 +540,28 @@ export function OnboardingWizard() {
                     <Plus className="w-4 h-4 text-emerald-400" />
                   )}
                   <h3 className="text-xs font-bold text-[var(--text-primary)]">
-                    {isFreelancer ? 'إضافة موقع أو منصة خاصة جديدة' : 'إضافة شركة أو عميل جديد'}
+                    {isFreelancer 
+                      ? (isArabic ? 'إضافة موقع أو منصة خاصة جديدة' : 'Add New Website / Platform') 
+                      : (isArabic ? 'إضافة شركة أو عميل جديد' : 'Add New Client / Company')}
                   </h3>
                 </div>
                 <span className="text-[10px] text-[var(--text-muted)]">
-                  * الحقول الإنجليزية والكود إلزامية
+                  {isArabic ? '* الحقول الأساسية والكود إلزامية' : '* Required fields'}
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    {isFreelancer ? 'اسم الموقع أو المنصة (English) *' : 'اسم الشركة (English) *'}
+                    {isFreelancer 
+                      ? (isArabic ? 'اسم الموقع أو المنصة *' : 'Website Name *') 
+                      : (isArabic ? 'اسم الشركة *' : 'Company Name *')}
                   </label>
                   <input
                     type="text"
-                    placeholder={isFreelancer ? 'e.g. MyPortfolio / DevBlog / NovaStore' : 'e.g. Apex FinTech Solutions'}
+                    placeholder={isFreelancer 
+                      ? (isArabic ? 'مثال: متجر نوفا' : 'e.g. Nova Storefront') 
+                      : (isArabic ? 'مثال: شركة أبيكس للتقنية' : 'e.g. Apex FinTech Solutions')}
                     value={newCompName}
                     onChange={(e) => handleNameChange(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
@@ -522,11 +570,15 @@ export function OnboardingWizard() {
 
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    {isFreelancer ? 'اسم الموقع أو المنصة (بالعربية)' : 'اسم الشركة (بالعربية)'}
+                    {isFreelancer 
+                      ? (isArabic ? 'الاسم البديل (اختياري)' : 'Alternative Name (Optional)') 
+                      : (isArabic ? 'الاسم البديل (اختياري)' : 'Alternative Name (Optional)')}
                   </label>
                   <input
                     type="text"
-                    placeholder={isFreelancer ? 'مثال: مدونة المطور / منصة متجر نوفا' : 'مثال: شركة حلول التقنية المالية'}
+                    placeholder={isFreelancer 
+                      ? (isArabic ? 'مثال: متجر نوفا للتجارة' : 'e.g. Nova Storefront Alt') 
+                      : (isArabic ? 'مثال: شركة أبيكس السحابية' : 'e.g. Apex Cloud Solutions')}
                     value={newCompNameAr}
                     onChange={(e) => setNewCompNameAr(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
@@ -535,11 +587,13 @@ export function OnboardingWizard() {
 
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    {isFreelancer ? 'كود الموقع المختصر (Site Code) *' : 'كود الشركة المميز (Code) *'}
+                    {isFreelancer 
+                      ? (isArabic ? 'كود الموقع المختصر *' : 'Site Code *') 
+                      : (isArabic ? 'كود الشركة المميز *' : 'Company Code *')}
                   </label>
                   <input
                     type="text"
-                    placeholder={isFreelancer ? 'e.g. PORT / BLOG / NOVA' : 'e.g. APX (أقصى 5 أحرف)'}
+                    placeholder={isFreelancer ? 'NOVA' : 'APX'}
                     maxLength={5}
                     value={newCompCode}
                     onChange={(e) => setNewCompCode(e.target.value.toUpperCase())}
@@ -549,11 +603,13 @@ export function OnboardingWizard() {
 
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    {isFreelancer ? 'رابط الموقع أو الدومين (Website URL)' : 'رابط الموقع أو الدومين (Website URL)'}
+                    {isFreelancer 
+                      ? (isArabic ? 'رابط الموقع أو النطاق' : 'Website URL') 
+                      : (isArabic ? 'رابط الموقع أو النطاق' : 'Website URL')}
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. https://mywebsite.com أو localhost:3000"
+                    placeholder="https://mywebsite.com"
                     value={newCompUrl}
                     onChange={(e) => setNewCompUrl(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden font-mono text-[11px]"
@@ -562,11 +618,15 @@ export function OnboardingWizard() {
 
                 <div className="space-y-1 sm:col-span-2">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    {isFreelancer ? 'نوع المنصة أو التخصص (Platform Type)' : 'المجال أو القطاع (Industry)'}
+                    {isFreelancer 
+                      ? (isArabic ? 'نوع المنصة أو التخصص' : 'Platform Type') 
+                      : (isArabic ? 'المجال أو القطاع' : 'Industry')}
                   </label>
                   <input
                     type="text"
-                    placeholder={isFreelancer ? 'مثال: E-Commerce, Portfolio, SaaS, Blog, Web App' : 'مثال: مدفوعات، لوجستيات، تجارة'}
+                    placeholder={isFreelancer 
+                      ? (isArabic ? 'مثال: متجر إلكتروني، مدونة، منصة سحابية' : 'e.g. E-Commerce, Blog, SaaS') 
+                      : (isArabic ? 'مثال: مدفوعات، لوجستيات، تجارة' : 'e.g. FinTech, Logistics, Retail')}
                     value={newCompIndustry}
                     onChange={(e) => setNewCompIndustry(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
@@ -580,7 +640,9 @@ export function OnboardingWizard() {
                   disabled={!newCompName.trim()}
                   className="px-4 py-2 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
                 >
-                  {isFreelancer ? '+ حفظ وإضافة الموقع للقائمة' : '+ حفظ وإضافة للقائمة'}
+                  {isFreelancer 
+                    ? (isArabic ? '+ حفظ وإضافة الموقع للقائمة' : '+ Save & Add Website') 
+                    : (isArabic ? '+ حفظ وإضافة للقائمة' : '+ Save & Add Company')}
                 </button>
               </div>
             </form>
@@ -592,13 +654,15 @@ export function OnboardingWizard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
             <div className="space-y-2">
               <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-                STEP 03 OF 03 • PIPELINE STAGES
+                {isArabic ? 'الخطوة 3 من 3 • مراحل المسار البرمجي' : 'STEP 03 OF 03 • PIPELINE STAGES'}
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                إيه مراحل مشروعك؟
+                {isArabic ? 'ما هي مراحل مشروعك؟' : 'Configure Your Architectural Stages'}
               </h2>
               <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-                حدد المراحل التي يمر بها مشروعك البرمجي، مع إمكانية استخدام المراحل الموصى بها مسبقاً بما فيها تصميم اللوجو والهوية.
+                {isArabic 
+                  ? 'حدد المراحل التي يمر بها مشروعك البرمجي، مع إمكانية استخدام المراحل الموصى بها مسبقاً بما فيها تصميم الهوية والشعار.' 
+                  : 'Select the pipeline stages for your engineering lifecycle, including Logo & Brand studio.'}
               </p>
             </div>
 
@@ -607,10 +671,10 @@ export function OnboardingWizard() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[var(--text-primary)]">
-                    المراحل المقترحة والموصى بها (Recommended Stages)
+                    {isArabic ? 'المراحل المقترحة والموصى بها' : 'Recommended Architecture Stages'}
                   </span>
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-emerald-400">
-                    7 مراحل أساسية
+                    {isArabic ? '7 مراحل أساسية' : '7 Core Stages'}
                   </span>
                 </div>
                 <button
@@ -618,7 +682,7 @@ export function OnboardingWizard() {
                   onClick={handleSelectAllRecommended}
                   className="text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] underline transition-colors"
                 >
-                  اختيار الكل (Select All)
+                  {isArabic ? 'اختيار الكل' : 'Select All'}
                 </button>
               </div>
 
@@ -633,7 +697,7 @@ export function OnboardingWizard() {
                       key={stage.id}
                       type="button"
                       onClick={() => handleToggleStage(stage.id)}
-                      className={`p-3 rounded-xl border text-left transition-all flex items-center justify-between ${
+                      className={`p-3 rounded-xl border text-start transition-all flex items-center justify-between ${
                         isChecked
                           ? isLogo
                             ? 'border-emerald-500/60 bg-emerald-950/20 shadow-xs ring-1 ring-emerald-500/30'
@@ -654,16 +718,16 @@ export function OnboardingWizard() {
                         <div className="min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span className="font-bold text-xs text-[var(--text-primary)] truncate">
-                              {stage.labelEn}
+                              {isArabic ? stage.labelAr : stage.labelEn}
                             </span>
                             {isLogo && (
-                              <span className="text-[9px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/40 px-1.5 py-0.2 rounded">
-                                لوجو جديد
+                              <span className="text-[9px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/40 px-1.5 py-0.5 rounded">
+                                {isArabic ? 'شعار وهوية' : 'Brand Logo'}
                               </span>
                             )}
                           </div>
-                          <p className="text-[11px] text-[var(--text-muted)] truncate">
-                            {stage.labelAr}
+                          <p className="text-[11px] text-[var(--text-muted)] truncate font-mono">
+                            {stage.id.toUpperCase()}
                           </p>
                         </div>
                       </div>
@@ -690,18 +754,18 @@ export function OnboardingWizard() {
             >
               <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--text-secondary)] shrink-0">
                 <Plus className="w-4 h-4 text-[var(--text-muted)]" />
-                <span>مرحلة إضافية:</span>
+                <span>{isArabic ? 'مرحلة إضافية:' : 'Custom Stage:'}</span>
               </div>
               <input
                 type="text"
-                placeholder="Stage Name (e.g. Security Audit)"
+                placeholder={isArabic ? 'اسم المرحلة (مثال: تدقيق الأمان)' : 'Stage Name (e.g. Security Audit)'}
                 value={customStageLabel}
                 onChange={(e) => setCustomStageLabel(e.target.value)}
                 className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] focus:outline-hidden"
               />
               <input
                 type="text"
-                placeholder="بالعربية (اختياري)"
+                placeholder={isArabic ? 'الاسم البديل (اختياري)' : 'Alt Name (Optional)'}
                 value={customStageLabelAr}
                 onChange={(e) => setCustomStageLabelAr(e.target.value)}
                 className="w-36 px-3 py-1.5 text-xs rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] focus:outline-hidden"
@@ -711,7 +775,7 @@ export function OnboardingWizard() {
                 disabled={!customStageLabel.trim()}
                 className="px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-xs font-medium text-[var(--text-primary)] disabled:opacity-40 transition-colors shrink-0"
               >
-                + إضافة
+                {isArabic ? '+ إضافة' : '+ Add'}
               </button>
             </form>
           </div>
@@ -729,8 +793,8 @@ export function OnboardingWizard() {
               onClick={() => setActiveView('landing')}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>الرجوع للرئيسية</span>
+              <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
+              <span>{isArabic ? 'الرجوع للرئيسية' : 'Back to Home'}</span>
             </button>
           ) : (
             <button
@@ -738,15 +802,15 @@ export function OnboardingWizard() {
               onClick={() => setOnboardingStep((onboardingStep - 1) as any)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>الرجوع للخطوة {onboardingStep - 1}</span>
+              <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
+              <span>{isArabic ? `الرجوع للخطوة ${onboardingStep - 1}` : `Back to Step ${onboardingStep - 1}`}</span>
             </button>
           )}
 
           {/* Center info */}
           <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-[var(--text-muted)]">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>MonoSpec • خطوة {onboardingStep} من 3</span>
+            <span>{isArabic ? `MonoSpec • خطوة ${onboardingStep} من 3` : `MonoSpec • Step ${onboardingStep} of 3`}</span>
           </div>
 
           {/* Next / Launch Button */}
@@ -757,8 +821,8 @@ export function OnboardingWizard() {
               disabled={!workspaceName.trim() || !roomCode.trim()}
               className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
             >
-              <span>{isFreelancer ? 'المتابعة لإضافة مواقعك الخاصة (Step 2)' : 'المتابعة لإضافة الشركات (Step 2)'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>{isFreelancer ? (isArabic ? 'المتابعة لإعداد المواقع والمنصات' : 'Continue to Websites Setup') : (isArabic ? 'المتابعة لإضافة الشركات' : 'Continue to Companies Setup')}</span>
+              <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </button>
           )}
 
@@ -766,7 +830,7 @@ export function OnboardingWizard() {
             <div className="flex items-center gap-2">
               {companyList.length === 0 && (
                 <span className="text-[10px] text-amber-400 hidden md:inline">
-                  {isFreelancer ? '* يرجى إضافة موقع واحد على الأقل' : '* يرجى إضافة شركة واحدة على الأقل'}
+                  {isFreelancer ? (isArabic ? '* يرجى إضافة موقع واحد على الأقل' : '* Please add at least one website') : (isArabic ? '* يرجى إضافة شركة واحدة على الأقل' : '* Please add at least one company')}
                 </span>
               )}
               <button
@@ -775,8 +839,8 @@ export function OnboardingWizard() {
                 disabled={companyList.length === 0}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
               >
-                <span>{isFreelancer ? 'المتابعة لمراحل تصميم الموقع (Step 3)' : 'المتابعة لمراحل المشروع (Step 3)'}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>{isFreelancer ? (isArabic ? 'المتابعة لمراحل تصميم الموقع' : 'Continue to Platform Stages') : (isArabic ? 'المتابعة لمراحل المشروع' : 'Continue to Pipeline Stages')}</span>
+                <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
               </button>
             </div>
           )}
@@ -789,7 +853,7 @@ export function OnboardingWizard() {
               className="flex items-center gap-2 px-7 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-black tracking-wide uppercase transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>إتمام الإعداد والدخول للمنظومة (Launch)</span>
+              <span>{isArabic ? 'إتمام الإعداد والدخول لمساحة العمل' : 'Complete Setup & Launch Workspace'}</span>
             </button>
           )}
         </div>

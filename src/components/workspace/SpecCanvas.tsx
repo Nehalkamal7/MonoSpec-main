@@ -35,8 +35,10 @@ export function SpecCanvas() {
     setFigmaModalOpen,
     setDemoDrawerOpen,
     getCompanyById,
+    locale,
   } = useMonoSpecStore();
 
+  const isArabic = locale === 'ar';
   const [isEditing, setIsEditing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [uiUxMode, setUiUxMode] = useState<'preview' | 'code'>('preview');
@@ -50,7 +52,7 @@ export function SpecCanvas() {
   if (!activeProject) {
     return (
       <div className="flex-1 flex items-center justify-center p-8 text-[var(--text-muted)] text-sm">
-        Select a project to inspect architectural specifications.
+        {isArabic ? 'اختر مشروعاً لمعاينة وتعديل المواصفات المعمارية.' : 'Select a project to inspect architectural specifications.'}
       </div>
     );
   }
@@ -143,7 +145,7 @@ export function SpecCanvas() {
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 overflow-hidden">
           <FileText className="w-4 h-4 text-[var(--text-muted)] shrink-0" />
           <span className="text-xs font-semibold text-[var(--text-primary)] truncate">
-            Specification Document
+            {isArabic ? 'مستند المواصفات الفنية' : 'Specification Document'}
           </span>
           <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)] shrink-0">
             {stageDef?.badge}
@@ -155,11 +157,11 @@ export function SpecCanvas() {
           {activeStageId === 'ui_ux' && (
             <button
               onClick={() => setDemoDrawerOpen(true)}
-              title="Open Sandbox Side Drawer"
+              title={isArabic ? 'فتح صندوق التجارب' : 'Open Sandbox Side Drawer'}
               className="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] transition-colors"
             >
               <Globe className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-              <span className="hidden md:inline">Sandbox Drawer</span>
+              <span className="hidden md:inline">{isArabic ? 'صندوق التجارب' : 'Sandbox Drawer'}</span>
             </button>
           )}
 
@@ -171,12 +173,12 @@ export function SpecCanvas() {
             {isEditing ? (
               <>
                 <Eye className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Preview</span>
+                <span className="hidden sm:inline">{isArabic ? 'معاينة' : 'Preview'}</span>
               </>
             ) : (
               <>
                 <Edit3 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Edit Raw</span>
+                <span className="hidden sm:inline">{isArabic ? 'تعديل المصدر' : 'Edit Raw'}</span>
               </>
             )}
           </button>
@@ -184,18 +186,18 @@ export function SpecCanvas() {
           {/* Copy Markdown */}
           <button
             onClick={handleCopyMarkdown}
-            title="Copy Spec as Markdown"
+            title={isArabic ? 'نسخ المواصفة كـ Markdown' : 'Copy Spec as Markdown'}
             className="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] transition-colors"
           >
             {copied ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="text-emerald-500 hidden sm:inline">Copied</span>
+                <span className="text-emerald-500 hidden sm:inline">{isArabic ? 'تم النسخ' : 'Copied'}</span>
               </>
             ) : (
               <>
                 <Copy className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                <span className="hidden sm:inline">Copy</span>
+                <span className="hidden sm:inline">{isArabic ? 'نسخ' : 'Copy'}</span>
               </>
             )}
           </button>
@@ -203,7 +205,7 @@ export function SpecCanvas() {
           {/* Download .md */}
           <button
             onClick={handleDownloadFile}
-            title="Download .md file"
+            title={isArabic ? 'تحميل ملف .md' : 'Download .md file'}
             className="flex items-center gap-1 p-1.5 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
@@ -224,14 +226,16 @@ export function SpecCanvas() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-xs font-semibold text-[var(--text-primary)]">
-                      Figma Export Tool & Component Preview
+                      {isArabic ? 'أداة تصدير Figma ومعاينة المكونات' : 'Figma Export Tool & Component Preview'}
                     </h3>
                     <span className="text-[10px] font-mono px-1.5 py-0.2 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
-                      HTML to Design Ready
+                      {isArabic ? 'جاهز لـ Figma' : 'HTML to Design Ready'}
                     </span>
                   </div>
                   <p className="text-[11px] text-[var(--text-muted)]">
-                    Interactive markup formatted specifically for instant paste into Figma.
+                    {isArabic
+                      ? 'مكون تفاعلي مصمم بالكامل للنسخ المباشر واستيراده داخل Figma.'
+                      : 'Interactive markup formatted specifically for instant paste into Figma.'}
                   </p>
                 </div>
               </div>
@@ -248,7 +252,7 @@ export function SpecCanvas() {
                     }`}
                   >
                     <Eye className="w-3 h-3" />
-                    <span>Live Preview</span>
+                    <span>{isArabic ? 'معاينة حية' : 'Live Preview'}</span>
                   </button>
                   <button
                     onClick={() => setUiUxMode('code')}
@@ -259,7 +263,7 @@ export function SpecCanvas() {
                     }`}
                   >
                     <Code2 className="w-3 h-3" />
-                    <span>Figma-Ready Code</span>
+                    <span>{isArabic ? 'كود Figma' : 'Figma-Ready Code'}</span>
                   </button>
                 </div>
 
@@ -273,7 +277,11 @@ export function SpecCanvas() {
                   ) : (
                     <FigmaIcon className="w-3.5 h-3.5" />
                   )}
-                  <span>{copiedFigmaSnippet ? 'Copied for Figma!' : 'Copy for Figma'}</span>
+                  <span>
+                    {copiedFigmaSnippet 
+                      ? (isArabic ? 'تم النسخ لـ Figma!' : 'Copied for Figma!') 
+                      : (isArabic ? 'نسخ لـ Figma' : 'Copy for Figma')}
+                  </span>
                 </button>
               </div>
             </div>
@@ -283,7 +291,7 @@ export function SpecCanvas() {
               <div className="flex flex-col items-center justify-center p-6 rounded-xl border border-dashed border-[var(--border-subtle)] bg-[var(--bg-canvas)]">
                 <div className="w-full flex justify-center" dangerouslySetInnerHTML={{ __html: figmaHtmlSnippet }} />
                 <span className="text-[10px] font-mono text-[var(--text-muted)] mt-3">
-                  Rendered in strict monochrome palette (#000000 / #ffffff / #18181b / #27272a).
+                  {isArabic ? 'عرض بتصميم هندسي أحادي (#000000 / #ffffff / #18181b)' : 'Rendered in strict monochrome palette (#000000 / #ffffff / #18181b / #27272a).'}
                 </span>
               </div>
             ) : (
@@ -298,7 +306,7 @@ export function SpecCanvas() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 text-xs font-mono">
               <div className="flex items-center gap-2 text-[11px] text-[var(--text-muted)] min-w-0">
                 <Link2 className="w-3.5 h-3.5 shrink-0" />
-                <span>figma_file_url:</span>
+                <span>figma_url:</span>
                 {isEditingFigmaUrl ? (
                   <div className="flex items-center gap-1">
                     <input
@@ -312,19 +320,19 @@ export function SpecCanvas() {
                       onClick={handleSaveFigmaUrl}
                       className="px-2 py-0.5 rounded bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-[10px] font-bold"
                     >
-                      Save
+                      {isArabic ? 'حفظ' : 'Save'}
                     </button>
                     <button
                       onClick={() => setIsEditingFigmaUrl(false)}
                       className="text-[10px] text-[var(--text-muted)] underline ml-1"
                     >
-                      Cancel
+                      {isArabic ? 'إلغاء' : 'Cancel'}
                     </button>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 truncate">
                     <span className="text-[var(--text-primary)] truncate max-w-[260px]">
-                      {activeProject.figmaUrl || 'No native Figma URL linked'}
+                      {activeProject.figmaUrl || (isArabic ? 'لا يوجد رابط Figma مرتبط' : 'No native Figma URL linked')}
                     </span>
                     <button
                       onClick={() => {
@@ -333,7 +341,7 @@ export function SpecCanvas() {
                       }}
                       className="underline text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                     >
-                      {activeProject.figmaUrl ? 'Edit' : '+ Add'}
+                      {activeProject.figmaUrl ? (isArabic ? 'تعديل' : 'Edit') : (isArabic ? '+ إضافة' : '+ Add')}
                     </button>
                   </div>
                 )}
@@ -347,7 +355,7 @@ export function SpecCanvas() {
                     rel="noreferrer"
                     className="flex items-center gap-1 text-[11px] text-[var(--text-primary)] hover:underline"
                   >
-                    <span>Open Native Figma</span>
+                    <span>{isArabic ? 'فتح في Figma' : 'Open Native Figma'}</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 )}
@@ -356,7 +364,7 @@ export function SpecCanvas() {
                   className="flex items-center gap-1 text-[11px] text-[var(--text-primary)] hover:underline font-medium"
                 >
                   <Globe className="w-3 h-3" />
-                  <span>Launch Sandbox Drawer</span>
+                  <span>{isArabic ? 'تشغيل صندوق التجارب' : 'Launch Sandbox Drawer'}</span>
                 </button>
               </div>
             </div>
@@ -369,10 +377,12 @@ export function SpecCanvas() {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-[var(--text-primary)]">
-                  Stage Definition of Done (DoD)
+                  {isArabic ? 'معايير اكتمال المرحلة (DoD)' : 'Stage Definition of Done (DoD)'}
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
-                  {deliverable.checklist.filter((c) => c.done).length} / {deliverable.checklist.length} Complete
+                  {isArabic 
+                    ? `مكتمل ${deliverable.checklist.filter((c) => c.done).length} من ${deliverable.checklist.length}`
+                    : `${deliverable.checklist.filter((c) => c.done).length} / ${deliverable.checklist.length} Complete`}
                 </span>
               </div>
               <span className="text-xs font-mono font-bold text-[var(--text-primary)]">
@@ -394,7 +404,7 @@ export function SpecCanvas() {
                 <button
                   key={item.id}
                   onClick={() => toggleChecklistItem(activeProject.id, activeStageId, item.id)}
-                  className="w-full flex items-start gap-2.5 p-2 rounded-lg text-left text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)] transition-colors group"
+                  className="w-full flex items-start gap-2.5 p-2 rounded-lg text-left rtl:text-right text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)] transition-colors group"
                 >
                   {item.done ? (
                     <CheckSquare className="w-4 h-4 text-[var(--accent-contrast)] mt-0.5 shrink-0" />
@@ -414,8 +424,8 @@ export function SpecCanvas() {
         {isEditing ? (
           <div className="space-y-2">
             <div className="text-xs text-[var(--text-muted)] flex items-center justify-between">
-              <span>Editing raw Markdown specification:</span>
-              <span className="font-mono text-[10px]">Autosaved to active project</span>
+              <span>{isArabic ? 'تعديل مسودة Markdown للمواصفة:' : 'Editing raw Markdown specification:'}</span>
+              <span className="font-mono text-[10px]">{isArabic ? 'حفظ تلقائي للمشروع النشط' : 'Autosaved to active project'}</span>
             </div>
             <textarea
               value={deliverable?.specMarkdown ?? ''}

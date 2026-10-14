@@ -60,6 +60,7 @@ export function SettingsModal() {
   // User Profile State
   const [profileName, setProfileName] = useState(userSession?.name || '');
   const [profileEmail, setProfileEmail] = useState(userSession?.email || '');
+  const [profilePhone, setProfilePhone] = useState(userSession?.phone || '+201553646123');
   const [profileRole, setProfileRole] = useState(userSession?.role || '');
   const [profileBio, setProfileBio] = useState(userSession?.bio || '');
   const [profileAvatar, setProfileAvatar] = useState(userSession?.avatarUrl || '');
@@ -107,6 +108,7 @@ export function SettingsModal() {
     updateUserSession({
       name: profileName.trim(),
       email: profileEmail.trim(),
+      phone: profilePhone.trim(),
       role: profileRole.trim(),
       bio: profileBio.trim(),
       avatarUrl: profileAvatar.trim(),
@@ -162,11 +164,10 @@ export function SettingsModal() {
             <button
               onClick={toggleLocale}
               title={isArabic ? 'Switch to English' : 'التحويل للعربية'}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold transition-all shadow-2xs text-emerald-400"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold transition-all shadow-2xs text-emerald-400"
             >
               <Globe className="w-3.5 h-3.5" />
-              <span className="font-mono text-sm">{isArabic ? 'ع' : 'E'}</span>
-              <span className="text-[10px] text-[var(--text-muted)]">({isArabic ? 'English' : 'عربي'})</span>
+              <span className="font-mono text-xs">{isArabic ? 'English' : 'عربي'}</span>
             </button>
 
             <button
@@ -214,7 +215,7 @@ export function SettingsModal() {
 
             <div className="pt-4 mt-4 border-t border-[var(--border-subtle)] space-y-2">
               <span className="text-[10px] font-mono uppercase text-[var(--text-muted)] px-2">
-                {isArabic ? 'المظهر واللغة' : 'Appearance'}
+                {isArabic ? 'المظهر والسمة' : 'Appearance'}
               </span>
               <div className="px-2">
                 <ThemeToggle />
@@ -247,7 +248,7 @@ export function SettingsModal() {
                     <button
                       type="button"
                       onClick={() => setAccountType('enterprise')}
-                      className={`p-3 rounded-lg border text-left transition-all ${
+                      className={`p-3 rounded-lg border text-left rtl:text-right transition-all ${
                         accountType === 'enterprise'
                           ? 'border-[var(--border-strong)] bg-[var(--bg-surface-elevated)] ring-1 ring-[var(--border-strong)]'
                           : 'border-[var(--border-subtle)] opacity-60'
@@ -255,7 +256,7 @@ export function SettingsModal() {
                     >
                       <div className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
                         <Building2 className="w-3.5 h-3.5" />
-                        <span>{isArabic ? 'فريق شركة / Enterprise' : 'Enterprise Team'}</span>
+                        <span>{isArabic ? 'فريق شركة ومؤسسة' : 'Enterprise Team'}</span>
                       </div>
                       <p className="text-[10px] text-[var(--text-muted)] mt-1">
                         {isArabic ? 'مشاريع مؤسسية متعددة الفرق' : 'Multi-team corporate products'}
@@ -265,7 +266,7 @@ export function SettingsModal() {
                     <button
                       type="button"
                       onClick={() => setAccountType('freelancer')}
-                      className={`p-3 rounded-lg border text-left transition-all ${
+                      className={`p-3 rounded-lg border text-left rtl:text-right transition-all ${
                         accountType === 'freelancer'
                           ? 'border-emerald-500/60 bg-emerald-950/20 ring-1 ring-emerald-500/30'
                           : 'border-[var(--border-subtle)] opacity-60'
@@ -273,7 +274,7 @@ export function SettingsModal() {
                     >
                       <div className="flex items-center gap-1.5 font-bold text-emerald-400">
                         <Briefcase className="w-3.5 h-3.5" />
-                        <span>{isArabic ? 'مستقل / Freelancer' : 'Solo / Freelancer Studio'}</span>
+                        <span>{isArabic ? 'استوديو مستقل' : 'Solo / Freelancer Studio'}</span>
                       </div>
                       <p className="text-[10px] text-[var(--text-muted)] mt-1">
                         {isArabic ? 'إدارة مشاريع العملاء بشكل مستقل' : 'Deliver specs for clients 10x faster'}
@@ -523,15 +524,15 @@ export function SettingsModal() {
                       >
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-xs">{stage.labelEn}</span>
+                            <span className="font-bold text-xs">{isArabic ? stage.labelAr : stage.labelEn}</span>
                             {isLogo && (
                               <span className="text-[9px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-1 py-0.2 rounded">
-                                LOGO
+                                {isArabic ? 'هوية' : 'LOGO'}
                               </span>
                             )}
                           </div>
-                          <p className="text-[10px] text-[var(--text-muted)]">
-                            {stage.labelAr} • {stage.badge}
+                          <p className="text-[10px] text-[var(--text-muted)] font-mono">
+                            {stage.badge}
                           </p>
                         </div>
                         <div
@@ -687,6 +688,18 @@ export function SettingsModal() {
 
                 <div className="space-y-1">
                   <label className="font-semibold text-[var(--text-secondary)]">
+                    {isArabic ? 'رقم الهاتف أو الواتساب' : 'Phone / WhatsApp'}
+                  </label>
+                  <input
+                    type="tel"
+                    value={profilePhone}
+                    onChange={(e) => setProfilePhone(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] font-mono focus:outline-hidden"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-semibold text-[var(--text-secondary)]">
                     {isArabic ? 'المسمى الوظيفي أو التخصص' : 'Title / Role'}
                   </label>
                   <input
@@ -699,7 +712,7 @@ export function SettingsModal() {
 
                 <div className="space-y-1">
                   <label className="font-semibold text-[var(--text-secondary)]">
-                    {isArabic ? 'نبذة تعريفية (Bio)' : 'Bio / Specialization'}
+                    {isArabic ? 'نبذة تعريفية' : 'Bio / Specialization'}
                   </label>
                   <textarea
                     rows={2}

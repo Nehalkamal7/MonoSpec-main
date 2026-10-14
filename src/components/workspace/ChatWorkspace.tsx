@@ -37,8 +37,10 @@ export function ChatWorkspace() {
     quickGenerateForActiveStage,
     getActiveProject,
     customStages,
+    locale,
   } = useMonoSpecStore();
 
+  const isArabic = locale === 'ar';
   const [input, setInput] = useState('');
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [activeAttachment, setActiveAttachment] = useState<ChatMessage['attachment'] | null>(null);
@@ -118,19 +120,16 @@ export function ChatWorkspace() {
         <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
           <Bot className="w-4 h-4 text-[var(--text-muted)] shrink-0" />
           <span className="text-xs font-semibold text-[var(--text-primary)] truncate shrink-0">
-            Architect Assistant
+            {isArabic ? 'المساعد المعماري' : 'Architect Assistant'}
           </span>
           <span className="text-[10px] text-[var(--text-muted)] shrink-0">/</span>
           <span className="text-xs text-[var(--text-secondary)] font-medium truncate">
-            {currentStage?.labelEn}
-          </span>
-          <span className="text-[10px] text-[var(--text-muted)] font-sans hidden 2xl:inline truncate">
-            ({currentStage?.labelAr})
+            {isArabic ? (currentStage?.labelAr || currentStage?.labelEn) : currentStage?.labelEn}
           </span>
         </div>
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-[var(--text-muted)] shrink-0">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-          <span className="hidden sm:inline">Active</span>
+          <span className="hidden sm:inline">{isArabic ? 'متصل' : 'Active'}</span>
         </div>
       </div>
 
@@ -143,10 +142,14 @@ export function ChatWorkspace() {
             </div>
             <div>
               <h2 className="text-xs font-semibold text-[var(--text-primary)]">
-                {currentStage?.labelEn} Workspace Feed
+                {isArabic 
+                  ? `مساحة الحوار لـ ${currentStage?.labelAr || currentStage?.labelEn}`
+                  : `${currentStage?.labelEn} Workspace Feed`}
               </h2>
               <p className="text-[11px] text-[var(--text-muted)] max-w-xs mt-1">
-                Collaborate with MonoSpec to formulate, verify, and validate precision architectural specifications. You can attach PDF files or Google Drive links for instant deep analysis.
+                {isArabic
+                  ? 'تعاون مع MonoSpec لبناء وصياغة مواصفات معمارية دقيقة متوافقة مع متطلباتك. يمكنك إرفاق ملفات PDF أو روابط Google Drive للتحليل الفوري.'
+                  : 'Collaborate with MonoSpec to formulate, verify, and validate precision architectural specifications. You can attach PDF files or Google Drive links for instant deep analysis.'}
               </p>
             </div>
           </div>
@@ -275,35 +278,35 @@ export function ChatWorkspace() {
       {/* Stage Quick Suggestions Bar (Dynamic per stage, with special logo stage shortcuts!) */}
       <div className="px-4 py-2 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-center gap-1.5 overflow-x-auto no-scrollbar select-none">
         <span className="text-[10px] font-mono text-[var(--text-muted)] shrink-0 flex items-center gap-1 mr-1">
-          <Zap className="w-3 h-3" /> Quick:
+          <Zap className="w-3 h-3" /> {isArabic ? 'إجراءات سريعة:' : 'Quick:'}
         </span>
 
         {isLogoStage ? (
           <>
             <button
-              onClick={() => sendChatMessage('Generate mathematical vector SVG logomark with 45-degree angle chevrons.')}
+              onClick={() => sendChatMessage(isArabic ? 'توليد شعار هندسي SVG بترميز نظيف وزوايا رياضية متناسقة.' : 'Generate mathematical vector SVG logomark with 45-degree angle chevrons.')}
               className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-medium border border-emerald-500/30 bg-emerald-950/20 text-emerald-400 hover:bg-emerald-900/30 transition-colors"
             >
               <Sparkles className="w-3 h-3 text-emerald-400" />
-              <span>SVG Vector Logomark</span>
+              <span>{isArabic ? 'شعار هندسي SVG' : 'SVG Vector Logomark'}</span>
             </button>
             <button
-              onClick={() => sendChatMessage('Define high-contrast enterprise color tokens matrix (Onyx, Optical White, Signal Accent).')}
+              onClick={() => sendChatMessage(isArabic ? 'تحديد مصفوفة توكنز الألوان عالية التباين للشاشات المظلمة.' : 'Define high-contrast enterprise color tokens matrix (Onyx, Optical White, Signal Accent).')}
               className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
-              <span>Color Tokens Palette</span>
+              <span>{isArabic ? 'لوحة ألوان الهوية' : 'Color Tokens Palette'}</span>
             </button>
             <button
-              onClick={() => sendChatMessage('Establish typography hierarchy pairing IBM Plex Sans Arabic with JetBrains Mono.')}
+              onClick={() => sendChatMessage(isArabic ? 'تحديد الخطوط الأساسية والخطوط الأحادية للواجهات البرمجية.' : 'Establish typography hierarchy pairing IBM Plex Sans Arabic with JetBrains Mono.')}
               className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
-              <span>Typography Pairing</span>
+              <span>{isArabic ? 'مواءمة الخطوط' : 'Typography Pairing'}</span>
             </button>
             <button
-              onClick={() => sendChatMessage('Export Favicon and app manifest icon dimensions (16px, 32px, 192px, 512px).')}
+              onClick={() => sendChatMessage(isArabic ? 'تصدير أيقونات Favicon وأيقونات التطبيق بجميع المقاسات القياسية.' : 'Export Favicon and app manifest icon dimensions (16px, 32px, 192px, 512px).')}
               className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
-              <span>Favicon Icons Pack</span>
+              <span>{isArabic ? 'حزمة أيقونات Favicon' : 'Favicon Icons Pack'}</span>
             </button>
           </>
         ) : (
@@ -313,28 +316,28 @@ export function ChatWorkspace() {
               className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
               <FileCode className="w-3 h-3 text-[var(--text-muted)]" />
-              <span>OpenAPI Schema</span>
+              <span>{isArabic ? 'مخطط OpenAPI' : 'OpenAPI Schema'}</span>
             </button>
             <button
               onClick={() => quickGenerateForActiveStage('security')}
               className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
               <Shield className="w-3 h-3 text-[var(--text-muted)]" />
-              <span>Security Threat Matrix</span>
+              <span>{isArabic ? 'مصفوفة الأمان' : 'Security Threat Matrix'}</span>
             </button>
             <button
               onClick={() => quickGenerateForActiveStage('perf')}
               className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
               <Gauge className="w-3 h-3 text-[var(--text-muted)]" />
-              <span>k6 Load Test</span>
+              <span>{isArabic ? 'اختبار أحمال k6' : 'k6 Load Test'}</span>
             </button>
             <button
               onClick={() => quickGenerateForActiveStage('figma')}
               className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             >
               <FigmaIcon className="w-3 h-3 text-[var(--text-muted)]" />
-              <span>Tokens JSON</span>
+              <span>{isArabic ? 'توكنز Figma' : 'Tokens JSON'}</span>
             </button>
           </>
         )}
@@ -346,7 +349,7 @@ export function ChatWorkspace() {
           <div className="flex items-center justify-between">
             <span className="font-semibold text-[var(--text-primary)] flex items-center gap-1.5">
               <Cpu className="w-3.5 h-3.5 text-emerald-400" />
-              <span>إرفاق مستند PDF أو مجلد Google Drive لتحليله بالـ AI</span>
+              <span>{isArabic ? 'إرفاق مستند أو مجلد Google Drive لتحليله بالذكاء الاصطناعي' : 'Attach Document or Google Drive Folder for AI Analysis'}</span>
             </span>
             <button
               type="button"
@@ -369,10 +372,10 @@ export function ChatWorkspace() {
               <FileText className="w-4 h-4 text-red-400 shrink-0" />
               <div>
                 <span className="font-bold text-[11px] text-[var(--text-primary)] block">
-                  رفع ملف PDF / كراسة شروط
+                  {isArabic ? 'رفع ملف PDF / كراسة شروط' : 'Upload PDF / Specification Document'}
                 </span>
                 <span className="text-[10px] text-[var(--text-muted)]">
-                  استخراج المتطلبات والجداول فوراً
+                  {isArabic ? 'استخراج المتطلبات والجداول فوراً' : 'Extract requirements & tables instantly'}
                 </span>
               </div>
             </label>
@@ -381,14 +384,16 @@ export function ChatWorkspace() {
             <button
               type="button"
               onClick={() => handleAttachMockPdf('Enterprise-Architecture-Guidelines.pdf')}
-              className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-left flex items-center gap-2.5 transition-colors"
+              className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-left rtl:text-right flex items-center gap-2.5 transition-colors"
             >
               <FileText className="w-4 h-4 text-emerald-400 shrink-0" />
               <div>
                 <span className="font-bold text-[11px] text-[var(--text-primary)] block">
                   Architecture-Guidelines.pdf
                 </span>
-                <span className="text-[10px] text-[var(--text-muted)]">نموذج معتمد لمواصفات الأنظمة</span>
+                <span className="text-[10px] text-[var(--text-muted)]">
+                  {isArabic ? 'نموذج معتمد لمواصفات الأنظمة' : 'Enterprise architecture standard'}
+                </span>
               </div>
             </button>
           </div>
@@ -396,13 +401,13 @@ export function ChatWorkspace() {
           {/* Google Drive Link input */}
           <div className="flex items-center gap-2 pt-1">
             <div className="flex-1 relative">
-              <HardDrive className="w-3.5 h-3.5 text-blue-400 absolute left-2.5 top-2.5" />
+              <HardDrive className="w-3.5 h-3.5 text-blue-400 absolute ltr:left-2.5 rtl:right-2.5 top-2.5" />
               <input
                 type="url"
-                placeholder="Google Drive folder link (e.g. https://drive.google.com/...)"
+                placeholder={isArabic ? 'رابط مجلد Google Drive (مثال: https://drive.google.com/...)' : 'Google Drive folder link (e.g. https://drive.google.com/...)'}
                 value={customDriveInput}
                 onChange={(e) => setCustomDriveInput(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
+                className="w-full ltr:pl-8 ltr:pr-3 rtl:pr-8 rtl:pl-3 py-1.5 text-xs rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
               />
             </div>
             <button
@@ -411,7 +416,7 @@ export function ChatWorkspace() {
               disabled={!customDriveInput.trim()}
               className="px-3 py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity shrink-0"
             >
-              ربط درايف
+              {isArabic ? 'ربط درايف' : 'Connect Drive'}
             </button>
           </div>
         </div>
@@ -430,7 +435,7 @@ export function ChatWorkspace() {
               )}
               <span className="font-bold truncate">{activeAttachment.name}</span>
               <span className="text-[10px] text-zinc-400 font-sans hidden sm:inline">
-                (سيتم تحليله وتدريبه مع الرسالة)
+                {isArabic ? '(سيتم تحليله وتضمينه مع الرسالة)' : '(will be analyzed with message)'}
               </span>
             </div>
             <button
@@ -448,7 +453,11 @@ export function ChatWorkspace() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={`Instruct MonoSpec on ${currentStage?.labelEn}... (Enter to send, Shift+Enter for newline)`}
+            placeholder={
+              isArabic
+                ? `اكتب تعليماتك المعمارية لـ MonoSpec في مرحلة ${currentStage?.labelAr || currentStage?.labelEn}... (اضغط Enter للإرسال)`
+                : `Instruct MonoSpec on ${currentStage?.labelEn}... (Enter to send, Shift+Enter for newline)`
+            }
             rows={2}
             className="w-full bg-transparent resize-none text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-hidden leading-relaxed"
           />
@@ -457,7 +466,7 @@ export function ChatWorkspace() {
               <button
                 type="button"
                 onClick={() => setShowAttachMenu((prev) => !prev)}
-                title="Attach PDF or Google Drive Link"
+                title={isArabic ? 'إرفاق ملف PDF أو رابط Google Drive' : 'Attach PDF or Google Drive Link'}
                 className={`flex items-center gap-1 px-2 py-1 rounded text-[11px] font-medium border transition-colors ${
                   showAttachMenu || activeAttachment
                     ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-400'
@@ -465,11 +474,11 @@ export function ChatWorkspace() {
                 }`}
               >
                 <Paperclip className="w-3 h-3" />
-                <span>إرفاق PDF / درايف</span>
+                <span>{isArabic ? 'إرفاق ملف / درايف' : 'Attach PDF / Drive'}</span>
               </button>
 
               <span className="text-[10px] font-mono text-[var(--text-muted)] hidden xl:inline">
-                Shift+Enter for newline
+                {isArabic ? 'Shift+Enter لسطر جديد' : 'Shift+Enter for newline'}
               </span>
             </div>
 
@@ -478,7 +487,7 @@ export function ChatWorkspace() {
               disabled={(!input.trim() && !activeAttachment) || isGeneratingSpec}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-xs"
             >
-              <span>Send</span>
+              <span>{isArabic ? 'إرسال' : 'Send'}</span>
               <Send className="w-3 h-3" />
             </button>
           </div>

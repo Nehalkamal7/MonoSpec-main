@@ -88,14 +88,16 @@ export function Header() {
             ) : (
               <Building2 className="w-3 h-3 text-[var(--text-muted)] shrink-0" />
             )}
-            <span className="font-semibold text-[var(--text-primary)] truncate max-w-[90px] sm:max-w-[130px]">{company.name}</span>
+            <span className="font-semibold text-[var(--text-primary)] truncate max-w-[90px] sm:max-w-[130px]">
+              {isArabic ? (company.nameAr || company.name) : company.name}
+            </span>
             <span className="text-[var(--text-muted)]">({company.code})</span>
             {company.websiteUrl && (
               <a
                 href={company.websiteUrl.startsWith('http') ? company.websiteUrl : `https://${company.websiteUrl}`}
                 target="_blank"
                 rel="noreferrer"
-                title={`Visit Website: ${company.websiteUrl}`}
+                title={`${isArabic ? 'زيارة الموقع' : 'Visit Website'}: ${company.websiteUrl}`}
                 className="text-emerald-400 hover:text-emerald-300 ml-0.5 inline-flex items-center"
               >
                 <ExternalLink className="w-2.5 h-2.5" />
@@ -115,11 +117,11 @@ export function Header() {
         {workspace && (
           <button
             onClick={handleCopyRoomCode}
-            title={`Workspace: ${workspace.name} • Click to copy team room code: ${workspace.roomCode}`}
+            title={`${isArabic ? 'مساحة العمل' : 'Workspace'}: ${workspace.name} • ${isArabic ? 'انقر لنسخ كود الروم' : 'Click to copy team room code'}: ${workspace.roomCode}`}
             className="hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-950/20 hover:bg-emerald-900/30 text-emerald-400 text-[11px] font-mono transition-colors shadow-2xs group shrink-0"
           >
             <KeyRound className="w-3 h-3 text-emerald-400 shrink-0" />
-            <span className="font-medium text-[10px] text-zinc-300">Room:</span>
+            <span className="font-medium text-[10px] text-zinc-300">{isArabic ? 'الروم:' : 'Room:'}</span>
             <span className="font-bold tracking-wider">{workspace.roomCode}</span>
             {copiedRoomCode ? (
               <Check className="w-3 h-3 text-emerald-300 ml-0.5" />
@@ -135,10 +137,7 @@ export function Header() {
           <span className="font-mono text-[10px] text-[var(--text-muted)] font-bold">
             {activeStage?.badge}
           </span>
-          <span className="font-medium text-[11px]">{activeStage?.labelEn}</span>
-          <span className="text-[10px] text-[var(--text-muted)] font-sans">
-            ({activeStage?.labelAr})
-          </span>
+          <span className="font-medium text-[11px]">{isArabic ? activeStage?.labelAr : activeStage?.labelEn}</span>
         </div>
 
         {/* Native Figma Project File Link */}
@@ -147,11 +146,11 @@ export function Header() {
             href={activeProject.figmaUrl}
             target="_blank"
             rel="noreferrer"
-            title={`Open native Figma file: ${activeProject.figmaUrl}`}
+            title={`${isArabic ? 'فتح ملف فيجما' : 'Open native Figma file'}: ${activeProject.figmaUrl}`}
             className="hidden 2xl:flex items-center gap-1.5 px-2 py-1 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-[11px] font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors shrink-0"
           >
             <FigmaIcon className="w-3 h-3" />
-            <span className="truncate max-w-[120px]">Figma File</span>
+            <span className="truncate max-w-[120px]">{isArabic ? 'ملف فيجما' : 'Figma File'}</span>
             <ExternalLink className="w-2.5 h-2.5 text-[var(--text-muted)]" />
           </a>
         )}
@@ -159,15 +158,15 @@ export function Header() {
 
       {/* Right: Language switch, Settings gear, User avatar, Viewport Controls */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        {/* Language Switcher (E / ع) */}
+        {/* Language Switcher */}
         <button
           onClick={toggleLocale}
-          title={isArabic ? 'Switch to English' : 'التحويل للعربية'}
-          className="flex items-center gap-1 px-2 py-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors shadow-2xs"
+          title={isArabic ? 'التحويل إلى اللغة الإنجليزية' : 'Switch to Arabic'}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors shadow-2xs"
         >
-          <span className="font-mono text-sm leading-none">{isArabic ? 'ع' : 'E'}</span>
-          <span className="text-[10px] text-[var(--text-muted)] hidden 2xl:inline">
-            ({isArabic ? 'EN' : 'عربي'})
+          <Globe className="w-3.5 h-3.5" />
+          <span className="text-[11px] font-semibold">
+            {isArabic ? 'العربية' : 'English'}
           </span>
         </button>
 
@@ -185,7 +184,7 @@ export function Header() {
         <div className="hidden md:flex items-center p-0.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
           <button
             onClick={() => setCanvasViewMode('split')}
-            title="Split Workspace View"
+            title={isArabic ? 'تقسيم شاشة العمل (مزدوج)' : 'Split Workspace View'}
             className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${
               canvasViewMode === 'split'
                 ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] font-medium shadow-xs'
@@ -193,11 +192,11 @@ export function Header() {
             }`}
           >
             <Columns className="w-3.5 h-3.5" />
-            <span className="hidden xl:inline">Split</span>
+            <span className="hidden xl:inline">{isArabic ? 'مزدوج' : 'Split'}</span>
           </button>
           <button
             onClick={() => setCanvasViewMode('canvas-only')}
-            title="Spec Canvas Focus"
+            title={isArabic ? 'تركيز على وثيقة المواصفة' : 'Spec Canvas Focus'}
             className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${
               canvasViewMode === 'canvas-only'
                 ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] font-medium shadow-xs'
@@ -205,11 +204,11 @@ export function Header() {
             }`}
           >
             <Maximize2 className="w-3.5 h-3.5" />
-            <span className="hidden xl:inline">Canvas</span>
+            <span className="hidden xl:inline">{isArabic ? 'المواصفة' : 'Canvas'}</span>
           </button>
           <button
             onClick={() => setCanvasViewMode('chat-only')}
-            title="Architect Chat Focus"
+            title={isArabic ? 'تركيز على محادثة المعماري' : 'Architect Chat Focus'}
             className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${
               canvasViewMode === 'chat-only'
                 ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] font-medium shadow-xs'
@@ -217,7 +216,7 @@ export function Header() {
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span className="hidden xl:inline">Chat</span>
+            <span className="hidden xl:inline">{isArabic ? 'المحادثة' : 'Chat'}</span>
           </button>
         </div>
 
@@ -226,27 +225,27 @@ export function Header() {
         {/* Export to Figma Shortcut */}
         <button
           onClick={() => setFigmaModalOpen(true)}
-          title="Export Design Tokens & Frames to Figma"
+          title={isArabic ? 'تصدير توكنز وشاشات فيجما' : 'Export Design Tokens & Frames to Figma'}
           className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] text-xs font-medium transition-all group shadow-2xs"
         >
           <FigmaIcon className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
-          <span className="hidden xl:inline">Figma</span>
+          <span className="hidden xl:inline">{isArabic ? 'فيجما' : 'Figma'}</span>
         </button>
 
         {/* Demo Preview Button */}
         <button
           onClick={() => setDemoModalOpen(true)}
-          title="Launch Live Architectural Simulation"
+          title={isArabic ? 'تشغيل المعاينة التفاعلية' : 'Launch Live Architectural Simulation'}
           className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 transition-all shadow-xs"
         >
           <Play className="w-3.5 h-3.5 fill-current" />
-          <span className="hidden md:inline">Preview</span>
+          <span className="hidden md:inline">{isArabic ? 'معاينة حية' : 'Preview'}</span>
         </button>
 
         {/* Copy / Share Quick Shortcut */}
         <button
           onClick={handleCopyLink}
-          title="Copy Spec Link"
+          title={isArabic ? 'نسخ رابط المواصفة' : 'Copy Spec Link'}
           className="p-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)] transition-colors"
         >
           {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Share2 className="w-4 h-4" />}
@@ -258,20 +257,20 @@ export function Header() {
         <div className="flex items-center gap-1.5 pl-0.5 sm:pl-1 shrink-0">
           {/* Avatar */}
           <div
-            title={`${userSession?.name || 'Architect'} (${accountType === 'freelancer' ? 'Freelancer' : 'Enterprise'})`}
+            title={`${userSession?.name || (isArabic ? 'نهال كمال' : 'Nehal Kamal')} (${accountType === 'freelancer' ? (isArabic ? 'مستقل' : 'Freelancer') : (isArabic ? 'مؤسسي' : 'Enterprise')})`}
             className="w-8 h-8 rounded-full bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] flex items-center justify-center font-bold text-xs overflow-hidden border border-[var(--border-strong)] shadow-xs select-none"
           >
             {userSession?.avatarUrl ? (
               <img src={userSession.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
-              <span>{(userSession?.name || 'A').slice(0, 1).toUpperCase()}</span>
+              <span>{(userSession?.name || 'N').slice(0, 1).toUpperCase()}</span>
             )}
           </div>
 
           {/* Settings Icon Button Next to Picture */}
           <button
             onClick={() => setSettingsModalOpen(true)}
-            title={isArabic ? 'إعدادات المنظومة الشاملة (Settings)' : 'Comprehensive Settings'}
+            title={isArabic ? 'إعدادات المنظومة' : 'Comprehensive Settings'}
             className="p-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:rotate-90 duration-300 shadow-2xs group"
           >
             <Settings className="w-4 h-4 group-hover:text-emerald-400 transition-colors" />

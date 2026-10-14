@@ -42,8 +42,10 @@ export function Sidebar() {
     setActiveView,
     addCompany,
     accountType,
+    locale,
   } = useMonoSpecStore();
 
+  const isArabic = locale === 'ar';
   const isFreelancer = accountType === 'freelancer';
 
   const [expandedCompanies, setExpandedCompanies] = useState<Record<string, boolean>>({
@@ -185,13 +187,13 @@ export function Sidebar() {
                 </span>
               </div>
               <p className="text-[11px] text-[var(--text-muted)] leading-none mt-0.5">
-                Precision for Any Enterprise
+                {isArabic ? 'دقة هندسية لكل المنظومات' : 'Precision for Any Enterprise'}
               </p>
             </div>
           </div>
           <button
             onClick={toggleSidebar}
-            title="Collapse Sidebar"
+            title={isArabic ? 'طي الشريط الجانبي' : 'Collapse Sidebar'}
             className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)] transition-colors"
           >
             <PanelLeftClose className="w-4 h-4" />
@@ -217,18 +219,18 @@ export function Sidebar() {
               </div>
               <button
                 onClick={handleCopyRoomCode}
-                title="Copy Team Room Code"
+                title={isArabic ? 'نسخ كود الروم' : 'Copy Team Room Code'}
                 className="flex items-center gap-1 text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
               >
                 {copiedRoomCode ? (
                   <>
                     <Check className="w-3 h-3 text-emerald-400" />
-                    <span className="text-emerald-400">Copied</span>
+                    <span className="text-emerald-400">{isArabic ? 'تم النسخ' : 'Copied'}</span>
                   </>
                 ) : (
                   <>
                     <Copy className="w-3 h-3" />
-                    <span>Copy Code</span>
+                    <span>{isArabic ? 'نسخ الكود' : 'Copy Code'}</span>
                   </>
                 )}
               </button>
@@ -243,15 +245,15 @@ export function Sidebar() {
             className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-95 transition-all shadow-xs group"
           >
             <Plus className="w-3.5 h-3.5 transition-transform group-hover:rotate-90 duration-200" />
-            <span>New Spec</span>
+            <span>{isArabic ? 'مشروع جديد' : 'New Spec'}</span>
           </button>
           <button
             onClick={() => setTrainingModalOpen(true)}
-            title="Upload PDF, Drive links & Train Model"
+            title={isArabic ? 'رفع ملفات PDF وروابط درايف وتدريب النموذج' : 'Upload PDF, Drive links & Train Model'}
             className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-xs text-[var(--text-primary)] font-medium transition-all shadow-2xs"
           >
             <Database className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-            <span>AI Datasets</span>
+            <span>{isArabic ? 'تدريب الذكاء' : 'AI Datasets'}</span>
           </button>
         </div>
 
@@ -260,7 +262,7 @@ export function Sidebar() {
           <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[var(--text-muted)]" />
           <input
             type="text"
-            placeholder="Filter projects & specs..."
+            placeholder={isArabic ? 'بحث في المشاريع والمواصفات...' : 'Filter projects & specs...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-8 pr-3 py-1.5 text-xs rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-hidden focus:border-[var(--border-strong)] transition-colors"
@@ -292,13 +294,8 @@ export function Sidebar() {
                   ) : (
                     <Building2 className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
                   )}
-                  <div className="text-left truncate">
-                    <span className="tracking-tight">{company.name}</span>
-                    {company.nameAr && company.nameAr !== company.name && (
-                      <span className="text-[10px] text-[var(--text-muted)] font-normal ml-1.5 font-sans">
-                        ({company.nameAr})
-                      </span>
-                    )}
+                  <div className="truncate">
+                    <span className="tracking-tight">{isArabic ? (company.nameAr || company.name) : company.name}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
@@ -324,10 +321,10 @@ export function Sidebar() {
               </button>
 
               {isExpanded && (
-                <div className="space-y-0.5 pl-3 border-l border-[var(--border-subtle)] ml-3">
+                <div className="space-y-0.5 ltr:pl-3 ltr:border-l rtl:pr-3 rtl:border-r border-[var(--border-subtle)] ltr:ml-3 rtl:mr-3">
                   {compProjects.length === 0 ? (
                     <div className="py-2 px-2 text-[11px] text-[var(--text-muted)] italic">
-                      No active projects. Click + to add one.
+                      {isArabic ? 'لا توجد مشاريع نشطة. اضغط + لإضافة مشروع جديد.' : 'No active projects. Click + to add one.'}
                     </div>
                   ) : (
                     compProjects.map((project) => {
@@ -339,7 +336,7 @@ export function Sidebar() {
                         <button
                           key={project.id}
                           onClick={() => setActiveProject(project.id)}
-                          className={`w-full text-left p-2 rounded-lg text-xs transition-all flex flex-col gap-1 border ${
+                          className={`w-full text-left rtl:text-right p-2 rounded-lg text-xs transition-all flex flex-col gap-1 border ${
                             isActive
                               ? 'bg-[var(--bg-surface-elevated)] border-[var(--border-strong)] text-[var(--text-primary)] shadow-xs'
                               : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]'
@@ -354,7 +351,7 @@ export function Sidebar() {
                             )}
                           </div>
                           <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)]">
-                            <span className="truncate">{activeStage?.labelEn || project.activeStageId}</span>
+                            <span className="truncate">{isArabic ? (activeStage?.labelAr || project.activeStageId) : (activeStage?.labelEn || project.activeStageId)}</span>
                             <span className="font-mono">{deliverable?.progress ?? 0}%</span>
                           </div>
                         </button>
@@ -376,19 +373,23 @@ export function Sidebar() {
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[var(--text-primary)]">
-                  {isFreelancer ? 'Add New Website / Platform' : 'Add New Company'}
+                  {isFreelancer 
+                    ? (isArabic ? 'إضافة منصة / موقع جديد' : 'Add New Website / Platform') 
+                    : (isArabic ? 'إضافة شركة جديدة' : 'Add New Company')}
                 </span>
                 <button
                   type="button"
                   onClick={() => setShowAddCompanyModal(false)}
                   className="text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                 >
-                  Cancel
+                  {isArabic ? 'إلغاء' : 'Cancel'}
                 </button>
               </div>
               <input
                 type="text"
-                placeholder={isFreelancer ? 'Website Name (e.g. MyPortfolio)' : 'Company Name (e.g. Apex FinTech)'}
+                placeholder={isFreelancer 
+                  ? (isArabic ? 'اسم الموقع (مثال: معرض أعمالي)' : 'Website Name (e.g. MyPortfolio)') 
+                  : (isArabic ? 'اسم الشركة (مثال: أفق للتقنية)' : 'Company Name (e.g. Apex FinTech)')}
                 value={newCompanyName}
                 onChange={(e) => setNewCompanyName(e.target.value)}
                 className="w-full px-2.5 py-1.5 text-xs rounded border border-[var(--border-subtle)] bg-[var(--bg-canvas)] text-[var(--text-primary)] focus:outline-hidden"
@@ -398,7 +399,9 @@ export function Sidebar() {
               <div className="grid grid-cols-2 gap-2">
                 <input
                   type="text"
-                  placeholder={isFreelancer ? 'Site Code (e.g. PORT)' : 'Code (e.g. APX)'}
+                  placeholder={isFreelancer 
+                    ? (isArabic ? 'الرمز (مثال: PORT)' : 'Site Code (e.g. PORT)') 
+                    : (isArabic ? 'الرمز (مثال: APX)' : 'Code (e.g. APX)')}
                   value={newCompanyCode}
                   maxLength={5}
                   onChange={(e) => setNewCompanyCode(e.target.value)}
@@ -406,7 +409,9 @@ export function Sidebar() {
                 />
                 <input
                   type="text"
-                  placeholder={isFreelancer ? 'Platform Type (e.g. SaaS)' : 'Sector / Industry'}
+                  placeholder={isFreelancer 
+                    ? (isArabic ? 'نوع المنصة (مثال: SaaS)' : 'Platform Type (e.g. SaaS)') 
+                    : (isArabic ? 'القطاع / المجال' : 'Sector / Industry')}
                   value={newCompanyIndustry}
                   onChange={(e) => setNewCompanyIndustry(e.target.value)}
                   className="w-full px-2 py-1 text-xs rounded border border-[var(--border-subtle)] bg-[var(--bg-canvas)] text-[var(--text-primary)] focus:outline-hidden"
@@ -415,7 +420,7 @@ export function Sidebar() {
               {isFreelancer && (
                 <input
                   type="text"
-                  placeholder="Website URL (e.g. https://mywebsite.com)"
+                  placeholder={isArabic ? 'رابط الموقع (مثال: https://mywebsite.com)' : 'Website URL (e.g. https://mywebsite.com)'}
                   value={newCompanyUrl}
                   onChange={(e) => setNewCompanyUrl(e.target.value)}
                   className="w-full px-2.5 py-1.5 text-xs rounded border border-[var(--border-subtle)] bg-[var(--bg-canvas)] text-[var(--text-primary)] focus:outline-hidden font-mono text-[11px]"
@@ -425,7 +430,9 @@ export function Sidebar() {
                 type="submit"
                 className="w-full py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 transition-opacity"
               >
-                {isFreelancer ? 'Save Website' : 'Save Company'}
+                {isFreelancer 
+                  ? (isArabic ? 'حفظ الموقع' : 'Save Website') 
+                  : (isArabic ? 'حفظ الشركة' : 'Save Company')}
               </button>
             </form>
           ) : (
@@ -434,7 +441,11 @@ export function Sidebar() {
               className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-dashed border-[var(--border-subtle)] hover:border-[var(--border-strong)] text-[var(--text-muted)] hover:text-[var(--text-primary)] text-xs transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>{isFreelancer ? 'Add Another Website' : 'Add Another Company'}</span>
+              <span>
+                {isFreelancer 
+                  ? (isArabic ? 'إضافة موقع آخر' : 'Add Another Website') 
+                  : (isArabic ? 'إضافة شركة أخرى' : 'Add Another Company')}
+              </span>
             </button>
           )}
         </div>
@@ -447,7 +458,7 @@ export function Sidebar() {
           className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
         >
           <Home className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-          <span>Product Overview</span>
+          <span>{isArabic ? 'نظرة عامة على النظام' : 'Product Overview'}</span>
         </button>
         <ThemeToggle />
       </div>

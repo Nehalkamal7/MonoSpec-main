@@ -191,14 +191,15 @@ export const useMonoSpecStore = create<MonoSpecStore>()(
       activeSettingsTab: 'workspace',
       userSession: {
         id: 'usr-default',
-        name: 'مهندس المنظومة / Chief Architect',
-        email: 'architect@enterprise.internal',
-        role: 'Enterprise Architect & Lead',
+        name: 'نهال كمال',
+        email: 'nehaledeib@gmail.com',
+        phone: '+201553646123',
+        role: 'مهندس الأنظمة والمعمارية البرمجية',
         workspaceId: DEFAULT_WORKSPACE.id,
         isAuthenticated: true,
         accountType: 'enterprise',
         avatarUrl: '',
-        bio: 'Leading enterprise systems, high-availability architecture & multi-company specifications.',
+        bio: 'المؤسس ومهندس المنظومات البرمجية والمواصفات المعمارية عالية الدقة للمؤسسات والشركات.',
       },
       workspace: DEFAULT_WORKSPACE,
 
@@ -257,8 +258,33 @@ export const useMonoSpecStore = create<MonoSpecStore>()(
       // View & Auth Actions
       setActiveView: (view) => set({ activeView: view }),
       setOnboardingStep: (step) => set({ onboardingStep: step }),
-      setLocale: (l) => set({ locale: l }),
-      toggleLocale: () => set((state) => ({ locale: state.locale === 'ar' ? 'en' : 'ar' })),
+      setLocale: (l) => {
+        if (typeof document !== 'undefined') {
+          document.documentElement.setAttribute('dir', l === 'ar' ? 'rtl' : 'ltr');
+          document.documentElement.setAttribute('lang', l);
+        }
+        set((state) => {
+          let updatedSession = state.userSession;
+          if (updatedSession) {
+            const isNehal = updatedSession.email === 'nehaledeib@gmail.com' || updatedSession.name === 'نهال كمال' || updatedSession.name === 'Nehal Kamal';
+            if (isNehal) {
+              updatedSession = {
+                ...updatedSession,
+                name: l === 'ar' ? 'نهال كمال' : 'Nehal Kamal',
+                role: l === 'ar' ? 'مهندس الأنظمة والمعمارية البرمجية' : 'Enterprise Software Architect & Lead',
+                bio: l === 'ar'
+                  ? 'المؤسس ومهندس المنظومات البرمجية والمواصفات المعمارية عالية الدقة للمؤسسات والشركات.'
+                  : 'Founder & Systems Architect for High-Availability Enterprise Software.',
+              };
+            }
+          }
+          return { locale: l, userSession: updatedSession };
+        });
+      },
+      toggleLocale: () => {
+        const next = get().locale === 'ar' ? 'en' : 'ar';
+        get().setLocale(next);
+      },
       setAccountType: (type) => set({ accountType: type }),
       setSettingsModalOpen: (open) => set({ isSettingsModalOpen: open }),
       setActiveSettingsTab: (tab) => set({ activeSettingsTab: tab }),
@@ -628,10 +654,31 @@ Constructed around an isometric grid with golden-ratio balanced symmetry:
 
         // Response generation including support for Logo and PDF/Drive attachments
         setTimeout(() => {
-          const activeProject = get().getActiveProject();
-          const stageName = customStages.find((s) => s.id === activeStageId)?.labelEn || activeStageId;
+          const { getActiveProject, locale } = get();
+          const activeProject = getActiveProject();
+          const isArabic = locale === 'ar';
+          const stageObj = customStages.find((s) => s.id === activeStageId);
+          const stageName = isArabic ? (stageObj?.labelAr || activeStageId) : (stageObj?.labelEn || activeStageId);
 
-          let assistantContent = `### Architectural Analysis & Verification
+          let assistantContent = isArabic ? `### التحليل المعماري والتحقق الهندسي
+تم تقييم طلبك لمشروع **${activeProject?.title}** في مرحلة **${stageName}**.
+
+تمت مراجعة معايير المواصفة لضمان التوافق التام مع المعايير المؤسسية:
+- **استراتيجية المرونة:** منع أي نقطة فشل مفردة عبر آليات النصاب الموزع.
+- **التتبع وقابلية الملاحظة:** تسجيل قياسات المعاملات وربطها مع مجمّع OpenTelemetry.
+
+\`\`\`typescript
+// التحقق من صحة المواصفة الفنية
+export const specValidation = {
+  verified: true,
+  complianceLevel: "Enterprise Strict",
+  latencyBudgetMs: 85,
+  timestamp: ${Date.now()},
+};
+\`\`\`
+
+هل ترغب في دمج هذه المواصفة مباشرة في لوحة المواصفات الفنية؟`
+: `### Architectural Analysis & Verification
 I have evaluated your request for **${activeProject?.title}** in the **${stageName}** stage.
 
 The specification parameters have been recalculated to ensure strict adherence to our monochrome enterprise standard:
@@ -651,7 +698,26 @@ export const specValidation = {
 Would you like me to incorporate this directly into the live specification canvas?`;
 
           if (attachment) {
-            assistantContent = `### Ingested Source Analysis & Integration: ${attachment.name}
+            assistantContent = isArabic ? `### تحليل واستيعاب المستند المرفق: ${attachment.name}
+**نوع المستند:** ${attachment.type.toUpperCase()}  
+**محرك المعالجة:** محرك MonoSpec العصبي لاستيعاب الوثائق (v2.4)
+
+تم استخراج المتطلبات والكيانات البرمجية وضوابط الامتثال بعمق من **${attachment.name}**:
+- **الثوابت المستخرجة:** تم مواءمة المخططات وقواعد البيانات مع مرحلة **${stageName}**.
+- **الكيانات والعقود:** مطابقة بنسبة 100% لضوابط الأمان السيادي واستبقاء البيانات.
+- **تحديث قاعدة المعرفة:** تم تضمين هذا المستند في أوزان النموذج لدعم الاسترجاع الذكي.
+
+\`\`\`json
+{
+  "source": "${attachment.name}",
+  "status": "INGESTED_AND_TRAINED",
+  "matchedRules": 18,
+  "confidenceScore": 0.994
+}
+\`\`\`
+
+هل ترغب في إدراج المتطلبات المستخرجة مباشرة في لوحة مواصفات هذه المرحلة؟`
+: `### Ingested Source Analysis & Integration: ${attachment.name}
 **Source Type:** ${attachment.type.toUpperCase()}  
 **Parsing Engine:** MonoSpec Deep Neural Ingestion Engine (v2.4)
 
@@ -671,7 +737,24 @@ I have deeply extracted the architectural invariants, entities, and compliance m
 
 Would you like me to inject the extracted requirements directly into this stage's specification canvas?`;
           } else if (activeStageId === 'logo') {
-            assistantContent = `### Brand Identity & Geometric Logomark Specification
+            assistantContent = isArabic ? `### مواصفة الهوية البصرية والشعار الهندسي
+إليك مخطط الهوية البصرية المتجهي المحسوب بالنسب الهندسية لمشروع **${activeProject?.title}**:
+
+\`\`\`svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80" class="w-48 h-16">
+  <rect width="240" height="80" rx="12" fill="#09090b" stroke="#27272a" stroke-width="2"/>
+  <path d="M35 55 L50 25 L65 55 L55 55 L50 42 L45 55 Z" fill="#ffffff" />
+  <circle cx="68" cy="30" r="4" fill="#22c55e" />
+  <text x="85" y="46" font-family="monospace" font-size="18" font-weight="bold" fill="#ffffff">ID-MARK</text>
+  <text x="165" y="46" font-family="sans-serif" font-size="12" fill="#a1a1aa">VECTOR</text>
+</svg>
+\`\`\`
+
+- **لون الخلفية الأساسي:** الأسود الداكن (\`#09090b\`)
+- **علامة الشعار عالية التباين:** الأبيض النقي (\`#ffffff\`)
+- **عنصر التمييز الديناميكي:** الأخضر الحيوي (\`#22c55e\`)
+- **سلسلة الخطوط:** Inter 600 / JetBrains Mono 700`
+: `### Brand Identity & Geometric Logomark Specification
 Here is the mathematically proportioned vector identity blueprint for **${activeProject?.title}**:
 
 \`\`\`svg
@@ -697,7 +780,11 @@ Here is the mathematically proportioned vector identity blueprint for **${active
             sender: 'assistant',
             content: assistantContent,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            suggestedActions: [
+            suggestedActions: isArabic ? [
+              { label: 'إضافة إلى لوحة المواصفات', action: 'append_spec' },
+              { label: 'توليد اختبارات التحقق', action: 'gen_assertions' },
+              { label: 'تصدير سجل المراجعة', action: 'export_audit' },
+            ] : [
               { label: 'Append to Spec Canvas', action: 'append_spec' },
               { label: 'Generate Unit Assertions', action: 'gen_assertions' },
               { label: 'Export Audit Log', action: 'export_audit' },
@@ -715,20 +802,31 @@ Here is the mathematically proportioned vector identity blueprint for **${active
       },
 
       quickGenerateForActiveStage: (promptType) => {
-        const { sendChatMessage, activeStageId } = get();
+        const { sendChatMessage, activeStageId, locale } = get();
+        const isArabic = locale === 'ar';
         if (activeStageId === 'logo') {
-          sendChatMessage('Generate mathematical vector SVG logomark with dark mode palette tokens and font hierarchy.');
+          sendChatMessage(isArabic 
+            ? 'توليد شعار متجهي SVG محسوب رياضياً مع منظومة ألوان الوضع الليلي وتسلسل الخطوط.'
+            : 'Generate mathematical vector SVG logomark with dark mode palette tokens and font hierarchy.');
           return;
         }
 
-        const prompts: Record<string, string> = {
+        const promptsEn: Record<string, string> = {
           schema: 'Generate OpenAPI 3.1 specification schema with strict validation rules and error response definitions.',
           security: 'Perform a threat boundary analysis and define OAuth 2.1 authorization scopes with mTLS requirements.',
           perf: 'Draft k6 high-concurrency performance benchmark scenarios targeting 20,000 requests per second.',
           figma: 'Extract design tokens (spacing, typography, monochrome palette) into Figma Tokens JSON format.',
           ci: 'Generate hardened GitHub Actions CI/CD workflow pipeline with static security scanning and Trivy container audit.',
         };
-        sendChatMessage(prompts[promptType] || 'Analyze current stage specifications and identify optimization vectors.');
+        const promptsAr: Record<string, string> = {
+          schema: 'توليد مخطط مواصفة OpenAPI 3.1 مع قواعد التحقق الدقيقة وتعاريف استجابات الأخطاء.',
+          security: 'إجراء تحليل حدود التهديدات وتحديد نطاقات تصريح OAuth 2.1 مع متطلبات mTLS.',
+          perf: 'إعداد سيناريوهات فحص الأداء العالي k6 مستهدفة 20,000 طلب في الثانية.',
+          figma: 'استخراج توكنات التصميم (المسافات، الخطوط، الألوان الأحادية) بصيغة Figma Tokens JSON.',
+          ci: 'توليد مسار عمل GitHub Actions CI/CD مع الفحص الأمني الثابت وتدقيق الحاويات عبر Trivy.',
+        };
+        const p = isArabic ? promptsAr : promptsEn;
+        sendChatMessage(p[promptType] || (isArabic ? 'تحليل مواصفات المرحلة الحالية وتحديد مسارات التحسين.' : 'Analyze current stage specifications and identify optimization vectors.'));
       },
     }),
     {
