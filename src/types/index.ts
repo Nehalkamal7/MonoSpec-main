@@ -9,6 +9,8 @@ export interface Company {
   industry?: string;
   logoUrl?: string;
   isCustom?: boolean;
+  websiteUrl?: string;
+  type?: 'enterprise' | 'freelancer_site';
 }
 
 export type StageId =

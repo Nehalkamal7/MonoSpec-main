@@ -17,6 +17,8 @@ import {
   Copy,
   Check,
   Home,
+  Globe,
+  ExternalLink,
 } from 'lucide-react';
 import { useMonoSpecStore } from '@/store/useMonoSpecStore';
 import { STAGES } from '@/lib/constants';
@@ -39,7 +41,10 @@ export function Sidebar() {
     workspace,
     setActiveView,
     addCompany,
+    accountType,
   } = useMonoSpecStore();
+
+  const isFreelancer = accountType === 'freelancer';
 
   const [expandedCompanies, setExpandedCompanies] = useState<Record<string, boolean>>({
     awamer: true,
@@ -50,6 +55,7 @@ export function Sidebar() {
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
   const [newCompanyName, setNewCompanyName] = useState('');
   const [newCompanyCode, setNewCompanyCode] = useState('');
+  const [newCompanyUrl, setNewCompanyUrl] = useState('');
   const [newCompanyIndustry, setNewCompanyIndustry] = useState('');
 
   const toggleCompanyExpand = (companyId: string) => {
@@ -75,12 +81,15 @@ export function Sidebar() {
     addCompany({
       name: newCompanyName.trim(),
       code,
-      industry: newCompanyIndustry.trim() || 'Enterprise Tech',
-      tagline: `Digital Systems & Architecture for ${newCompanyName.trim()}`,
+      websiteUrl: newCompanyUrl.trim() || undefined,
+      industry: newCompanyIndustry.trim() || (isFreelancer ? 'منصة وتطبيق ويب' : 'Enterprise Tech'),
+      tagline: `${isFreelancer ? 'مواصفات وتصميم موقع' : 'Digital Systems & Architecture for'} ${newCompanyName.trim()}`,
+      type: isFreelancer ? 'freelancer_site' : 'enterprise',
     });
 
     setNewCompanyName('');
     setNewCompanyCode('');
+    setNewCompanyUrl('');
     setNewCompanyIndustry('');
     setShowAddCompanyModal(false);
   };
@@ -122,11 +131,12 @@ export function Sidebar() {
           <div className="flex flex-col items-center gap-1.5 overflow-y-auto max-h-[40vh] no-scrollbar">
             {companies.map((comp) => {
               const isSelected = selectedCompanyFilter === comp.id;
+              const isCompFreelance = comp.type === 'freelancer_site' || isFreelancer;
               return (
                 <button
                   key={comp.id}
                   onClick={() => setSelectedCompanyFilter(isSelected ? 'all' : comp.id)}
-                  title={`Filter ${comp.name} (${comp.code})`}
+                  title={`${isCompFreelance ? 'Website' : 'Company'}: ${comp.name} (${comp.code})`}
                   className={`w-9 h-9 rounded-md text-[10px] font-mono font-bold flex items-center justify-center border transition-all ${
                     isSelected
                       ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] border-transparent'
@@ -277,6 +287,11 @@ export function Sidebar() {
                   ) : (
                     <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
                   )}
+                  {isFreelancer || company.type === 'freelancer_site' ? (
+                    <Globe className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  ) : (
+                    <Building2 className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
+                  )}
                   <div className="text-left truncate">
                     <span className="tracking-tight">{company.name}</span>
                     {company.nameAr && company.nameAr !== company.name && (
@@ -287,6 +302,18 @@ export function Sidebar() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
+                  {company.websiteUrl && (
+                    <a
+                      href={company.websiteUrl.startsWith('http') ? company.websiteUrl : `https://${company.websiteUrl}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      title={`Visit ${company.websiteUrl}`}
+                      className="text-emerald-400 hover:text-emerald-300 p-0.5"
+                    >
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  )}
                   <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] text-[var(--text-muted)]">
                     {company.code}
                   </span>
@@ -340,7 +367,7 @@ export function Sidebar() {
           );
         })}
 
-        {/* Add Another Company Button */}
+        {/* Add Another Company / Website Button */}
         <div className="pt-2">
           {showAddCompanyModal ? (
             <form
@@ -348,7 +375,9 @@ export function Sidebar() {
               className="p-3 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-surface-elevated)] space-y-2.5 animate-in fade-in duration-150"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-[var(--text-primary)]">Add New Company</span>
+                <span className="text-xs font-semibold text-[var(--text-primary)]">
+                  {isFreelancer ? 'Add New Website / Platform' : 'Add New Company'}
+                </span>
                 <button
                   type="button"
                   onClick={() => setShowAddCompanyModal(false)}
@@ -359,7 +388,7 @@ export function Sidebar() {
               </div>
               <input
                 type="text"
-                placeholder="Company Name (e.g. Apex FinTech)"
+                placeholder={isFreelancer ? 'Website Name (e.g. MyPortfolio)' : 'Company Name (e.g. Apex FinTech)'}
                 value={newCompanyName}
                 onChange={(e) => setNewCompanyName(e.target.value)}
                 className="w-full px-2.5 py-1.5 text-xs rounded border border-[var(--border-subtle)] bg-[var(--bg-canvas)] text-[var(--text-primary)] focus:outline-hidden"
@@ -369,7 +398,7 @@ export function Sidebar() {
               <div className="grid grid-cols-2 gap-2">
                 <input
                   type="text"
-                  placeholder="Code (e.g. APX)"
+                  placeholder={isFreelancer ? 'Site Code (e.g. PORT)' : 'Code (e.g. APX)'}
                   value={newCompanyCode}
                   maxLength={5}
                   onChange={(e) => setNewCompanyCode(e.target.value)}
@@ -377,17 +406,26 @@ export function Sidebar() {
                 />
                 <input
                   type="text"
-                  placeholder="Sector / Industry"
+                  placeholder={isFreelancer ? 'Platform Type (e.g. SaaS)' : 'Sector / Industry'}
                   value={newCompanyIndustry}
                   onChange={(e) => setNewCompanyIndustry(e.target.value)}
                   className="w-full px-2 py-1 text-xs rounded border border-[var(--border-subtle)] bg-[var(--bg-canvas)] text-[var(--text-primary)] focus:outline-hidden"
                 />
               </div>
+              {isFreelancer && (
+                <input
+                  type="text"
+                  placeholder="Website URL (e.g. https://mywebsite.com)"
+                  value={newCompanyUrl}
+                  onChange={(e) => setNewCompanyUrl(e.target.value)}
+                  className="w-full px-2.5 py-1.5 text-xs rounded border border-[var(--border-subtle)] bg-[var(--bg-canvas)] text-[var(--text-primary)] focus:outline-hidden font-mono text-[11px]"
+                />
+              )}
               <button
                 type="submit"
                 className="w-full py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 transition-opacity"
               >
-                Save Company
+                {isFreelancer ? 'Save Website' : 'Save Company'}
               </button>
             </form>
           ) : (
@@ -396,7 +434,7 @@ export function Sidebar() {
               className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-dashed border-[var(--border-subtle)] hover:border-[var(--border-strong)] text-[var(--text-muted)] hover:text-[var(--text-primary)] text-xs transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Add Another Company</span>
+              <span>{isFreelancer ? 'Add Another Website' : 'Add Another Company'}</span>
             </button>
           )}
         </div>

@@ -23,6 +23,7 @@ import {
   Palette,
   FileText,
   Camera,
+  ExternalLink,
 } from 'lucide-react';
 import { useMonoSpecStore } from '@/store/useMonoSpecStore';
 import { RECOMMENDED_STAGES } from '@/lib/constants';
@@ -63,9 +64,10 @@ export function SettingsModal() {
   const [profileBio, setProfileBio] = useState(userSession?.bio || '');
   const [profileAvatar, setProfileAvatar] = useState(userSession?.avatarUrl || '');
 
-  // New Company in Settings State
+  // New Company / Website in Settings State
   const [newCompName, setNewCompName] = useState('');
   const [newCompCode, setNewCompCode] = useState('');
+  const [newCompUrl, setNewCompUrl] = useState('');
   const [newCompIndustry, setNewCompIndustry] = useState('');
 
   // AI Settings State
@@ -118,11 +120,14 @@ export function SettingsModal() {
     addCompany({
       name: newCompName.trim(),
       code: (newCompCode.trim() || newCompName.slice(0, 3)).toUpperCase(),
-      industry: newCompIndustry.trim() || 'Software & Tech',
+      websiteUrl: newCompUrl.trim() || undefined,
+      industry: newCompIndustry.trim() || (accountType === 'freelancer' ? 'منصة وتطبيق ويب' : 'Software & Tech'),
+      type: accountType === 'freelancer' ? 'freelancer_site' : 'enterprise',
     });
 
     setNewCompName('');
     setNewCompCode('');
+    setNewCompUrl('');
     setNewCompIndustry('');
   };
 
@@ -179,7 +184,12 @@ export function SettingsModal() {
           <div className="w-56 border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] p-3 space-y-1 select-none shrink-0 overflow-y-auto">
             {[
               { id: 'workspace', labelAr: 'مساحة العمل والروم', labelEn: 'Workspace & Room', icon: KeyRound },
-              { id: 'companies', labelAr: 'الشركات والعملاء', labelEn: 'Companies & Clients', icon: Building2 },
+              {
+                id: 'companies',
+                labelAr: accountType === 'freelancer' ? 'المواقع والمنصات' : 'الشركات والعملاء',
+                labelEn: accountType === 'freelancer' ? 'Websites & Platforms' : 'Companies & Clients',
+                icon: accountType === 'freelancer' ? Globe : Building2,
+              },
               { id: 'stages', labelAr: 'مراحل المشروع (7)', labelEn: 'Pipeline Stages', icon: Layers },
               { id: 'ai', labelAr: 'إعدادات الذكاء الاصطناعي', labelEn: 'AI & Ingestion', icon: Cpu },
               { id: 'profile', labelAr: 'الملف الشخصي والحساب', labelEn: 'Profile & Account', icon: User },
@@ -338,19 +348,23 @@ export function SettingsModal() {
               </div>
             )}
 
-            {/* TAB 2: COMPANIES & CLIENTS */}
+            {/* TAB 2: COMPANIES & CLIENTS / FREELANCER WEBSITES */}
             {activeSettingsTab === 'companies' && (
               <div className="space-y-6 max-w-2xl">
                 <div>
                   <h3 className="text-sm font-bold text-[var(--text-primary)]">
                     {accountType === 'freelancer'
-                      ? (isArabic ? 'عملاء ومشاريع الفريلانسر' : 'Freelancer Clients')
+                      ? (isArabic ? 'مواقعك ومنصاتك الخاصة' : 'My Websites & Platforms')
                       : (isArabic ? 'الشركات والمؤسسات المسجلة' : 'Registered Client Companies')}
                   </h3>
                   <p className="text-[11px] text-[var(--text-muted)]">
-                    {isArabic
-                      ? 'يمكنك إضافة عدد غير محدود من الشركات والعملاء، والتبديل بينهم لعزل المواصفات والـ RAG'
-                      : 'Manage client accounts and isolated specification datasets'}
+                    {accountType === 'freelancer'
+                      ? (isArabic
+                          ? 'يمكنك إدارة مواقعك الخاصة وتطبيقات الويب والمنصات وتحديد روابطها ومواصفاتها المعمارية'
+                          : 'Manage your personal websites, web apps, domains, and architecture specs')
+                      : (isArabic
+                          ? 'يمكنك إضافة عدد غير محدود من الشركات والعملاء، والتبديل بينهم لعزل المواصفات والـ RAG'
+                          : 'Manage client accounts and isolated specification datasets')}
                   </p>
                 </div>
 
@@ -368,9 +382,21 @@ export function SettingsModal() {
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-xs">{c.name}</span>
                             <span className="text-[10px] font-mono text-[var(--text-muted)]">({c.code})</span>
+                            {c.websiteUrl && (
+                              <a
+                                href={c.websiteUrl.startsWith('http') ? c.websiteUrl : `https://${c.websiteUrl}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                title={`Visit ${c.websiteUrl}`}
+                                className="text-emerald-400 hover:text-emerald-300 text-[10px] inline-flex items-center gap-0.5 font-mono"
+                              >
+                                <ExternalLink className="w-2.5 h-2.5" />
+                                <span>{c.websiteUrl}</span>
+                              </a>
+                            )}
                           </div>
                           <p className="text-[11px] text-[var(--text-muted)]">
-                            {c.nameAr || c.industry || 'Technology'}
+                            {c.nameAr || c.industry || (accountType === 'freelancer' ? 'منصة وتطبيق ويب' : 'Technology')}
                           </p>
                         </div>
                       </div>
@@ -388,20 +414,32 @@ export function SettingsModal() {
                   ))}
                 </div>
 
-                {/* Add Company Form */}
+                {/* Add Company / Website Form */}
                 <form
                   onSubmit={handleAddCompanyInSettings}
                   className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] space-y-3"
                 >
                   <span className="font-bold text-xs text-[var(--text-primary)] flex items-center gap-1.5">
-                    <Plus className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>{isArabic ? 'إضافة شركة أو عميل جديد' : 'Add New Client / Company'}</span>
+                    {accountType === 'freelancer' ? (
+                      <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                    ) : (
+                      <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                    )}
+                    <span>
+                      {accountType === 'freelancer'
+                        ? (isArabic ? 'إضافة موقع أو منصة خاصة جديدة' : 'Add New Website / Platform')
+                        : (isArabic ? 'إضافة شركة أو عميل جديد' : 'Add New Client / Company')}
+                    </span>
                   </span>
 
                   <div className="grid grid-cols-2 gap-2">
                     <input
                       type="text"
-                      placeholder={isArabic ? 'اسم الشركة (English)' : 'Company Name'}
+                      placeholder={
+                        accountType === 'freelancer'
+                          ? (isArabic ? 'اسم الموقع (English)' : 'Website Name (e.g. MyPortfolio)')
+                          : (isArabic ? 'اسم الشركة (English)' : 'Company Name')
+                      }
                       value={newCompName}
                       onChange={(e) => setNewCompName(e.target.value)}
                       className="px-2.5 py-1.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface)] focus:outline-hidden"
@@ -409,16 +447,29 @@ export function SettingsModal() {
                     />
                     <input
                       type="text"
-                      placeholder={isArabic ? 'الكود (e.g. APX)' : 'Code (e.g. APX)'}
+                      placeholder={isArabic ? 'الكود (e.g. PORT)' : 'Code (e.g. PORT)'}
                       maxLength={5}
                       value={newCompCode}
                       onChange={(e) => setNewCompCode(e.target.value)}
                       className="px-2.5 py-1.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface)] font-mono uppercase focus:outline-hidden"
                     />
                   </div>
+                  {accountType === 'freelancer' && (
+                    <input
+                      type="text"
+                      placeholder="رابط الموقع (e.g. https://mywebsite.com)"
+                      value={newCompUrl}
+                      onChange={(e) => setNewCompUrl(e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface)] focus:outline-hidden font-mono text-[11px]"
+                    />
+                  )}
                   <input
                     type="text"
-                    placeholder={isArabic ? 'القطاع أو مجال العمل (Industry)' : 'Industry'}
+                    placeholder={
+                      accountType === 'freelancer'
+                        ? (isArabic ? 'نوع المنصة (e.g. E-Commerce, SaaS, Portfolio)' : 'Platform Type')
+                        : (isArabic ? 'القطاع أو مجال العمل (Industry)' : 'Industry')
+                    }
                     value={newCompIndustry}
                     onChange={(e) => setNewCompIndustry(e.target.value)}
                     className="w-full px-2.5 py-1.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface)] focus:outline-hidden"
@@ -429,7 +480,9 @@ export function SettingsModal() {
                       disabled={!newCompName.trim()}
                       className="px-4 py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
                     >
-                      + {isArabic ? 'إضافة الشركة' : 'Add Company'}
+                      + {isArabic
+                          ? (accountType === 'freelancer' ? 'إضافة الموقع' : 'إضافة الشركة')
+                          : (accountType === 'freelancer' ? 'Add Website' : 'Add Company')}
                     </button>
                   </div>
                 </form>

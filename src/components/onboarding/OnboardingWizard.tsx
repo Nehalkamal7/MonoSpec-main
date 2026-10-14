@@ -23,6 +23,8 @@ import {
   Server,
   ShieldCheck,
   Rocket,
+  Globe,
+  ExternalLink,
 } from 'lucide-react';
 import { useMonoSpecStore } from '@/store/useMonoSpecStore';
 import { RECOMMENDED_STAGES } from '@/lib/constants';
@@ -60,18 +62,19 @@ export function OnboardingWizard() {
 
   // Step 1: Workspace State
   const [workspaceName, setWorkspaceName] = useState(
-    isFreelancer ? 'استوديو المشاريع والحلول المستقلة' : 'Apex Innovations Team'
+    isFreelancer ? 'استوديو المواقع والمشاريع الخاصة' : 'Apex Innovations Team'
   );
   const [roomCode, setRoomCode] = useState(
     isFreelancer ? 'FREE-8842-PRO' : 'MONO-8842-KSA'
   );
   const [copiedCode, setCopiedCode] = useState(false);
 
-  // Step 2: Company Setup State - DYNAMIC & NOT HARDCODED!
+  // Step 2: Site / Company Setup State - Tailored for Freelancers vs Enterprise
   const [companyList, setCompanyList] = useState<Omit<Company, 'id'>[]>([]);
   const [newCompName, setNewCompName] = useState('');
   const [newCompNameAr, setNewCompNameAr] = useState('');
   const [newCompCode, setNewCompCode] = useState('');
+  const [newCompUrl, setNewCompUrl] = useState('');
   const [newCompIndustry, setNewCompIndustry] = useState('');
 
   // Step 3: Stages State
@@ -116,18 +119,21 @@ export function OnboardingWizard() {
         name: newCompName.trim(),
         nameAr: newCompNameAr.trim() || newCompName.trim(),
         code,
+        websiteUrl: newCompUrl.trim() || undefined,
         industry:
           newCompIndustry.trim() ||
-          (isFreelancer ? 'Client Engineering' : 'Software & Technology'),
+          (isFreelancer ? 'منصة وتطبيق ويب' : 'Software & Technology'),
         tagline: `${
-          isFreelancer ? 'Client Specification & Architecture' : 'Enterprise Architecture'
-        } for ${newCompName.trim()}`,
+          isFreelancer ? 'مواصفات وتصميم موقع' : 'Enterprise Architecture for'
+        } ${newCompName.trim()}`,
+        type: isFreelancer ? 'freelancer_site' : 'enterprise',
       },
     ]);
 
     setNewCompName('');
     setNewCompNameAr('');
     setNewCompCode('');
+    setNewCompUrl('');
     setNewCompIndustry('');
   };
 
@@ -135,11 +141,13 @@ export function OnboardingWizard() {
     if (isFreelancer) {
       setCompanyList([
         {
-          name: 'Al-Riyadh Logistics & Freight',
-          nameAr: 'شركة الرياض للوجستيات وسلاسل الإمداد',
-          code: 'RLG',
-          industry: 'Logistics & Fleet Systems',
-          tagline: 'Autonomous Freight & Telemetry Platform',
+          name: 'Nova Store & E-Commerce',
+          nameAr: 'متجر ومنصة نوفا للتجارة السريعة',
+          code: 'NOVA',
+          websiteUrl: 'https://novastore.dev',
+          industry: 'متجر إلكتروني ومنصة دفع',
+          tagline: 'منصة ويب للتجارة الإلكترونية والمدفوعات',
+          type: 'freelancer_site',
         },
       ]);
     } else {
@@ -148,8 +156,10 @@ export function OnboardingWizard() {
           name: 'Apex Cloud Innovations',
           nameAr: 'أنظمة أبيكس السحابية المتقدمة',
           code: 'APX',
+          websiteUrl: 'https://apexcloud.internal',
           industry: 'Enterprise Cloud & FinTech Systems',
           tagline: 'High-Availability Architecture Platform',
+          type: 'enterprise',
         },
       ]);
     }
@@ -198,26 +208,30 @@ export function OnboardingWizard() {
     // 1. Create Workspace
     createWorkspaceWithRoomCode(workspaceName, roomCode);
 
-    // 2. Set dynamic companies (configured by user)
+    // 2. Set dynamic companies / sites (configured by user)
     const finalCompanies: Company[] = (
       companyList.length > 0
         ? companyList
         : [
             {
-              name: workspaceName || (isFreelancer ? 'Freelance Studio' : 'Apex Systems'),
-              nameAr: workspaceName || (isFreelancer ? 'استوديو العمل الحر' : 'أنظمة أبيكس'),
-              code: (workspaceName || 'APX').slice(0, 3).toUpperCase(),
-              industry: isFreelancer ? 'Client Engineering' : 'Software & Technology',
-              tagline: `Enterprise Architecture for ${workspaceName || 'Apex Systems'}`,
+              name: workspaceName || (isFreelancer ? 'Portfolio Web App' : 'Apex Systems'),
+              nameAr: workspaceName || (isFreelancer ? 'موقعي الشخصي' : 'أنظمة أبيكس'),
+              code: (workspaceName || (isFreelancer ? 'WEB' : 'APX')).slice(0, 3).toUpperCase(),
+              websiteUrl: undefined,
+              industry: isFreelancer ? 'منصة وتطبيق ويب' : 'Software & Technology',
+              tagline: `${isFreelancer ? 'مواصفات وتصميم موقع' : 'Enterprise Architecture for'} ${workspaceName || 'Platform'}`,
+              type: isFreelancer ? ('freelancer_site' as const) : ('enterprise' as const),
             },
           ]
-    ).map((comp, idx) => ({
+    ).map((comp: Omit<Company, 'id'>, idx) => ({
       id: `comp-${Date.now().toString(36)}-${idx}`,
       name: comp.name,
       nameAr: comp.nameAr || comp.name,
       code: comp.code || comp.name.slice(0, 3).toUpperCase(),
-      industry: comp.industry || 'Software & Technology',
-      tagline: comp.tagline || `Enterprise Architecture for ${comp.name}`,
+      industry: comp.industry || (isFreelancer ? 'منصة وتطبيق ويب' : 'Software & Technology'),
+      tagline: comp.tagline || `${isFreelancer ? 'مواصفات وتصميم موقع' : 'Enterprise Architecture for'} ${comp.name}`,
+      websiteUrl: comp.websiteUrl,
+      type: isFreelancer ? 'freelancer_site' : 'enterprise',
       isCustom: true,
     }));
 
@@ -226,7 +240,7 @@ export function OnboardingWizard() {
     // 3. Set Selected Stages
     setSelectedStageIds(chosenStageIds);
 
-    // 4. Update workspace initial projects to be mapped to the user's primary company!
+    // 4. Update workspace initial projects to be mapped to the user's primary company/site!
     const currentState = useMonoSpecStore.getState();
     if (currentState.projects.length > 0 && finalCompanies[0]) {
       const updatedProjects = currentState.projects.map((proj, pIdx) => ({
@@ -256,9 +270,11 @@ export function OnboardingWizard() {
             M
           </button>
           <div>
-            <h1 className="text-sm font-bold tracking-tight">إعداد مساحة عمل MonoSpec</h1>
+            <h1 className="text-sm font-bold tracking-tight">
+              {isFreelancer ? 'إعداد استوديو المستقل MonoSpec' : 'إعداد مساحة عمل MonoSpec'}
+            </h1>
             <p className="text-[11px] text-[var(--text-muted)]">
-              تهيئة النظام لشركتك وفريقك في 3 خطوات بسيطة
+              {isFreelancer ? 'تهيئة النظام لمشاريعك ومواقعك الخاصة في 3 خطوات بسيطة' : 'تهيئة النظام لشركتك وفريقك في 3 خطوات بسيطة'}
             </p>
           </div>
         </div>
@@ -266,9 +282,9 @@ export function OnboardingWizard() {
         {/* Step Indicator Pills */}
         <div className="flex items-center gap-2">
           {[
-            { num: 1, title: 'مساحة العمل والروم' },
-            { num: 2, title: 'الشركات والعملاء' },
-            { num: 3, title: 'مراحل المشروع' },
+            { num: 1, title: isFreelancer ? 'الاستوديو والروم' : 'مساحة العمل والروم' },
+            { num: 2, title: isFreelancer ? 'المواقع والمنصات' : 'الشركات والعملاء' },
+            { num: 3, title: isFreelancer ? 'مراحل تصميم الموقع' : 'مراحل المشروع' },
           ].map((s) => (
             <div
               key={s.num}
@@ -366,49 +382,49 @@ export function OnboardingWizard() {
           </div>
         )}
 
-        {/* STEP 2: Company Setup & Dynamic Multi-Company Addition */}
+        {/* STEP 2: Company Setup & Dynamic Multi-Company Addition (or Freelancer Sites) */}
         {onboardingStep === 2 && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
             <div className="space-y-2">
               <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-                {isFreelancer ? 'STEP 02 OF 03 • CLIENTS & PORTFOLIO' : 'STEP 02 OF 03 • COMPANY SETUP'}
+                {isFreelancer ? 'STEP 02 OF 03 • MY WEBSITES & DIGITAL PLATFORMS' : 'STEP 02 OF 03 • COMPANY SETUP'}
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                 {isFreelancer
-                  ? 'ما هي الشركات أو العملاء الذين تعمل معهم؟'
+                  ? 'ما هي مواقعك أو منصاتك وتطبيقاتك الخاصة؟'
                   : 'ما اسم شركتك؟ (ويمكنك إضافة أكثر من شركة وعميل)'}
               </h2>
               <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
                 {isFreelancer
-                  ? 'أضف أول عميل أو جهة تصمم لها المواصفات الفنية والشعار. كل شركة تضاف ستحصل على كود روم خاص بها ويمكنك حذف أو إضافة أي شركة بحرية.'
+                  ? 'أضف مواقعك الخاصة والمنصات وتطبيقات الويب التي قمت بتطويرها أو تعمل عليها. كل موقع ستُصمَّم له مواصفات معمارية، شعار، وروم كود مخصص.'
                   : 'أدخل شركتك لتهيئة مساحة العمل، ويمكنك إضافة فروع أو عملاء متعددين لعزل المواصفات والبيانات مع إمكانية التعديل والحذف في أي وقت.'}
               </p>
             </div>
 
-            {/* List of Configured Companies */}
+            {/* List of Configured Sites / Companies */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[var(--text-secondary)]">
-                  {isFreelancer ? 'العملاء والشركات المضافة حالياً' : 'الشركات المضافة حالياً'} ({companyList.length})
+                  {isFreelancer ? 'مواقعك ومنصاتك المضافة حالياً' : 'الشركات المضافة حالياً'} ({companyList.length})
                 </span>
                 <span className="text-[11px] text-[var(--text-muted)]">
-                  يمكنك حذف أو تعديل أو إضافة أي عدد
+                  {isFreelancer ? 'يمكنك إضافة أو حذف أي موقع بحرية' : 'يمكنك حذف أو تعديل أو إضافة أي عدد'}
                 </span>
               </div>
 
               {companyList.length === 0 ? (
-                /* Empty state when no companies are added yet */
+                /* Empty state when nothing added yet */
                 <div className="p-6 rounded-2xl border border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)] text-center space-y-3">
                   <div className="w-10 h-10 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
-                    <Building2 className="w-5 h-5" />
+                    {isFreelancer ? <Globe className="w-5 h-5" /> : <Building2 className="w-5 h-5" />}
                   </div>
                   <div>
                     <h4 className="font-bold text-xs text-[var(--text-primary)]">
-                      {isFreelancer ? 'لم تقم بإضافة عملاء حتى الآن' : 'لم تقم بإضافة شركات حتى الآن'}
+                      {isFreelancer ? 'لم تقم بإضافة أي موقع أو منصة بعد' : 'لم تقم بإضافة شركات حتى الآن'}
                     </h4>
                     <p className="text-[11px] text-[var(--text-muted)] mt-1 max-w-md mx-auto leading-relaxed">
                       {isFreelancer
-                        ? 'أدخل اسم أول عميل لك في النموذج أدناه واضغط إضافة، أو اضغط الزر التجريبي لتحميل عميل افتراضي سريعاً.'
+                        ? 'أدخل اسم ورابط موقعك الخاص في النموذج أدناه واضغط حفظ وإضافة، أو اضغط الزر التجريبي لتحميل موقع تجريبي سريعاً.'
                         : 'أدخل اسم شركتك في النموذج أدناه واضغط حفظ وإضافة، أو اضغط الزر التجريبي لاختبار النظام بنموذج سريع.'}
                     </p>
                   </div>
@@ -418,11 +434,11 @@ export function OnboardingWizard() {
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-950/20 hover:bg-emerald-900/30 text-emerald-400 text-xs font-semibold transition-colors shadow-2xs"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>{isFreelancer ? 'تجربة بعميل تجريبي سريع' : 'تجربة بشركة تجريبية سريعة'}</span>
+                    <span>{isFreelancer ? 'تجربة بموقع أو منصة تجريبية سريعة' : 'تجربة بشركة تجريبية سريعة'}</span>
                   </button>
                 </div>
               ) : (
-                /* Dynamic company cards - each can be deleted freely! */
+                /* Dynamic site/company cards - each can be deleted freely! */
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {companyList.map((comp, idx) => (
                     <div
@@ -431,6 +447,11 @@ export function OnboardingWizard() {
                     >
                       <div className="space-y-0.5 min-w-0 pr-2">
                         <div className="flex items-center gap-2">
+                          {isFreelancer ? (
+                            <Globe className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          ) : (
+                            <Building2 className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
+                          )}
                           <span className="font-bold text-xs text-[var(--text-primary)] truncate">
                             {comp.name}
                           </span>
@@ -441,6 +462,12 @@ export function OnboardingWizard() {
                         <p className="text-[11px] text-[var(--text-muted)] truncate">
                           {comp.nameAr || comp.industry}
                         </p>
+                        {comp.websiteUrl && (
+                          <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-mono">
+                            <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                            <span className="truncate">{comp.websiteUrl}</span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Always removable with no restrictions! */}
@@ -458,16 +485,20 @@ export function OnboardingWizard() {
               )}
             </div>
 
-            {/* Form to Add a Company/Client */}
+            {/* Form to Add a Site / Company */}
             <form
               onSubmit={handleAddCompany}
               className="p-5 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] space-y-4"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Plus className="w-4 h-4 text-emerald-400" />
+                  {isFreelancer ? (
+                    <Globe className="w-4 h-4 text-emerald-400" />
+                  ) : (
+                    <Plus className="w-4 h-4 text-emerald-400" />
+                  )}
                   <h3 className="text-xs font-bold text-[var(--text-primary)]">
-                    {isFreelancer ? 'إضافة عميل أو شركة جديدة' : 'إضافة شركة أو عميل جديد'}
+                    {isFreelancer ? 'إضافة موقع أو منصة خاصة جديدة' : 'إضافة شركة أو عميل جديد'}
                   </h3>
                 </div>
                 <span className="text-[10px] text-[var(--text-muted)]">
@@ -478,11 +509,11 @@ export function OnboardingWizard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    {isFreelancer ? 'اسم العميل / الشركة (English) *' : 'اسم الشركة (English) *'}
+                    {isFreelancer ? 'اسم الموقع أو المنصة (English) *' : 'اسم الشركة (English) *'}
                   </label>
                   <input
                     type="text"
-                    placeholder={isFreelancer ? 'e.g. Al-Riyadh Logistics / Horizon Pay' : 'e.g. Apex FinTech Solutions'}
+                    placeholder={isFreelancer ? 'e.g. MyPortfolio / DevBlog / NovaStore' : 'e.g. Apex FinTech Solutions'}
                     value={newCompName}
                     onChange={(e) => handleNameChange(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
@@ -491,11 +522,11 @@ export function OnboardingWizard() {
 
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    {isFreelancer ? 'اسم العميل / الشركة (بالعربية)' : 'اسم الشركة (بالعربية)'}
+                    {isFreelancer ? 'اسم الموقع أو المنصة (بالعربية)' : 'اسم الشركة (بالعربية)'}
                   </label>
                   <input
                     type="text"
-                    placeholder={isFreelancer ? 'مثال: شركة الرياض للوجستيات' : 'مثال: شركة حلول التقنية المالية'}
+                    placeholder={isFreelancer ? 'مثال: مدونة المطور / منصة متجر نوفا' : 'مثال: شركة حلول التقنية المالية'}
                     value={newCompNameAr}
                     onChange={(e) => setNewCompNameAr(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
@@ -504,11 +535,11 @@ export function OnboardingWizard() {
 
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    كود الشركة المميز (Code) *
+                    {isFreelancer ? 'كود الموقع المختصر (Site Code) *' : 'كود الشركة المميز (Code) *'}
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. APX (أقصى 5 أحرف)"
+                    placeholder={isFreelancer ? 'e.g. PORT / BLOG / NOVA' : 'e.g. APX (أقصى 5 أحرف)'}
                     maxLength={5}
                     value={newCompCode}
                     onChange={(e) => setNewCompCode(e.target.value.toUpperCase())}
@@ -518,11 +549,24 @@ export function OnboardingWizard() {
 
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-[var(--text-secondary)]">
-                    المجال أو القطاع (Industry)
+                    {isFreelancer ? 'رابط الموقع أو الدومين (Website URL)' : 'رابط الموقع أو الدومين (Website URL)'}
                   </label>
                   <input
                     type="text"
-                    placeholder="مثال: مدفوعات، لوجستيات، تجارة"
+                    placeholder="e.g. https://mywebsite.com أو localhost:3000"
+                    value={newCompUrl}
+                    onChange={(e) => setNewCompUrl(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden font-mono text-[11px]"
+                  />
+                </div>
+
+                <div className="space-y-1 sm:col-span-2">
+                  <label className="text-[11px] font-medium text-[var(--text-secondary)]">
+                    {isFreelancer ? 'نوع المنصة أو التخصص (Platform Type)' : 'المجال أو القطاع (Industry)'}
+                  </label>
+                  <input
+                    type="text"
+                    placeholder={isFreelancer ? 'مثال: E-Commerce, Portfolio, SaaS, Blog, Web App' : 'مثال: مدفوعات، لوجستيات، تجارة'}
                     value={newCompIndustry}
                     onChange={(e) => setNewCompIndustry(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-hidden"
@@ -536,7 +580,7 @@ export function OnboardingWizard() {
                   disabled={!newCompName.trim()}
                   className="px-4 py-2 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
                 >
-                  + حفظ وإضافة للقائمة
+                  {isFreelancer ? '+ حفظ وإضافة الموقع للقائمة' : '+ حفظ وإضافة للقائمة'}
                 </button>
               </div>
             </form>
@@ -713,7 +757,7 @@ export function OnboardingWizard() {
               disabled={!workspaceName.trim() || !roomCode.trim()}
               className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
             >
-              <span>المتابعة لإضافة الشركات (Step 2)</span>
+              <span>{isFreelancer ? 'المتابعة لإضافة مواقعك الخاصة (Step 2)' : 'المتابعة لإضافة الشركات (Step 2)'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           )}
@@ -722,7 +766,7 @@ export function OnboardingWizard() {
             <div className="flex items-center gap-2">
               {companyList.length === 0 && (
                 <span className="text-[10px] text-amber-400 hidden md:inline">
-                  * يرجى إضافة شركة واحدة على الأقل
+                  {isFreelancer ? '* يرجى إضافة موقع واحد على الأقل' : '* يرجى إضافة شركة واحدة على الأقل'}
                 </span>
               )}
               <button
@@ -731,7 +775,7 @@ export function OnboardingWizard() {
                 disabled={companyList.length === 0}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
               >
-                <span>المتابعة لمراحل المشروع (Step 3)</span>
+                <span>{isFreelancer ? 'المتابعة لمراحل تصميم الموقع (Step 3)' : 'المتابعة لمراحل المشروع (Step 3)'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>

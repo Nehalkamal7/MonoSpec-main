@@ -81,11 +81,26 @@ export function Header() {
       {/* Left: Active Project Info & Workspace Room Code */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex items-center gap-2">
-          {/* Company Tag */}
+          {/* Company / Website Tag */}
           <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[11px] font-mono text-[var(--text-secondary)]">
-            <Building2 className="w-3 h-3 text-[var(--text-muted)]" />
+            {accountType === 'freelancer' || company.type === 'freelancer_site' ? (
+              <Globe className="w-3 h-3 text-emerald-400 shrink-0" />
+            ) : (
+              <Building2 className="w-3 h-3 text-[var(--text-muted)] shrink-0" />
+            )}
             <span className="font-semibold text-[var(--text-primary)]">{company.name}</span>
             <span className="text-[var(--text-muted)]">({company.code})</span>
+            {company.websiteUrl && (
+              <a
+                href={company.websiteUrl.startsWith('http') ? company.websiteUrl : `https://${company.websiteUrl}`}
+                target="_blank"
+                rel="noreferrer"
+                title={`Visit Website: ${company.websiteUrl}`}
+                className="text-emerald-400 hover:text-emerald-300 ml-0.5 inline-flex items-center"
+              >
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            )}
           </div>
 
           <span className="text-[var(--text-muted)]">/</span>

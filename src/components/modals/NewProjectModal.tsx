@@ -6,8 +6,10 @@ import { useMonoSpecStore } from '@/store/useMonoSpecStore';
 import { CompanyId, Project } from '@/types';
 
 export function NewProjectModal() {
-  const { isNewProjectModalOpen, setNewProjectModalOpen, createProject, companies } =
+  const { isNewProjectModalOpen, setNewProjectModalOpen, createProject, companies, accountType } =
     useMonoSpecStore();
+
+  const isFreelancer = accountType === 'freelancer';
 
   const [title, setTitle] = useState('');
   const [companyId, setCompanyId] = useState<CompanyId>(companies[0]?.id || 'awamer');
@@ -25,7 +27,10 @@ export function NewProjectModal() {
       title: title.trim(),
       companyId,
       description:
-        description.trim() || 'Enterprise software architecture specification created via MonoSpec.',
+        description.trim() ||
+        (isFreelancer
+          ? 'المواصفات الفنية والمعمارية للموقع / المنصة تم إنشاؤها عبر MonoSpec.'
+          : 'Enterprise software architecture specification created via MonoSpec.'),
       architectureTier,
     });
 
@@ -46,9 +51,12 @@ export function NewProjectModal() {
               +
             </div>
             <div>
-              <h2 className="text-sm font-semibold tracking-tight">Initialize New Project</h2>
+              <h2 className="text-sm font-semibold tracking-tight">
+                {isFreelancer ? 'بدء مواصفة موقع جديد (New Spec)' : 'Initialize New Project'}
+              </h2>
               <p className="text-[11px] text-[var(--text-muted)]">
-                Assign to <strong className="text-[var(--text-primary)]">{selectedCompany?.name || 'Company'}</strong>
+                {isFreelancer ? 'التابع لموقع / منصة: ' : 'Assign to '}
+                <strong className="text-[var(--text-primary)]">{selectedCompany?.name || (isFreelancer ? 'الموقع' : 'Company')}</strong>
               </p>
             </div>
           </div>
@@ -66,10 +74,11 @@ export function NewProjectModal() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-[var(--text-secondary)]">
-                Enterprise Client / Target Company
+                {isFreelancer ? 'اختر الموقع أو المنصة التابع لها المشروع' : 'Enterprise Client / Target Company'}
               </label>
               <span className="text-[10px] font-mono text-[var(--text-muted)]">
-                Selected Code: <strong className="text-[var(--text-primary)]">{selectedCompany?.code}</strong>
+                {isFreelancer ? 'كود الموقع: ' : 'Selected Code: '}
+                <strong className="text-[var(--text-primary)]">{selectedCompany?.code}</strong>
               </span>
             </div>
 
