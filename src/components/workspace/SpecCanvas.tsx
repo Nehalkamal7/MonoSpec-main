@@ -139,44 +139,44 @@ export function SpecCanvas() {
   return (
     <div className="flex-1 flex flex-col h-full bg-[var(--bg-canvas)] border-l border-[var(--border-subtle)] overflow-hidden transition-colors">
       {/* Spec Canvas Toolbar */}
-      <div className="h-12 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 flex items-center justify-between shrink-0 select-none">
-        <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-[var(--text-muted)]" />
-          <span className="text-xs font-semibold text-[var(--text-primary)]">
+      <div className="h-12 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 sm:px-4 flex items-center justify-between gap-2 shrink-0 select-none overflow-hidden whitespace-nowrap">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 overflow-hidden">
+          <FileText className="w-4 h-4 text-[var(--text-muted)] shrink-0" />
+          <span className="text-xs font-semibold text-[var(--text-primary)] truncate">
             Specification Document
           </span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)] shrink-0">
             {stageDef?.badge}
           </span>
         </div>
 
         {/* Toolbar Actions */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           {activeStageId === 'ui_ux' && (
             <button
               onClick={() => setDemoDrawerOpen(true)}
               title="Open Sandbox Side Drawer"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] transition-colors"
+              className="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] transition-colors"
             >
               <Globe className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-              <span>Sandbox Drawer</span>
+              <span className="hidden md:inline">Sandbox Drawer</span>
             </button>
           )}
 
           {/* Edit / Preview Toggle */}
           <button
             onClick={() => setIsEditing(!isEditing)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] transition-colors"
+            className="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] transition-colors"
           >
             {isEditing ? (
               <>
                 <Eye className="w-3.5 h-3.5" />
-                <span>Preview</span>
+                <span className="hidden sm:inline">Preview</span>
               </>
             ) : (
               <>
                 <Edit3 className="w-3.5 h-3.5" />
-                <span>Edit Raw</span>
+                <span className="hidden sm:inline">Edit Raw</span>
               </>
             )}
           </button>
@@ -185,17 +185,17 @@ export function SpecCanvas() {
           <button
             onClick={handleCopyMarkdown}
             title="Copy Spec as Markdown"
-            className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] transition-colors"
+            className="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] transition-colors"
           >
             {copied ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="text-emerald-500">Copied</span>
+                <span className="text-emerald-500 hidden sm:inline">Copied</span>
               </>
             ) : (
               <>
                 <Copy className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                <span>Copy</span>
+                <span className="hidden sm:inline">Copy</span>
               </>
             )}
           </button>

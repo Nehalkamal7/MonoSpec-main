@@ -42,8 +42,8 @@ export function StageNavigation() {
   );
 
   return (
-    <nav className="h-14 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-6 flex items-center overflow-x-auto no-scrollbar select-none transition-colors">
-      <div className="flex items-center gap-1.5 w-full min-w-max">
+    <nav className="h-14 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 sm:px-6 flex items-center overflow-x-auto no-scrollbar select-none transition-colors scroll-smooth">
+      <div className="flex items-center gap-1.5 w-max">
         {displayedStages.map((stage) => {
           const isActive = stage.id === activeStageId;
           const deliverable = activeProject.stages[stage.id];
@@ -54,7 +54,7 @@ export function StageNavigation() {
             <button
               key={stage.id}
               onClick={() => setActiveStage(stage.id)}
-              className={`group relative flex items-center gap-2.5 px-3.5 py-2 rounded-lg text-xs transition-all border ${
+              className={`group relative flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3.5 py-2 rounded-lg text-xs transition-all border shrink-0 select-none whitespace-nowrap ${
                 isActive
                   ? 'bg-[var(--bg-canvas)] border-[var(--border-strong)] text-[var(--text-primary)] shadow-xs'
                   : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]'

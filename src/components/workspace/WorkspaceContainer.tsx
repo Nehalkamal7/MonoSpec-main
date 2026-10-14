@@ -14,8 +14,10 @@ export function WorkspaceContainer() {
       {(canvasViewMode === 'split' || canvasViewMode === 'chat-only') && (
         <div
           className={`${
-            canvasViewMode === 'chat-only' ? 'w-full' : 'w-full lg:w-[42%] max-w-xl'
-          } h-full flex flex-col shrink-0`}
+            canvasViewMode === 'chat-only'
+              ? 'w-full'
+              : 'w-full md:w-[45%] lg:w-[42%] xl:w-[38%] max-w-xl min-w-[280px] sm:min-w-[320px]'
+          } h-full flex flex-col shrink-0 min-w-0`}
         >
           <ChatWorkspace />
         </div>

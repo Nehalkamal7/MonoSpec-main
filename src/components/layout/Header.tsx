@@ -77,18 +77,18 @@ export function Header() {
   const isArabic = locale === 'ar';
 
   return (
-    <header className="h-16 border-b border-[var(--border-subtle)] bg-[var(--bg-canvas)] px-6 flex items-center justify-between shrink-0 select-none transition-colors">
+    <header className="h-16 border-b border-[var(--border-subtle)] bg-[var(--bg-canvas)] px-3 sm:px-6 flex items-center justify-between gap-3 sm:gap-4 shrink-0 select-none transition-colors">
       {/* Left: Active Project Info & Workspace Room Code */}
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 max-w-full">
           {/* Company / Website Tag */}
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[11px] font-mono text-[var(--text-secondary)]">
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[11px] font-mono text-[var(--text-secondary)] shrink-0">
             {accountType === 'freelancer' || company.type === 'freelancer_site' ? (
               <Globe className="w-3 h-3 text-emerald-400 shrink-0" />
             ) : (
               <Building2 className="w-3 h-3 text-[var(--text-muted)] shrink-0" />
             )}
-            <span className="font-semibold text-[var(--text-primary)]">{company.name}</span>
+            <span className="font-semibold text-[var(--text-primary)] truncate max-w-[90px] sm:max-w-[130px]">{company.name}</span>
             <span className="text-[var(--text-muted)]">({company.code})</span>
             {company.websiteUrl && (
               <a
@@ -103,10 +103,10 @@ export function Header() {
             )}
           </div>
 
-          <span className="text-[var(--text-muted)]">/</span>
+          <span className="text-[var(--text-muted)] shrink-0">/</span>
 
           {/* Project Title */}
-          <h1 className="font-semibold text-sm tracking-tight text-[var(--text-primary)] truncate max-w-xs md:max-w-md">
+          <h1 className="font-semibold text-xs sm:text-sm tracking-tight text-[var(--text-primary)] truncate min-w-0">
             {activeProject.title}
           </h1>
         </div>
@@ -116,7 +116,7 @@ export function Header() {
           <button
             onClick={handleCopyRoomCode}
             title={`Workspace: ${workspace.name} • Click to copy team room code: ${workspace.roomCode}`}
-            className="hidden lg:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-950/20 hover:bg-emerald-900/30 text-emerald-400 text-[11px] font-mono transition-colors shadow-2xs group"
+            className="hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-950/20 hover:bg-emerald-900/30 text-emerald-400 text-[11px] font-mono transition-colors shadow-2xs group shrink-0"
           >
             <KeyRound className="w-3 h-3 text-emerald-400 shrink-0" />
             <span className="font-medium text-[10px] text-zinc-300">Room:</span>
@@ -130,7 +130,7 @@ export function Header() {
         )}
 
         {/* Active Stage Pill */}
-        <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface-elevated)] text-xs text-[var(--text-primary)] shadow-2xs">
+        <div className="hidden 2xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface-elevated)] text-xs text-[var(--text-primary)] shadow-2xs shrink-0">
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-contrast)] animate-pulse" />
           <span className="font-mono text-[10px] text-[var(--text-muted)] font-bold">
             {activeStage?.badge}
@@ -148,7 +148,7 @@ export function Header() {
             target="_blank"
             rel="noreferrer"
             title={`Open native Figma file: ${activeProject.figmaUrl}`}
-            className="hidden 2xl:flex items-center gap-1.5 px-2 py-1 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-[11px] font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            className="hidden 2xl:flex items-center gap-1.5 px-2 py-1 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-[11px] font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors shrink-0"
           >
             <FigmaIcon className="w-3 h-3" />
             <span className="truncate max-w-[120px]">Figma File</span>
@@ -158,7 +158,7 @@ export function Header() {
       </div>
 
       {/* Right: Language switch, Settings gear, User avatar, Viewport Controls */}
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
         {/* Language Switcher (E / ع) */}
         <button
           onClick={toggleLocale}
@@ -166,7 +166,7 @@ export function Header() {
           className="flex items-center gap-1 px-2 py-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors shadow-2xs"
         >
           <span className="font-mono text-sm leading-none">{isArabic ? 'ع' : 'E'}</span>
-          <span className="text-[10px] text-[var(--text-muted)] hidden sm:inline">
+          <span className="text-[10px] text-[var(--text-muted)] hidden 2xl:inline">
             ({isArabic ? 'EN' : 'عربي'})
           </span>
         </button>
@@ -175,14 +175,14 @@ export function Header() {
         <button
           onClick={() => setActiveView('landing')}
           title="Return to Universal Project Overview & Landing Page"
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+          className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
         >
           <Home className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-          <span className="hidden md:inline">{isArabic ? 'الرئيسية' : 'Landing'}</span>
+          <span className="hidden xl:inline">{isArabic ? 'الرئيسية' : 'Landing'}</span>
         </button>
 
-        {/* View Mode Segmented Controls */}
-        <div className="hidden lg:flex items-center p-0.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+        {/* View Mode Segmented Controls - compact icons on medium/zoomed, labels on xl */}
+        <div className="hidden md:flex items-center p-0.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
           <button
             onClick={() => setCanvasViewMode('split')}
             title="Split Workspace View"
@@ -193,7 +193,7 @@ export function Header() {
             }`}
           >
             <Columns className="w-3.5 h-3.5" />
-            <span>Split</span>
+            <span className="hidden xl:inline">Split</span>
           </button>
           <button
             onClick={() => setCanvasViewMode('canvas-only')}
@@ -205,7 +205,7 @@ export function Header() {
             }`}
           >
             <Maximize2 className="w-3.5 h-3.5" />
-            <span>Canvas</span>
+            <span className="hidden xl:inline">Canvas</span>
           </button>
           <button
             onClick={() => setCanvasViewMode('chat-only')}
@@ -217,7 +217,7 @@ export function Header() {
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>Chat</span>
+            <span className="hidden xl:inline">Chat</span>
           </button>
         </div>
 
@@ -227,20 +227,20 @@ export function Header() {
         <button
           onClick={() => setFigmaModalOpen(true)}
           title="Export Design Tokens & Frames to Figma"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] text-xs font-medium transition-all group shadow-2xs"
+          className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] text-xs font-medium transition-all group shadow-2xs"
         >
           <FigmaIcon className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
-          <span className="hidden md:inline">Figma</span>
+          <span className="hidden xl:inline">Figma</span>
         </button>
 
         {/* Demo Preview Button */}
         <button
           onClick={() => setDemoModalOpen(true)}
           title="Launch Live Architectural Simulation"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 transition-all shadow-xs"
+          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 transition-all shadow-xs"
         >
           <Play className="w-3.5 h-3.5 fill-current" />
-          <span className="hidden sm:inline">Preview</span>
+          <span className="hidden md:inline">Preview</span>
         </button>
 
         {/* Copy / Share Quick Shortcut */}
@@ -255,7 +255,7 @@ export function Header() {
         <div className="w-px h-5 bg-[var(--border-subtle)]" />
 
         {/* User Avatar with Settings Gear Button Right Next To It! */}
-        <div className="flex items-center gap-1.5 pl-1">
+        <div className="flex items-center gap-1.5 pl-0.5 sm:pl-1 shrink-0">
           {/* Avatar */}
           <div
             title={`${userSession?.name || 'Architect'} (${accountType === 'freelancer' ? 'Freelancer' : 'Enterprise'})`}

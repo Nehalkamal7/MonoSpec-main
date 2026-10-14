@@ -114,23 +114,23 @@ export function ChatWorkspace() {
   return (
     <div className="flex-1 flex flex-col h-full bg-[var(--bg-canvas)] overflow-hidden transition-colors">
       {/* Chat Stage Header */}
-      <div className="h-12 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 flex items-center justify-between shrink-0 select-none">
-        <div className="flex items-center gap-2">
-          <Bot className="w-4 h-4 text-[var(--text-muted)]" />
-          <span className="text-xs font-semibold text-[var(--text-primary)]">
+      <div className="h-12 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 sm:px-4 flex items-center justify-between gap-2 shrink-0 select-none overflow-hidden whitespace-nowrap">
+        <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
+          <Bot className="w-4 h-4 text-[var(--text-muted)] shrink-0" />
+          <span className="text-xs font-semibold text-[var(--text-primary)] truncate shrink-0">
             Architect Assistant
           </span>
-          <span className="text-[10px] text-[var(--text-muted)]">/</span>
-          <span className="text-xs text-[var(--text-secondary)] font-medium">
+          <span className="text-[10px] text-[var(--text-muted)] shrink-0">/</span>
+          <span className="text-xs text-[var(--text-secondary)] font-medium truncate">
             {currentStage?.labelEn}
           </span>
-          <span className="text-[10px] text-[var(--text-muted)] font-sans">
+          <span className="text-[10px] text-[var(--text-muted)] font-sans hidden 2xl:inline truncate">
             ({currentStage?.labelAr})
           </span>
         </div>
-        <div className="flex items-center gap-1.5 text-[10px] font-mono text-[var(--text-muted)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Stage Feed Active</span>
+        <div className="flex items-center gap-1.5 text-[10px] font-mono text-[var(--text-muted)] shrink-0">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+          <span className="hidden sm:inline">Active</span>
         </div>
       </div>
 
@@ -468,7 +468,7 @@ export function ChatWorkspace() {
                 <span>إرفاق PDF / درايف</span>
               </button>
 
-              <span className="text-[10px] font-mono text-[var(--text-muted)] hidden sm:inline">
+              <span className="text-[10px] font-mono text-[var(--text-muted)] hidden xl:inline">
                 Shift+Enter for newline
               </span>
             </div>
