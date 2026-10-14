@@ -22,6 +22,7 @@ export function DemoPreviewDrawer() {
     getActiveProject,
     updateProjectUrls,
     setDemoModalOpen,
+    getCompanyById,
   } = useMonoSpecStore();
 
   const activeProject = getActiveProject();
@@ -31,7 +32,12 @@ export function DemoPreviewDrawer() {
 
   if (!isDemoDrawerOpen || !activeProject) return null;
 
-  const company = COMPANIES[activeProject.companyId];
+  const company =
+    getCompanyById(activeProject.companyId) || {
+      id: activeProject.companyId,
+      name: activeProject.companyId,
+      code: (activeProject.companyId.slice(0, 3) || 'APX').toUpperCase(),
+    };
 
   const handleSaveDemoUrl = () => {
     updateProjectUrls(activeProject.id, { demoUrl: demoUrlInput.trim() });

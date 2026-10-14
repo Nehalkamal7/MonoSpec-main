@@ -245,9 +245,9 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col justify-between selection:bg-[var(--selection-bg)] selection:text-[var(--selection-text)] font-sans">
+    <div className="h-screen w-full bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col selection:bg-[var(--selection-bg)] selection:text-[var(--selection-text)] font-sans overflow-hidden">
       {/* Top Bar */}
-      <header className="h-16 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-6 flex items-center justify-between">
+      <header className="h-16 shrink-0 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setActiveView('landing')}
@@ -287,8 +287,9 @@ export function OnboardingWizard() {
         </div>
       </header>
 
-      {/* Main Wizard Step Container */}
-      <main className="flex-1 max-w-3xl w-full mx-auto p-6 sm:p-10 flex flex-col justify-center">
+      {/* Main Wizard Step Container - Fully Scrollable */}
+      <main className="flex-1 overflow-y-auto w-full overscroll-contain py-8 px-4 sm:px-8">
+        <div className="max-w-3xl w-full mx-auto space-y-6 pb-24">
         {/* STEP 1: Workspace & Room Code */}
         {onboardingStep === 1 && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
@@ -361,18 +362,6 @@ export function OnboardingWizard() {
                   💡 يستطيع أي مهندس أو مصمم الانضمام للروم عبر إدخال الكود <strong className="text-[var(--text-primary)] font-mono">{roomCode}</strong> في صفحة الدخول.
                 </p>
               </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setOnboardingStep(2)}
-                disabled={!workspaceName.trim() || !roomCode.trim()}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
-              >
-                <span>المتابعة لإضافة الشركات (Step 2)</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
             </div>
           </div>
         )}
@@ -551,35 +540,6 @@ export function OnboardingWizard() {
                 </button>
               </div>
             </form>
-
-            {/* Navigation buttons */}
-            <div className="flex items-center justify-between pt-2">
-              <button
-                type="button"
-                onClick={() => setOnboardingStep(1)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>الرجوع للخطوة 1</span>
-              </button>
-
-              <div className="flex flex-col items-end gap-1">
-                <button
-                  type="button"
-                  onClick={() => setOnboardingStep(3)}
-                  disabled={companyList.length === 0}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
-                >
-                  <span>المتابعة لمراحل المشروع (Step 3)</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-                {companyList.length === 0 && (
-                  <span className="text-[10px] text-amber-400/80">
-                    * يرجى إضافة شركة واحدة على الأقل أو الضغط على الزر التجريبي للمتابعة
-                  </span>
-                )}
-              </div>
-            </div>
           </div>
         )}
 
@@ -710,36 +670,85 @@ export function OnboardingWizard() {
                 + إضافة
               </button>
             </form>
-
-            {/* Final Actions */}
-            <div className="flex items-center justify-between pt-3">
-              <button
-                type="button"
-                onClick={() => setOnboardingStep(2)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>الرجوع للخطوة 2</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleFinishOnboarding}
-                disabled={chosenStageIds.length === 0}
-                className="flex items-center gap-2 px-8 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-black tracking-wide uppercase transition-all shadow-lg shadow-emerald-500/20"
-              >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>إتمام الإعداد وإطلاق مساحة العمل (Launch Workspace)</span>
-              </button>
-            </div>
           </div>
         )}
+        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="h-12 border-t border-[var(--border-subtle)] px-6 flex items-center justify-between text-[11px] text-[var(--text-muted)] font-mono">
-        <span>MonoSpec Onboarding Engine v2.4</span>
-        <span>Secure Room Code Protection Enabled</span>
+      {/* Persistent Bottom Sticky Action Bar - ALWAYS VISIBLE! */}
+      <footer className="shrink-0 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] px-6 py-3.5 z-30 shadow-lg">
+        <div className="max-w-3xl mx-auto flex items-center justify-between">
+          {/* Back Button */}
+          {onboardingStep === 1 ? (
+            <button
+              type="button"
+              onClick={() => setActiveView('landing')}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>الرجوع للرئيسية</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setOnboardingStep((onboardingStep - 1) as any)}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>الرجوع للخطوة {onboardingStep - 1}</span>
+            </button>
+          )}
+
+          {/* Center info */}
+          <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-[var(--text-muted)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>MonoSpec • خطوة {onboardingStep} من 3</span>
+          </div>
+
+          {/* Next / Launch Button */}
+          {onboardingStep === 1 && (
+            <button
+              type="button"
+              onClick={() => setOnboardingStep(2)}
+              disabled={!workspaceName.trim() || !roomCode.trim()}
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
+            >
+              <span>المتابعة لإضافة الشركات (Step 2)</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          )}
+
+          {onboardingStep === 2 && (
+            <div className="flex items-center gap-2">
+              {companyList.length === 0 && (
+                <span className="text-[10px] text-amber-400 hidden md:inline">
+                  * يرجى إضافة شركة واحدة على الأقل
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setOnboardingStep(3)}
+                disabled={companyList.length === 0}
+                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
+              >
+                <span>المتابعة لمراحل المشروع (Step 3)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {onboardingStep === 3 && (
+            <button
+              type="button"
+              onClick={handleFinishOnboarding}
+              disabled={chosenStageIds.length === 0}
+              className="flex items-center gap-2 px-7 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-black tracking-wide uppercase transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              <span>إتمام الإعداد والدخول للمنظومة (Launch)</span>
+            </button>
+          )}
+        </div>
       </footer>
     </div>
   );

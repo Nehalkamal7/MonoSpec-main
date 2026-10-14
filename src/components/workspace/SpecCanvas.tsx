@@ -34,6 +34,7 @@ export function SpecCanvas() {
     updateProjectUrls,
     setFigmaModalOpen,
     setDemoDrawerOpen,
+    getCompanyById,
   } = useMonoSpecStore();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -56,7 +57,12 @@ export function SpecCanvas() {
 
   const deliverable = activeProject.stages[activeStageId];
   const stageDef = STAGES.find((s) => s.id === activeStageId);
-  const company = COMPANIES[activeProject.companyId];
+  const company =
+    getCompanyById(activeProject.companyId) || {
+      id: activeProject.companyId,
+      name: activeProject.companyId,
+      code: (activeProject.companyId.slice(0, 3) || 'APX').toUpperCase(),
+    };
 
   // Semantic UI component generated for the active project
   const figmaHtmlSnippet = `<div class="w-full max-w-xl p-6 bg-black border border-zinc-800 rounded-2xl text-white font-sans antialiased shadow-2xl">

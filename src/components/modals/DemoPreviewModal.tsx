@@ -25,6 +25,7 @@ export function DemoPreviewModal() {
     setDemoModalOpen,
     getActiveProject,
     updateProjectUrls,
+    getCompanyById,
   } = useMonoSpecStore();
 
   const [activeTab, setActiveTab] = useState<'iframe' | 'telemetry' | 'topology'>('iframe');
@@ -47,7 +48,12 @@ export function DemoPreviewModal() {
 
   if (!isDemoModalOpen || !activeProject) return null;
 
-  const company = COMPANIES[activeProject.companyId];
+  const company =
+    getCompanyById(activeProject.companyId) || {
+      id: activeProject.companyId,
+      name: activeProject.companyId,
+      code: (activeProject.companyId.slice(0, 3) || 'APX').toUpperCase(),
+    };
 
   const handleSaveDemoUrl = () => {
     updateProjectUrls(activeProject.id, { demoUrl: demoUrlInput.trim() });
