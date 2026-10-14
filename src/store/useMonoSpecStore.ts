@@ -21,8 +21,12 @@ interface MonoSpecStore {
   // Navigation & View State
   activeView: ActiveView;
   onboardingStep: number; // 1: Workspace & Room Code, 2: Company Setup, 3: Stages Config
+  locale: 'ar' | 'en';
+  accountType: 'enterprise' | 'freelancer';
   userSession: UserSession | null;
   workspace: TeamWorkspace | null;
+  isSettingsModalOpen: boolean;
+  activeSettingsTab: 'workspace' | 'companies' | 'stages' | 'ai' | 'profile';
 
   // Companies (Dynamic Multi-Company Support)
   companies: Company[];
@@ -63,8 +67,15 @@ interface MonoSpecStore {
   // View & Auth Actions
   setActiveView: (view: ActiveView) => void;
   setOnboardingStep: (step: number) => void;
+  setLocale: (locale: 'ar' | 'en') => void;
+  toggleLocale: () => void;
+  setAccountType: (type: 'enterprise' | 'freelancer') => void;
+  setSettingsModalOpen: (open: boolean) => void;
+  setActiveSettingsTab: (tab: 'workspace' | 'companies' | 'stages' | 'ai' | 'profile') => void;
   setUserSession: (session: UserSession | null) => void;
+  updateUserSession: (data: Partial<UserSession>) => void;
   setWorkspace: (ws: TeamWorkspace | null) => void;
+  updateWorkspace: (data: Partial<TeamWorkspace>) => void;
   createWorkspaceWithRoomCode: (name: string, customCode?: string) => TeamWorkspace;
   joinWorkspaceByRoomCode: (roomCode: string) => boolean;
 
@@ -173,13 +184,20 @@ export const useMonoSpecStore = create<MonoSpecStore>()(
       // Default to landing page when first opening, can be switched immediately
       activeView: 'landing',
       onboardingStep: 1,
+      locale: 'ar',
+      accountType: 'enterprise',
+      isSettingsModalOpen: false,
+      activeSettingsTab: 'workspace',
       userSession: {
         id: 'usr-default',
-        name: 'Chief Architect',
+        name: 'مهندس المنظومة / Chief Architect',
         email: 'architect@enterprise.internal',
-        role: 'Enterprise Lead',
+        role: 'Enterprise Architect & Lead',
         workspaceId: DEFAULT_WORKSPACE.id,
         isAuthenticated: true,
+        accountType: 'enterprise',
+        avatarUrl: '',
+        bio: 'Leading enterprise systems, high-availability architecture & multi-company specifications.',
       },
       workspace: DEFAULT_WORKSPACE,
 
@@ -236,8 +254,21 @@ export const useMonoSpecStore = create<MonoSpecStore>()(
       // View & Auth Actions
       setActiveView: (view) => set({ activeView: view }),
       setOnboardingStep: (step) => set({ onboardingStep: step }),
+      setLocale: (l) => set({ locale: l }),
+      toggleLocale: () => set((state) => ({ locale: state.locale === 'ar' ? 'en' : 'ar' })),
+      setAccountType: (type) => set({ accountType: type }),
+      setSettingsModalOpen: (open) => set({ isSettingsModalOpen: open }),
+      setActiveSettingsTab: (tab) => set({ activeSettingsTab: tab }),
       setUserSession: (session) => set({ userSession: session }),
+      updateUserSession: (data) =>
+        set((state) => ({
+          userSession: state.userSession ? { ...state.userSession, ...data } : null,
+        })),
       setWorkspace: (ws) => set({ workspace: ws }),
+      updateWorkspace: (data) =>
+        set((state) => ({
+          workspace: state.workspace ? { ...state.workspace, ...data } : null,
+        })),
 
       createWorkspaceWithRoomCode: (name, customCode) => {
         const roomCode =
@@ -694,6 +725,8 @@ Here is the mathematically proportioned vector identity blueprint for **${active
       name: 'monospec-universal-storage-v2',
       partialize: (state) => ({
         activeView: state.activeView,
+        locale: state.locale,
+        accountType: state.accountType,
         workspace: state.workspace,
         userSession: state.userSession,
         companies: state.companies,

@@ -94,6 +94,8 @@ export interface TeamWorkspace {
   inviteLink?: string;
 }
 
+export type Locale = 'ar' | 'en';
+
 export interface UserSession {
   id: string;
   name: string;
@@ -101,6 +103,9 @@ export interface UserSession {
   role: string;
   workspaceId: string;
   isAuthenticated: boolean;
+  avatarUrl?: string;
+  accountType?: 'enterprise' | 'freelancer';
+  bio?: string;
 }
 
 export interface IngestedSource {

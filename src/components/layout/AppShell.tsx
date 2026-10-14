@@ -9,6 +9,7 @@ import { NewProjectModal } from '@/components/modals/NewProjectModal';
 import { FigmaExportModal } from '@/components/modals/FigmaExportModal';
 import { DemoPreviewModal } from '@/components/modals/DemoPreviewModal';
 import { TrainingDatasetsModal } from '@/components/modals/TrainingDatasetsModal';
+import { SettingsModal } from '@/components/modals/SettingsModal';
 import { DemoPreviewDrawer } from '@/components/workspace/DemoPreviewDrawer';
 import { useMonoSpecStore } from '@/store/useMonoSpecStore';
 import { STAGES } from '@/lib/constants';
@@ -68,6 +69,7 @@ export function AppShell() {
       <FigmaExportModal />
       <DemoPreviewModal />
       <TrainingDatasetsModal />
+      <SettingsModal />
       <DemoPreviewDrawer />
     </div>
   );

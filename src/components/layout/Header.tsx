@@ -16,6 +16,9 @@ import {
   Users,
   KeyRound,
   Home,
+  Settings,
+  Globe,
+  Briefcase,
 } from 'lucide-react';
 import { FigmaIcon } from '@/components/ui/FigmaIcon';
 import { useMonoSpecStore } from '@/store/useMonoSpecStore';
@@ -32,6 +35,11 @@ export function Header() {
     getCompanyById,
     workspace,
     setActiveView,
+    userSession,
+    setSettingsModalOpen,
+    locale,
+    toggleLocale,
+    accountType,
   } = useMonoSpecStore();
 
   const [copied, setCopied] = useState(false);
@@ -43,7 +51,12 @@ export function Header() {
   const company =
     getCompanyById(activeProject.companyId) || {
       id: activeProject.companyId,
-      name: activeProject.companyId === 'awamer' ? 'Awamer Alshabaka' : activeProject.companyId === 'creative' ? 'Creative System' : activeProject.companyId,
+      name:
+        activeProject.companyId === 'awamer'
+          ? 'Awamer Alshabaka'
+          : activeProject.companyId === 'creative'
+          ? 'Creative System'
+          : activeProject.companyId,
       code: activeProject.companyId.slice(0, 3).toUpperCase(),
     };
 
@@ -65,6 +78,8 @@ export function Header() {
       setTimeout(() => setCopiedRoomCode(false), 2000);
     }
   };
+
+  const isArabic = locale === 'ar';
 
   return (
     <header className="h-16 border-b border-[var(--border-subtle)] bg-[var(--bg-canvas)] px-6 flex items-center justify-between shrink-0 select-none transition-colors">
@@ -107,9 +122,13 @@ export function Header() {
         {/* Active Stage Pill */}
         <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface-elevated)] text-xs text-[var(--text-primary)] shadow-2xs">
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-contrast)] animate-pulse" />
-          <span className="font-mono text-[10px] text-[var(--text-muted)] font-bold">{activeStage?.badge}</span>
+          <span className="font-mono text-[10px] text-[var(--text-muted)] font-bold">
+            {activeStage?.badge}
+          </span>
           <span className="font-medium text-[11px]">{activeStage?.labelEn}</span>
-          <span className="text-[10px] text-[var(--text-muted)] font-sans">({activeStage?.labelAr})</span>
+          <span className="text-[10px] text-[var(--text-muted)] font-sans">
+            ({activeStage?.labelAr})
+          </span>
         </div>
 
         {/* Native Figma Project File Link */}
@@ -128,8 +147,20 @@ export function Header() {
         )}
       </div>
 
-      {/* Right: Actions, Figma Shortcut, Demo Preview, Viewport Controls */}
+      {/* Right: Language switch, Settings gear, User avatar, Viewport Controls */}
       <div className="flex items-center gap-2 shrink-0">
+        {/* Language Switcher (E / ع) */}
+        <button
+          onClick={toggleLocale}
+          title={isArabic ? 'Switch to English' : 'التحويل للعربية'}
+          className="flex items-center gap-1 px-2 py-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors shadow-2xs"
+        >
+          <span className="font-mono text-sm leading-none">{isArabic ? 'ع' : 'E'}</span>
+          <span className="text-[10px] text-[var(--text-muted)] hidden sm:inline">
+            ({isArabic ? 'EN' : 'عربي'})
+          </span>
+        </button>
+
         {/* Landing Page Home Shortcut */}
         <button
           onClick={() => setActiveView('landing')}
@@ -137,7 +168,7 @@ export function Header() {
           className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
         >
           <Home className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-          <span className="hidden md:inline">Landing Page</span>
+          <span className="hidden md:inline">{isArabic ? 'الرئيسية' : 'Landing'}</span>
         </button>
 
         {/* View Mode Segmented Controls */}
@@ -189,8 +220,7 @@ export function Header() {
           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] text-xs font-medium transition-all group shadow-2xs"
         >
           <FigmaIcon className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
-          <span className="hidden md:inline">Export to Figma</span>
-          <span className="md:hidden">Figma</span>
+          <span className="hidden md:inline">Figma</span>
         </button>
 
         {/* Demo Preview Button */}
@@ -200,7 +230,7 @@ export function Header() {
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-semibold hover:opacity-90 transition-all shadow-xs"
         >
           <Play className="w-3.5 h-3.5 fill-current" />
-          <span>Demo Preview</span>
+          <span className="hidden sm:inline">Preview</span>
         </button>
 
         {/* Copy / Share Quick Shortcut */}
@@ -211,6 +241,32 @@ export function Header() {
         >
           {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Share2 className="w-4 h-4" />}
         </button>
+
+        <div className="w-px h-5 bg-[var(--border-subtle)]" />
+
+        {/* User Avatar with Settings Gear Button Right Next To It! */}
+        <div className="flex items-center gap-1.5 pl-1">
+          {/* Avatar */}
+          <div
+            title={`${userSession?.name || 'Architect'} (${accountType === 'freelancer' ? 'Freelancer' : 'Enterprise'})`}
+            className="w-8 h-8 rounded-full bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] flex items-center justify-center font-bold text-xs overflow-hidden border border-[var(--border-strong)] shadow-xs select-none"
+          >
+            {userSession?.avatarUrl ? (
+              <img src={userSession.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              <span>{(userSession?.name || 'A').slice(0, 1).toUpperCase()}</span>
+            )}
+          </div>
+
+          {/* Settings Icon Button Next to Picture */}
+          <button
+            onClick={() => setSettingsModalOpen(true)}
+            title={isArabic ? 'إعدادات المنظومة الشاملة (Settings)' : 'Comprehensive Settings'}
+            className="p-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:rotate-90 duration-300 shadow-2xs group"
+          >
+            <Settings className="w-4 h-4 group-hover:text-emerald-400 transition-colors" />
+          </button>
+        </div>
       </div>
     </header>
   );
