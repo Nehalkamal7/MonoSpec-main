@@ -135,9 +135,6 @@ export function UniversalLandingPage() {
   // Interactive Pipeline Stage State
   const [activePipelineStageId, setActivePipelineStageId] = useState<string>('tech_analysis');
 
-  // Pricing State
-  const [billingInterval, setBillingInterval] = useState<'monthly' | 'annual'>('annual');
-
   // Contact & Support Form State
   const [supportName, setSupportName] = useState('');
   const [supportEmail, setSupportEmail] = useState('');
@@ -259,9 +256,6 @@ export function UniversalLandingPage() {
           <a href="#freelancers" className="hover:text-emerald-400 transition-colors font-semibold flex items-center gap-1 text-emerald-400">
             <Briefcase className="w-3.5 h-3.5" />
             <span>{isArabic ? 'استوديو المستقلين' : 'Freelancer Studio'}</span>
-          </a>
-          <a href="#pricing" className="hover:text-[var(--text-primary)] transition-colors">
-            {isArabic ? 'الأسعار والخطط' : 'Pricing'}
           </a>
           <a href="#contact" className="hover:text-[var(--text-primary)] transition-colors font-semibold text-emerald-400">
             {isArabic ? 'الدعم والتواصل' : 'Support & Contact'}
@@ -480,27 +474,35 @@ export function UniversalLandingPage() {
         </div>
 
         {/* 4. KEY METRICS STATS BAR */}
-        <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-4xl text-left">
+        <div className={`mt-14 grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-4xl ${isArabic ? 'text-right' : 'text-left'}`}>
           <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs">
-            <div className="text-2xl font-black font-mono text-[var(--text-primary)]">10x Faster</div>
+            <div className="text-2xl font-black font-mono text-[var(--text-primary)]">
+              {isArabic ? '10 أضعاف أسرع' : '10x Faster'}
+            </div>
             <p className="text-xs text-[var(--text-muted)] mt-1">
               {isArabic ? 'تسليم المواصفات الفنية للعميل والتيم' : 'Speed in architectural spec delivery'}
             </p>
           </div>
           <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs">
-            <div className="text-2xl font-black font-mono text-emerald-400">7 مراحل</div>
+            <div className="text-2xl font-black font-mono text-emerald-400">
+              {isArabic ? '7 مراحل' : '7 Stages'}
+            </div>
             <p className="text-xs text-[var(--text-muted)] mt-1">
               {isArabic ? 'بما فيها مرحلة اللوجو والهوية البصرية' : 'Complete with Logo & Brand stage'}
             </p>
           </div>
           <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs">
-            <div className="text-2xl font-black font-mono text-[var(--text-primary)]">PDF & Drive</div>
+            <div className="text-2xl font-black font-mono text-[var(--text-primary)]">
+              {isArabic ? 'ملفات ومستندات' : 'PDF & Drive'}
+            </div>
             <p className="text-xs text-[var(--text-muted)] mt-1">
               {isArabic ? 'فهم عميق للجداول والكيانات والامتثال' : 'Deep parsing of documents & links'}
             </p>
           </div>
           <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-2xs">
-            <div className="text-2xl font-black font-mono text-[var(--text-primary)]">Room Codes</div>
+            <div className="text-2xl font-black font-mono text-[var(--text-primary)]">
+              {isArabic ? 'رموز الغرف' : 'Room Codes'}
+            </div>
             <p className="text-xs text-[var(--text-muted)] mt-1">
               {isArabic ? 'روم مخصص لكل تيم ولكل موقع' : 'Unique codes per client / website'}
             </p>
@@ -513,7 +515,7 @@ export function UniversalLandingPage() {
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-              WORKFLOW TRANSFORMATION
+              {isArabic ? 'تحول جذري في أسلوب العمل' : 'WORKFLOW TRANSFORMATION'}
             </span>
             <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
               {isArabic ? 'كيف يسهل MonoSpec عملك ويوفر 80% من وقت المشروع؟' : 'How MonoSpec Simplifies Your Entire Workflow'}
@@ -620,7 +622,7 @@ export function UniversalLandingPage() {
       <section id="pipeline" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] max-w-6xl mx-auto space-y-10 scroll-mt-24">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-            END-TO-END PIPELINE
+            {isArabic ? 'خط الإنتاج المتكامل' : 'END-TO-END PIPELINE'}
           </span>
           <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
             {isArabic ? 'مراحل خط الإنتاج الشاملة (7 مراحل متكاملة)' : 'Full 7-Stage Architectural Pipeline'}
@@ -667,8 +669,8 @@ export function UniversalLandingPage() {
                 </div>
 
                 <div className="mt-4 pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-secondary)]">
-                  <span>DoD Checklists</span>
-                  <span className="text-emerald-400 font-bold">100% Ready</span>
+                  <span>{isArabic ? 'قوائم معايير الإنجاز' : 'DoD Checklists'}</span>
+                  <span className="text-emerald-400 font-bold">{isArabic ? 'جاهز 100%' : '100% Ready'}</span>
                 </div>
               </div>
             );
@@ -731,7 +733,7 @@ export function UniversalLandingPage() {
               <div className="flex items-center justify-between pb-3 border-b border-zinc-800 text-[11px] text-zinc-400">
                 <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
                   <Globe className="w-3.5 h-3.5" />
-                  MY WEBSITES & PLATFORMS
+                  {isArabic ? 'مواقعي وتطبيقاتي الخاصة' : 'MY WEBSITES & PLATFORMS'}
                 </span>
                 <span className="text-[10px] bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">FREE-8842-PRO</span>
               </div>
@@ -741,14 +743,18 @@ export function UniversalLandingPage() {
                     <span className="text-white font-bold block">Nova Store & E-Commerce</span>
                     <span className="text-emerald-400 text-[10px]">https://novastore.dev</span>
                   </div>
-                  <span className="text-emerald-400 text-[10px] bg-emerald-950/60 px-2 py-0.5 rounded">7/7 Stages</span>
+                  <span className="text-emerald-400 text-[10px] bg-emerald-950/60 px-2 py-0.5 rounded">
+                    {isArabic ? '7/7 مراحل' : '7/7 Stages'}
+                  </span>
                 </div>
                 <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 flex justify-between items-center">
                   <div>
                     <span className="text-white font-bold block">Personal Portfolio & Blog</span>
                     <span className="text-zinc-400 text-[10px]">https://nehal.dev</span>
                   </div>
-                  <span className="text-zinc-400 text-[10px] bg-zinc-800 px-2 py-0.5 rounded">Active</span>
+                  <span className="text-zinc-400 text-[10px] bg-zinc-800 px-2 py-0.5 rounded">
+                    {isArabic ? 'نشط' : 'Active'}
+                  </span>
                 </div>
               </div>
               <p className="text-[10px] text-zinc-500 text-center pt-1 font-sans">
@@ -759,158 +765,12 @@ export function UniversalLandingPage() {
         </div>
       </section>
 
-      {/* 8. COMMERCIAL PRICING & LICENSING (ضروري جداً لبيع المشروع) */}
-      <section id="pricing" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] max-w-6xl mx-auto space-y-12 scroll-mt-24">
-        <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-            COMMERCIAL LICENSING & PLANS
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
-            {isArabic ? 'باقات الاشتراك وترخيص المنظومة' : 'Flexible Plans & Commercial Licensing'}
-          </h2>
-          <p className="text-xs sm:text-sm text-[var(--text-muted)]">
-            {isArabic
-              ? 'اختر الباقة المناسبة لفريقك أو استوديو أعمالك، مع إمكانية شراء الترخيص الكامل للمشروع'
-              : 'Choose the right plan for your engineering team or freelance practice with enterprise buyout options'}
-          </p>
-
-          {/* Monthly / Annual Toggle */}
-          <div className="inline-flex items-center p-1 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] mt-2">
-            <button
-              onClick={() => setBillingInterval('monthly')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                billingInterval === 'monthly'
-                  ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] shadow-xs'
-                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-              }`}
-            >
-              {isArabic ? 'دفع شهري' : 'Monthly'}
-            </button>
-            <button
-              onClick={() => setBillingInterval('annual')}
-              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                billingInterval === 'annual'
-                  ? 'bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] shadow-xs'
-                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-              }`}
-            >
-              <span>{isArabic ? 'دفع سنوي' : 'Annual'}</span>
-              <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500 text-black">
-                -20%
-              </span>
-            </button>
-          </div>
-        </div>
-
-        {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Tier 1: Freelancer Starter */}
-          <div className="p-6 sm:p-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex flex-col justify-between shadow-2xs hover:border-[var(--border-strong)] transition-colors">
-            <div className="space-y-4">
-              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider font-mono">
-                Solo Freelancer
-              </span>
-              <div>
-                <div className="text-3xl font-black font-mono">$0</div>
-                <span className="text-xs text-[var(--text-muted)]">{isArabic ? 'مجاني مدى الحياة' : 'Free Forever'}</span>
-              </div>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                {isArabic ? 'مثالي للمستقلين الذين يديرون حتى 3 مواقع ومشاريع خاصة' : 'Perfect for solo developers managing up to 3 personal websites.'}
-              </p>
-              <ul className="space-y-2 text-xs text-[var(--text-secondary)] pt-4 border-t border-[var(--border-subtle)]">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? '3 مواقع ومنصات خاصة' : '3 personal websites & platforms'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'جميع المراحل السبع مع الشعار' : 'All 7 stages including brand & logo'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'تحليل ملفات PDF ومستندات العمل' : 'PDF & RFP specification ingestion'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'كود روم لمشاركة المشاريع' : 'Dedicated room code per project'}</li>
-              </ul>
-            </div>
-            <button
-              onClick={() => handleStartOnboarding('freelancer')}
-              className="mt-6 w-full py-2.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-[var(--text-primary)] transition-colors"
-            >
-              {isArabic ? 'ابدأ مجاناً كـ مستقل' : 'Get Started Free'}
-            </button>
-          </div>
-
-          {/* Tier 2: Pro Studio (Most Popular) */}
-          <div className="p-6 sm:p-8 rounded-2xl border border-emerald-500/50 bg-radial from-emerald-950/20 to-[var(--bg-surface)] flex flex-col justify-between shadow-xl ring-1 ring-emerald-500/30 relative">
-            <span className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-emerald-500 text-black text-[10px] font-black uppercase tracking-wider shadow-sm">
-              {isArabic ? 'الأكثر طلباً' : 'Most Popular'}
-            </span>
-            <div className="space-y-4">
-              <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider font-mono">
-                Studio & Startup
-              </span>
-              <div>
-                <div className="text-3xl font-black font-mono">
-                  {billingInterval === 'annual' ? '$29' : '$39'}
-                  <span className="text-xs font-normal text-[var(--text-muted)] font-sans"> {isArabic ? ' / شهرياً' : ' / mo'}</span>
-                </div>
-                <span className="text-xs text-emerald-400 font-mono">
-                  {billingInterval === 'annual' 
-                    ? (isArabic ? 'فوترة سنوية (وفر $120)' : 'Billed annually (Save $120)') 
-                    : (isArabic ? 'فوترة شهرية' : 'Billed monthly')}
-                </span>
-              </div>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                {isArabic ? 'للفرق التقنية والاستوديوهات التي تسلم مشاريع برمجية تجارية لعملائها' : 'For tech studios & high-velocity teams delivering client software.'}
-              </p>
-              <ul className="space-y-2 text-xs text-[var(--text-primary)] pt-4 border-t border-[var(--border-subtle)]">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'مواقع وعملاء غير محدودين' : 'Unlimited websites & client projects'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'مزامنة Google Drive السحابية' : 'Google Drive & cloud ingestion'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'تصدير مباشر لـ Figma Tokens' : 'Direct Figma Tokens & Next.js export'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'أولوية في سرعة استجابة الذكاء الاصطناعي' : 'Priority AI generation & sub-second latency'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'دعم فني ذو أولوية فائقة 24/7' : '24/7 High-priority technical support'}</li>
-              </ul>
-            </div>
-            <button
-              onClick={() => handleStartOnboarding('enterprise')}
-              className="mt-6 w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-black uppercase tracking-wide transition-all shadow-md shadow-emerald-500/20"
-            >
-              {isArabic ? 'ابدأ تجربة الاستوديو' : 'Start Studio Plan'}
-            </button>
-          </div>
-
-          {/* Tier 3: Enterprise & Buyout */}
-          <div className="p-6 sm:p-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex flex-col justify-between shadow-2xs hover:border-[var(--border-strong)] transition-colors">
-            <div className="space-y-4">
-              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider font-mono">
-                Enterprise & Commercial Buyout
-              </span>
-              <div>
-                <div className="text-3xl font-black font-mono">
-                  {billingInterval === 'annual' ? '$199' : '$249'}
-                  <span className="text-xs font-normal text-[var(--text-muted)] font-sans"> {isArabic ? ' / شهرياً' : ' / mo'}</span>
-                </div>
-                <span className="text-xs text-[var(--text-muted)]">{isArabic ? 'أو ترخيص استحواذ دائم للمشروع' : 'Or Full Source Buyout'}</span>
-              </div>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                {isArabic ? 'للشركات الكبرى والمستثمرين الراغبين بشراء المنظومة أو تشغيلها في سحابة خاصة' : 'Custom on-premise sovereign deployment, SAMA compliance, or IP buyout.'}
-              </p>
-              <ul className="space-y-2 text-xs text-[var(--text-secondary)] pt-4 border-t border-[var(--border-subtle)]">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'سحابة سيادية معزولة (السعودية / الإمارات / أوروبا)' : 'Isolated sovereign cloud (KSA / UAE / EU)'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'تدقيق امتثال SAMA و ZATCA و NCA' : 'SAMA, ZATCA, and NCA compliance audits'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'مهندس معماري استشاري مخصص' : 'Dedicated principal software architect'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'خط دعم ساخن مخصص عبر الهاتف 24/7' : '24/7 Dedicated executive phone hotline'}</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'عقد ترخيص تجاري لنقل الملكية الفكرية' : 'Full commercial IP transfer buyout contract'}</li>
-              </ul>
-            </div>
-            <a
-              href="#contact"
-              className="mt-6 w-full py-2.5 rounded-xl bg-[var(--accent-contrast)] text-[var(--accent-contrast-text)] text-xs font-bold flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity"
-            >
-              <span>{isArabic ? 'تواصل لشراء الترخيص' : 'Contact for Buyout'}</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. COMPREHENSIVE CONTACT, NUMBERS & TECHNICAL SUPPORT (قسم الدعم الفني وأرقام التواصل المباشرة) */}
+      {/* 8. COMPREHENSIVE CONTACT, NUMBERS & TECHNICAL SUPPORT (قسم الدعم الفني وأرقام التواصل المباشرة) */}
       <section id="contact" className="px-4 sm:px-6 py-20 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/60 scroll-mt-24">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold">
-              24/7 SUPPORT & COMMERCIAL INQUIRIES
+              {isArabic ? 'دعم واستفسارات على مدار الساعة' : '24/7 SUPPORT & COMMERCIAL INQUIRIES'}
             </span>
             <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
               {isArabic ? 'مركز الدعم الفني وأرقام التواصل المباشرة' : 'Direct Support Lines & Contact Center'}
@@ -1343,7 +1203,7 @@ export function UniversalLandingPage() {
             </p>
             <div className="flex items-center gap-3 pt-2 text-[11px] font-mono text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>SAMA • ZATCA • NCA • SOC2 COMPLIANT</span>
+              <span>{isArabic ? 'متوافق مع معايير SAMA و ZATCA و NCA و SOC2' : 'SAMA • ZATCA • NCA • SOC2 COMPLIANT'}</span>
             </div>
           </div>
 
@@ -1354,7 +1214,7 @@ export function UniversalLandingPage() {
               <li><a href="#pipeline" className="hover:text-white transition-colors">{isArabic ? 'المراحل السبع' : 'The 7 Stages'}</a></li>
               <li><a href="#how-it-works" className="hover:text-white transition-colors">{isArabic ? 'تحليل PDF ومستندات العمل' : 'PDF & Drive Ingestion'}</a></li>
               <li><a href="#freelancers" className="hover:text-white transition-colors">{isArabic ? 'استوديو المستقلين' : 'Freelancer Studio'}</a></li>
-              <li><a href="#pricing" className="hover:text-white transition-colors">{isArabic ? 'تكاملات Figma والمعمارية' : 'Figma & Architecture'}</a></li>
+              <li><a href="#pipeline" className="hover:text-white transition-colors">{isArabic ? 'تكاملات Figma والمعمارية' : 'Figma & Architecture'}</a></li>
             </ul>
           </div>
 
@@ -1382,7 +1242,7 @@ export function UniversalLandingPage() {
         </div>
 
         <div className="max-w-6xl mx-auto pt-6 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
-          <p>© 2026 MonoSpec Enterprise OS. All rights reserved.</p>
+          <p>{isArabic ? '© 2026 منظومة MonoSpec التقنية. كافة الحقوق محفوظة.' : '© 2026 MonoSpec Enterprise OS. All rights reserved.'}</p>
           <div className="flex items-center gap-4 text-[var(--text-muted)]">
             <a href="#contact" className="hover:text-white transition-colors">{isArabic ? 'سياسة الخصوصية' : 'Privacy Policy'}</a>
             <span>•</span>
